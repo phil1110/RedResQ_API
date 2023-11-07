@@ -14,8 +14,12 @@ namespace RedResQ_API.Lib.Services
 	{
 		public static Session Login(string identifier, string password)
 		{
-			// WIP - Regex needed to decide between Login Email or Login Username
-			return null;
+			if(identifier.Contains("@"))
+			{
+				return LoginEmail(identifier, password);
+			}
+
+			return LoginUsername(identifier, password);
 		}
 
 		private static Session LoginEmail(string email, string password)
