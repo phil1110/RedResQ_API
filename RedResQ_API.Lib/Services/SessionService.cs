@@ -12,17 +12,17 @@ namespace RedResQ_API.Lib.Services
 {
 	public static class SessionService
 	{
-		public static Session Login(string identifier, string password)
+		public static Session Login(string identifier, string password, string deviceId)
 		{
 			if(identifier.Contains("@"))
 			{
-				return LoginEmail(identifier, password);
+				return LoginEmail(identifier, password, deviceId);
 			}
 
-			return LoginUsername(identifier, password);
+			return LoginUsername(identifier, password, deviceId);
 		}
 
-		private static Session LoginEmail(string email, string password)
+		private static Session LoginEmail(string email, string deviceId, string password)
 		{
 			try
 			{
@@ -30,11 +30,12 @@ namespace RedResQ_API.Lib.Services
 				{
 					Console.WriteLine(connection.State);
 
-					var sql = $"exec LoginEmail @email = #email, @password = #password";
+					var sql = $"exec LoginEmail @email = #email, @deviceId = #deviceId, @password = #password";
 
 					using (var cmd = new SqlCommand(sql, connection))
 					{
 						cmd.Parameters.Add("#email", SqlDbType.VarChar).Value = email;
+						cmd.Parameters.Add("#deviceId", SqlDbType.VarChar).Value = deviceId;
 						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
 
 						connection.Open();
@@ -103,7 +104,7 @@ namespace RedResQ_API.Lib.Services
 			}
 		}
 
-		private static Session LoginUsername(string username, string password)
+		private static Session LoginUsername(string username, string deviceId, string password)
 		{
 			try
 			{
@@ -111,11 +112,12 @@ namespace RedResQ_API.Lib.Services
 				{
 					Console.WriteLine(connection.State);
 
-					var sql = "exec LoginUsername @username = #username, @password = #password";
+					var sql = "exec LoginUsername @username = #username, @deviceId = #deviceId, @password = #password";
 
 					using (var cmd = new SqlCommand(sql, connection))
 					{
 						cmd.Parameters.Add("#username", SqlDbType.VarChar).Value = username;
+						cmd.Parameters.Add("#deviceId", SqlDbType.VarChar).Value = deviceId;
 						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
 
 						connection.Open();
