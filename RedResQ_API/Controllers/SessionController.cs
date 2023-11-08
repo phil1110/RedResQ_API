@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RedResQ_API.Lib.Models;
 using RedResQ_API.Lib.Services;
+using System.Runtime.CompilerServices;
 
 namespace RedResQ_API.Controllers
 {
@@ -13,7 +14,7 @@ namespace RedResQ_API.Controllers
 
 		}
 
-		[HttpGet]
+		[HttpGet("login")]
 		public ActionResult<Session> Get(string id, string secret)
 		{
 			try
