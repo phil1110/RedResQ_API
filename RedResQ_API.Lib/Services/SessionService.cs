@@ -95,44 +95,22 @@ namespace RedResQ_API.Lib.Services
 
 		private static Session LoginUsername(string username, string deviceId, string password)
 		{
-			try
+			string query = "exec LoginUsername @username = #username, @deviceId = #deviceId, @password = #password";
+
+			List<SqlParameter> parameters = new List<SqlParameter>();
+			parameters.Add((SqlParameter)(new SqlParameter("#username", SqlDbType.VarChar).Value = username));
+			parameters.Add((SqlParameter)(new SqlParameter("#deviceId", SqlDbType.VarChar).Value = deviceId));
+			parameters.Add((SqlParameter)(new SqlParameter("#password", SqlDbType.VarChar).Value = password));
+
+			DataTable output = SqlHandler.ExecuteSelect(query, parameters.ToArray());
+
+			if (output.Rows.Count == 1)
 			{
-				using (var connection = new SqlConnection(Constants.ConnectionString))
-				{
-					Console.WriteLine(connection.State);
-
-					var sql = "exec LoginUsername @username = #username, @deviceId = #deviceId, @password = #password";
-
-					using (var cmd = new SqlCommand(sql, connection))
-					{
-						cmd.Parameters.Add("#username", SqlDbType.VarChar).Value = username;
-						cmd.Parameters.Add("#deviceId", SqlDbType.VarChar).Value = deviceId;
-						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
-
-						connection.Open();
-
-						var reader = cmd.ExecuteReader();
-						var output = new DataTable();
-
-						output.Load(reader);
-
-						connection.Close();
-
-						if (output.Rows.Count == 1)
-						{
-							return ConvertToSession(output);
-						}
-						else
-						{
-							return null;
-						}
-					}
-				}
+				return ConvertToSession(output, ConvertToPerson(output));
 			}
-			catch (Exception e)
+			else
 			{
-				Console.WriteLine(e);
-				throw;
+				return null;
 			}
 		}
 
@@ -141,19 +119,18 @@ namespace RedResQ_API.Lib.Services
 			return null;
 		}
 
-		private static Session ConvertToSession(DataTable table)
+		private static Session ConvertToSession(DataTable table, Person person)
 		{
-			int length = 0;
-			var person = ConvertToPerson(table, ref length);
+			int length = 1;
 
 			return new Session(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
 				Convert.ToString(table.Rows[0].ItemArray[length]),
 				person);
 		}
 
-		private static Person ConvertToPerson(DataTable table, ref int length)
+		private static Person ConvertToPerson(DataTable table)
 		{
-			length = table.Rows[0].ItemArray.Length - 1;
+			var length = table.Rows[0].ItemArray.Length - 1;
 
 			var role = new Role(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
 				Convert.ToString(table.Rows[0].ItemArray[length]));
