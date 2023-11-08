@@ -30,16 +30,12 @@ namespace RedResQ_API.Lib.Services
 				{
 					Console.WriteLine(connection.State);
 
-					var sql = $"select s.* from VSession as s " +
-							  $"left join Person p " +
-							  $"on s.PersonID = p.ID " +
-							  $"where s.email = @email) " +
-							  $"and p.password = @password";
+					var sql = $"exec LoginEmail @email = #email, @password = #password";
 
 					using (var cmd = new SqlCommand(sql, connection))
 					{
-						cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = email;
-						cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
+						cmd.Parameters.Add("#email", SqlDbType.VarChar).Value = email;
+						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
 
 						connection.Open();
 
@@ -115,16 +111,12 @@ namespace RedResQ_API.Lib.Services
 				{
 					Console.WriteLine(connection.State);
 
-					var sql = $"select s.* from VSession as s " +
-							  $"left join Person p " +
-							  $"on s.PersonID = p.ID " +
-							  $"where s.username = @username " +
-							  $"and p.password = @password";
+					var sql = "exec LoginUsername @username = #username, @password = #password";
 
 					using (var cmd = new SqlCommand(sql, connection))
 					{
-						cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
-						cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
+						cmd.Parameters.Add("#username", SqlDbType.VarChar).Value = username;
+						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
 
 						connection.Open();
 
@@ -190,6 +182,11 @@ namespace RedResQ_API.Lib.Services
 				Console.WriteLine(e);
 				throw;
 			}
+		}
+
+		public static Session Register(Session session, string password)
+		{
+			return null;
 		}
 	}
 }
