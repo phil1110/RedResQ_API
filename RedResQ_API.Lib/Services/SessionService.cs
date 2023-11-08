@@ -14,12 +14,21 @@ namespace RedResQ_API.Lib.Services
 	{
 		public static Session Login(string identifier, string password, string deviceId)
 		{
+			Session output;
+
 			if(identifier.Contains("@"))
 			{
-				return LoginEmail(identifier, password, deviceId);
+				output = LoginEmail(identifier, password, deviceId);
+			}
+			else
+			{
+				output = LoginUsername(identifier, password, deviceId);
 			}
 
-			return LoginUsername(identifier, password, deviceId);
+			if(output == null)
+			{
+
+			}
 		}
 
 		private static Session LoginEmail(string email, string deviceId, string password)
@@ -49,50 +58,30 @@ namespace RedResQ_API.Lib.Services
 
 						if (output.Rows.Count == 1)
 						{
-							var length = output.Rows[0].ItemArray.Length - 1;
-
-							var role = new Role(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							var loc = new Location(Convert.ToInt32(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 4;
-
-							var lang = new Language(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							if (!Enum.TryParse<Sex>(Convert.ToString(output.Rows[0].ItemArray[length]), out var sex))
-							{
-								return null;
-							}
-
-							length--;
-
-							var person = new Person(Convert.ToInt32(output.Rows[0].ItemArray[length - 5]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 4]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								(DateTime)output.Rows[0].ItemArray[length],
-								sex,
-								lang, loc, null, role);
-
-							length -= 6;
-
-							return new Session(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]),
-								person);
+							return ConvertToSession(output);
 						}
-						else
+					}
+
+					sql = $"exec LoginEmail @email = #email, @deviceId = #deviceId, @password = #password";
+
+					using (var cmd = new SqlCommand(sql, connection))
+					{
+						cmd.Parameters.Add("#email", SqlDbType.VarChar).Value = email;
+						cmd.Parameters.Add("#deviceId", SqlDbType.VarChar).Value = deviceId;
+						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
+
+						connection.Open();
+
+						var reader = cmd.ExecuteReader();
+						var output = new DataTable();
+
+						output.Load(reader);
+
+						connection.Close();
+
+						if (output.Rows.Count == 1)
 						{
-							return null;
+							return ConvertToSession(output);
 						}
 					}
 				}
@@ -131,46 +120,7 @@ namespace RedResQ_API.Lib.Services
 
 						if (output.Rows.Count == 1)
 						{
-							var length = output.Rows[0].ItemArray.Length - 1;
-
-							var role = new Role(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							var loc = new Location(Convert.ToInt32(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 4;
-
-							var lang = new Language(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							if (!Enum.TryParse<Sex>(Convert.ToString(output.Rows[0].ItemArray[length]), out var sex))
-							{
-								return null;
-							}
-
-							length--;
-
-							var person = new Person(Convert.ToInt32(output.Rows[0].ItemArray[length - 5]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 4]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								(DateTime)output.Rows[0].ItemArray[length],
-								sex,
-								lang, loc, null, role);
-
-							length -= 6;
-
-							return new Session(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]),
-								person);
+							return ConvertToSession(output);
 						}
 						else
 						{
@@ -189,6 +139,57 @@ namespace RedResQ_API.Lib.Services
 		public static Session Register(Session session, string password)
 		{
 			return null;
+		}
+
+		private static Session ConvertToSession(DataTable table)
+		{
+			int length = 0;
+			var person = ConvertToPerson(table, ref length);
+
+			return new Session(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
+				Convert.ToString(table.Rows[0].ItemArray[length]),
+				person);
+		}
+
+		private static Person ConvertToPerson(DataTable table, ref int length)
+		{
+			length = table.Rows[0].ItemArray.Length - 1;
+
+			var role = new Role(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
+				Convert.ToString(table.Rows[0].ItemArray[length]));
+
+			length -= 2;
+
+			var loc = new Location(Convert.ToInt32(table.Rows[0].ItemArray[length - 3]),
+				Convert.ToString(table.Rows[0].ItemArray[length - 2]),
+				Convert.ToString(table.Rows[0].ItemArray[length - 1]),
+				Convert.ToString(table.Rows[0].ItemArray[length]));
+
+			length -= 4;
+
+			var lang = new Language(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
+				Convert.ToString(table.Rows[0].ItemArray[length]));
+
+			length -= 2;
+
+			if (!Enum.TryParse<Sex>(Convert.ToString(table.Rows[0].ItemArray[length]), out var sex))
+			{
+				return null;
+			}
+
+			length--;
+
+			var person = new Person(Convert.ToInt32(table.Rows[0].ItemArray[length - 5]),
+				Convert.ToString(table.Rows[0].ItemArray[length - 4]),
+				Convert.ToString(table.Rows[0].ItemArray[length - 3]),
+				Convert.ToString(table.Rows[0].ItemArray[length - 2]),
+				Convert.ToString(table.Rows[0].ItemArray[length - 1]),
+				(DateTime)table.Rows[0].ItemArray[length],
+				sex, lang, loc, null, role);
+
+			length -= 6;
+
+			return person;
 		}
 	}
 }
