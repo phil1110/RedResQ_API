@@ -87,7 +87,7 @@ namespace RedResQ_API.Lib.Models
 		public string Hash
 		{
 			get => _hash;
-			private set => _hash = value;
+			internal set => _hash = value;
 		}
 
 		public Sex Sex
