@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RedResQ_API.Lib.Models;
 using RedResQ_API.Lib.Services;
+using System.Net;
 using System.Runtime.CompilerServices;
 
 namespace RedResQ_API.Controllers
@@ -15,11 +16,11 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpGet("login")]
-		public ActionResult<Session> Login(string id, string secret)
+		public ActionResult<Person> Login(Credentials credentials)
 		{
 			try
 			{
-				var output = SessionService.Login(id, secret);
+				var output = SessionService.Login(credentials)!;
 
 				if (output == null)
 				{
@@ -27,7 +28,7 @@ namespace RedResQ_API.Controllers
 				}
 				else
 				{
-					return output;
+					return Ok(output);
 				}
 			}
 			catch (Exception e)
@@ -37,11 +38,11 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpPost("register")]
-		public ActionResult<Session> Register(string secret, Session session)
+		public ActionResult<Person> Register(Person person)
 		{
 			try
 			{
-				return SessionService.Register(session, secret);
+				return Ok(SessionService.Register(person));
 			}
 			catch (Exception e)
 			{

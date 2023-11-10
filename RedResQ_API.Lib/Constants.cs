@@ -17,7 +17,7 @@ namespace RedResQ_API.Lib
 			{
 				DataSource = Environment.GetEnvironmentVariable("API_DB_DS"),
 				UserID = Environment.GetEnvironmentVariable("API_DB_UID"),
-				Password = Environment.GetEnvironmentVariable("API_DSB_PWD"),
+				Password = Environment.GetEnvironmentVariable("API_DB_PWD"),
 				InitialCatalog = Environment.GetEnvironmentVariable("API_DB_IC")
 			};
 

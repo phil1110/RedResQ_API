@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib
 {
 	internal static class SqlHandler
 	{
-		internal static DataTable ExecuteSelect(string query, SqlParameter[]? parameters = null)
+		internal static DataTable ExecuteQuery(string query, SqlParameter[]? parameters = null)
 		{
 			DataTable? output = null;
 

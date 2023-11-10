@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Services
 {
-	public class UserService
+	public class PersonService
 	{
-		private static Session ConvertToSession(DataTable table, Person person)
+		internal static Session ConvertToSession(DataTable table, Person person)
 		{
 			int length = 1;
 
@@ -20,7 +20,7 @@ namespace RedResQ_API.Lib.Services
 				person);
 		}
 
-		private static Person ConvertToPerson(DataTable table)
+		internal static Person ConvertToPerson(DataTable table)
 		{
 			var length = table.Rows[0].ItemArray.Length - 1;
 
