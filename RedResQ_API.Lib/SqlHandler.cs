@@ -32,7 +32,7 @@ namespace RedResQ_API.Lib
 
 					var reader = cmd.ExecuteReader();
 
-					output.Load(reader);
+					output!.Load(reader);
 
 					connection.Close();
 				}
@@ -40,5 +40,32 @@ namespace RedResQ_API.Lib
 
 			return output;
 		}
-	}
+
+		internal static int ExecuteNonQuery(string query, SqlParameter[]? parameters = null)
+		{
+			using (var connection = new SqlConnection(Constants.ConnectionString))
+			{
+				Console.WriteLine(connection.State);
+
+				using (var cmd = new SqlCommand(query, connection))
+				{
+					if (parameters != null)
+					{
+						foreach (SqlParameter parameter in parameters)
+						{
+							cmd.Parameters.Add(parameter);
+						}
+					}
+
+					connection.Open();
+
+					int output = cmd.ExecuteNonQuery();
+
+					connection.Close();
+
+					return output;
+				}
+			}
+		}
+	} 
 }

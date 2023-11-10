@@ -12,161 +12,66 @@ namespace RedResQ_API.Lib.Services
 {
 	public static class SessionService
 	{
-		public static Session Login(string identifier, string password, string deviceId)
+		public static Person Register(Person person)
 		{
-			Session output;
-
-			if(identifier.Contains("@"))
+			if (person != null)
 			{
-				output = LoginEmail(identifier, password, deviceId);
-			}
-			else
-			{
-				output = LoginUsername(identifier, password, deviceId);
+				List<SqlParameter> parameters = new List<SqlParameter>();
+				string query = "exec Register @username = #username, @firstname = #firstname, @lastname = #lastname, " +
+					"@email = #email, @birthdate = #birthdate, @hash = #hash, @sex = #sex, @languageId = #languageId, " +
+					"@locationId = #locationId, @roleId = #roleId";
+				person.Hash = HashPassword(person);
+
+				parameters.Add((SqlParameter)(new SqlParameter("#username", SqlDbType.VarChar).Value = person.Username));
+				parameters.Add((SqlParameter)(new SqlParameter("#firstname", SqlDbType.VarChar).Value = person.FirstName));
+				parameters.Add((SqlParameter)(new SqlParameter("#lastname", SqlDbType.VarChar).Value = person.LastName));
+				parameters.Add((SqlParameter)(new SqlParameter("#email", SqlDbType.VarChar).Value = person.Email));
+				parameters.Add((SqlParameter)(new SqlParameter("#birthdate", SqlDbType.Date).Value = person.Birthdate));
+				parameters.Add((SqlParameter)(new SqlParameter("#hash", SqlDbType.VarChar).Value = person.Hash));
+				parameters.Add((SqlParameter)(new SqlParameter("#sex", SqlDbType.VarChar).Value = person.Sex));
+				parameters.Add((SqlParameter)(new SqlParameter("#languageId", SqlDbType.Int).Value = person.Language.Id));
+				parameters.Add((SqlParameter)(new SqlParameter("#locationId", SqlDbType.Int).Value = person.Location.Id));
+				parameters.Add((SqlParameter)(new SqlParameter("#roleId", SqlDbType.Int).Value = person.Role.Id));
+
+				SqlHandler.ExecuteNonQuery(query, parameters.ToArray());
+
+				return person;
 			}
 
-			if(output == null)
-			{
-
-			}
+			throw new NullReferenceException("Person object was null!");
 		}
 
-		private static Session LoginEmail(string email, string deviceId, string password)
+		public static Person Login(Credentials credentials)
 		{
-			try
+			if(credentials != null)
 			{
-				using (var connection = new SqlConnection(Constants.ConnectionString))
+				if (credentials.Identifier.Contains("@"))
 				{
-					Console.WriteLine(connection.State);
-
-					var sql = $"exec LoginEmail @email = #email, @deviceId = #deviceId, @password = #password";
-
-					using (var cmd = new SqlCommand(sql, connection))
-					{
-						cmd.Parameters.Add("#email", SqlDbType.VarChar).Value = email;
-						cmd.Parameters.Add("#deviceId", SqlDbType.VarChar).Value = deviceId;
-						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
-
-						connection.Open();
-
-						var reader = cmd.ExecuteReader();
-						var output = new DataTable();
-
-						output.Load(reader);
-
-						connection.Close();
-
-						if (output.Rows.Count == 1)
-						{
-							return ConvertToSession(output);
-						}
-					}
-
-					sql = $"exec LoginEmail @email = #email, @deviceId = #deviceId, @password = #password";
-
-					using (var cmd = new SqlCommand(sql, connection))
-					{
-						cmd.Parameters.Add("#email", SqlDbType.VarChar).Value = email;
-						cmd.Parameters.Add("#deviceId", SqlDbType.VarChar).Value = deviceId;
-						cmd.Parameters.Add("#password", SqlDbType.VarChar).Value = password;
-
-						connection.Open();
-
-						var reader = cmd.ExecuteReader();
-						var output = new DataTable();
-
-						output.Load(reader);
-
-						connection.Close();
-
-						if (output.Rows.Count == 1)
-						{
-							return ConvertToSession(output);
-						}
-					}
+					return LoginEmail(credentials);
 				}
+
+				return LoginUsername(credentials);
 			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e);
-				throw;
-			}
+
+			throw new NullReferenceException("Credentials object was null!");
 		}
 
-		private static Session LoginUsername(string username, string deviceId, string password)
+		private static Person LoginEmail(Credentials credentials)
 		{
-			string query = "exec LoginUsername @username = #username, @deviceId = #deviceId, @password = #password";
 
-			List<SqlParameter> parameters = new List<SqlParameter>();
-			parameters.Add((SqlParameter)(new SqlParameter("#username", SqlDbType.VarChar).Value = username));
-			parameters.Add((SqlParameter)(new SqlParameter("#deviceId", SqlDbType.VarChar).Value = deviceId));
-			parameters.Add((SqlParameter)(new SqlParameter("#password", SqlDbType.VarChar).Value = password));
-
-			DataTable output = SqlHandler.ExecuteSelect(query, parameters.ToArray());
-
-			if (output.Rows.Count == 1)
-			{
-				return ConvertToSession(output, ConvertToPerson(output));
-			}
-			else
-			{
-				return null;
-			}
+			throw new NotImplementedException();
 		}
 
-		public static Session Register(Session session, string password)
+		private static Person LoginUsername(Credentials credentials)
 		{
-			return null;
+			throw new NotImplementedException();
 		}
 
-		private static Session ConvertToSession(DataTable table, Person person)
+		private static string HashPassword(Person person)
 		{
-			int length = 1;
+			string hash = string.Empty;
 
-			return new Session(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
-				Convert.ToString(table.Rows[0].ItemArray[length]),
-				person);
-		}
-
-		private static Person ConvertToPerson(DataTable table)
-		{
-			var length = table.Rows[0].ItemArray.Length - 1;
-
-			var role = new Role(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
-				Convert.ToString(table.Rows[0].ItemArray[length]));
-
-			length -= 2;
-
-			var loc = new Location(Convert.ToInt32(table.Rows[0].ItemArray[length - 3]),
-				Convert.ToString(table.Rows[0].ItemArray[length - 2]),
-				Convert.ToString(table.Rows[0].ItemArray[length - 1]),
-				Convert.ToString(table.Rows[0].ItemArray[length]));
-
-			length -= 4;
-
-			var lang = new Language(Convert.ToInt32(table.Rows[0].ItemArray[length - 1]),
-				Convert.ToString(table.Rows[0].ItemArray[length]));
-
-			length -= 2;
-
-			if (!Enum.TryParse<Sex>(Convert.ToString(table.Rows[0].ItemArray[length]), out var sex))
-			{
-				return null;
-			}
-
-			length--;
-
-			var person = new Person(Convert.ToInt32(table.Rows[0].ItemArray[length - 5]),
-				Convert.ToString(table.Rows[0].ItemArray[length - 4]),
-				Convert.ToString(table.Rows[0].ItemArray[length - 3]),
-				Convert.ToString(table.Rows[0].ItemArray[length - 2]),
-				Convert.ToString(table.Rows[0].ItemArray[length - 1]),
-				(DateTime)table.Rows[0].ItemArray[length],
-				sex, lang, loc, null, role);
-
-			length -= 6;
-
-			return person;
+			return person.Hash;
 		}
 	}
 }
