@@ -16,6 +16,7 @@ namespace RedResQ_API.Lib.Models
 		private string _lastName;
 		private string _email;
 		private DateTime _birthdate;
+		private string _hash;
 		private Sex _sex;
 		private Language _language;
 		private Location _location;
@@ -27,7 +28,7 @@ namespace RedResQ_API.Lib.Models
 		#region Constructor
 
 		public Person(int id, string username, string firstName, string lastName, string email, DateTime birthdate,
-			Sex sex, Language language, Location location, Settings settings, Role role)
+			string hash, Sex sex, Language language, Location location, Settings settings, Role role)
 		{
 			Id = id;
 			Username = username;
@@ -35,6 +36,7 @@ namespace RedResQ_API.Lib.Models
 			LastName = lastName;
 			Email = email;
 			Birthdate = birthdate;
+			Hash = hash;
 			Sex = sex;
 			Language = language;
 			Location = location;
@@ -80,6 +82,12 @@ namespace RedResQ_API.Lib.Models
 		{
 			get => _birthdate;
 			private set => _birthdate = value;
+		}
+
+		public string Hash
+		{
+			get => _hash;
+			internal set => _hash = value;
 		}
 
 		public Sex Sex

@@ -1,10 +1,14 @@
-﻿using Microsoft.VisualBasic;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using RedResQ_API.Lib.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,184 +16,117 @@ namespace RedResQ_API.Lib.Services
 {
 	public static class SessionService
 	{
-		public static Session Login(string identifier, string password)
+		public static string Register(Person person)
 		{
-			if(identifier.Contains("@"))
+			if (person != null)
 			{
-				return LoginEmail(identifier, password);
+				List<SqlParameter> parameters = new List<SqlParameter>();
+				string storedProcedure = "Register";
+				person.Hash = HashPassword(person);
+
+				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = person.Username } );
+				parameters.Add(new SqlParameter { ParameterName = "@firstname", SqlDbType = SqlDbType.VarChar, Value = person.FirstName });
+				parameters.Add(new SqlParameter { ParameterName = "@lastname", SqlDbType = SqlDbType.VarChar, Value = person.LastName });
+				parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = person.Email });
+				parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = person.Birthdate });
+				parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = person.Hash });
+				parameters.Add(new SqlParameter { ParameterName = "@sex", SqlDbType = SqlDbType.VarChar, Value = person.Sex.ToString() });
+				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.VarChar, Value = person.Language.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.VarChar, Value = person.Location.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.VarChar, Value = person.Role.Id });
+
+				SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
+
+				return CreateToken(person);
 			}
 
-			return LoginUsername(identifier, password);
+			throw new NullReferenceException("Person object was null!");
 		}
 
-		private static Session LoginEmail(string email, string password)
+		public static string Login(Credentials credentials)
 		{
-			try
+			if(credentials != null)
 			{
-				using (var connection = new SqlConnection(Constants.ConnectionString))
+				Person person;
+
+				if (credentials.Identifier.Contains("@"))
 				{
-					Console.WriteLine(connection.State);
-
-					var sql = $"select s.* from VSession as s " +
-							  $"left join Person p " +
-							  $"on s.PersonID = p.ID " +
-							  $"where s.email = @email) " +
-							  $"and p.password = @password";
-
-					using (var cmd = new SqlCommand(sql, connection))
-					{
-						cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = email;
-						cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
-
-						connection.Open();
-
-						var reader = cmd.ExecuteReader();
-						var output = new DataTable();
-
-						output.Load(reader);
-
-						connection.Close();
-
-						if (output.Rows.Count == 1)
-						{
-							var length = output.Rows[0].ItemArray.Length - 1;
-
-							var role = new Role(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							var loc = new Location(Convert.ToInt32(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 4;
-
-							var lang = new Language(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							if (!Enum.TryParse<Sex>(Convert.ToString(output.Rows[0].ItemArray[length]), out var sex))
-							{
-								return null;
-							}
-
-							length--;
-
-							var person = new Person(Convert.ToInt32(output.Rows[0].ItemArray[length - 5]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 4]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								(DateTime)output.Rows[0].ItemArray[length],
-								sex,
-								lang, loc, null, role);
-
-							length -= 6;
-
-							return new Session(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]),
-								person);
-						}
-						else
-						{
-							return null;
-						}
-					}
+					person =  LoginEmail(credentials);
 				}
+				else
+				{
+					person = LoginUsername(credentials);
+				}
+
+				return CreateToken(person);
 			}
-			catch (Exception e)
+
+			throw new NullReferenceException("Credentials object was null!");
+		}
+
+		private static Person LoginEmail(Credentials credentials)
+		{
+			List<SqlParameter> parameters = new List<SqlParameter>();
+			string query = "exec LoginEmail @email = #email";
+
+			parameters.Add((SqlParameter)(new SqlParameter("#email", SqlDbType.VarChar).Value = credentials.Identifier));
+
+			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(query, parameters.ToArray()));
+
+			if(BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
 			{
-				Console.WriteLine(e);
-				throw;
+				return output;
+			}
+			else
+			{
+				throw new UnauthorizedAccessException();
 			}
 		}
 
-		private static Session LoginUsername(string username, string password)
+		private static Person LoginUsername(Credentials credentials)
 		{
-			try
+			List<SqlParameter> parameters = new List<SqlParameter>();
+			string query = "exec LoginUsername @username = #username";
+
+			parameters.Add((SqlParameter)(new SqlParameter("#username", SqlDbType.VarChar).Value = credentials.Identifier));
+
+			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(query, parameters.ToArray()));
+
+			if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
 			{
-				using (var connection = new SqlConnection(Constants.ConnectionString))
-				{
-					Console.WriteLine(connection.State);
-
-					var sql = $"select s.* from VSession as s " +
-							  $"left join Person p " +
-							  $"on s.PersonID = p.ID " +
-							  $"where s.username = @username " +
-							  $"and p.password = @password";
-
-					using (var cmd = new SqlCommand(sql, connection))
-					{
-						cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
-						cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
-
-						connection.Open();
-
-						var reader = cmd.ExecuteReader();
-						var output = new DataTable();
-
-						output.Load(reader);
-
-						connection.Close();
-
-						if (output.Rows.Count == 1)
-						{
-							var length = output.Rows[0].ItemArray.Length - 1;
-
-							var role = new Role(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							var loc = new Location(Convert.ToInt32(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 4;
-
-							var lang = new Language(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]));
-
-							length -= 2;
-
-							if (!Enum.TryParse<Sex>(Convert.ToString(output.Rows[0].ItemArray[length]), out var sex))
-							{
-								return null;
-							}
-
-							length--;
-
-							var person = new Person(Convert.ToInt32(output.Rows[0].ItemArray[length - 5]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 4]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 3]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 2]),
-								Convert.ToString(output.Rows[0].ItemArray[length - 1]),
-								(DateTime)output.Rows[0].ItemArray[length],
-								sex,
-								lang, loc, null, role);
-
-							length -= 6;
-
-							return new Session(Convert.ToInt32(output.Rows[0].ItemArray[length - 1]),
-								Convert.ToString(output.Rows[0].ItemArray[length]),
-								person);
-						}
-						else
-						{
-							return null;
-						}
-					}
-				}
+				return output;
 			}
-			catch (Exception e)
+			else
 			{
-				Console.WriteLine(e);
-				throw;
+				throw new UnauthorizedAccessException();
 			}
+		}
+
+		private static string HashPassword(Person person)
+		{
+			string hash = BCrypt.Net.BCrypt.HashPassword(person.Hash);
+
+			return hash;
+		}
+
+		private static string CreateToken(Person person)
+		{
+			List<Claim> claims = new List<Claim>
+			{
+				new Claim(ClaimTypes.Name, person.Username)
+			};
+
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));
+
+			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+			var token = new JwtSecurityToken(
+					claims: claims,
+					expires: DateTime.UtcNow.AddDays(30),
+					signingCredentials: creds
+				);
+
+			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 	}
 }

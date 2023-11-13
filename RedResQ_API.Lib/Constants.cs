@@ -15,10 +15,10 @@ namespace RedResQ_API.Lib
 		{
 			var builder = new SqlConnectionStringBuilder
 			{
-				DataSource = "localhost",
-				UserID = "api",
-				Password = "password",
-				InitialCatalog = "RedResQ"
+				DataSource = Environment.GetEnvironmentVariable("API_DB_DS"),
+				UserID = Environment.GetEnvironmentVariable("API_DB_UID"),
+				Password = Environment.GetEnvironmentVariable("API_DB_PWD"),
+				InitialCatalog = Environment.GetEnvironmentVariable("API_DB_IC")
 			};
 
 			ConnectionString = builder.ConnectionString;

@@ -4,9 +4,14 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "API_DB_DS": "192.168.0.254",
+            "API_DB_UID": "api",
+            "API_DB_PWD": "password",
+            "API_DB_IC": "RedResQ_Test",
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
+        },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5195"
     },
@@ -14,9 +19,14 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "API_DB_DS": "192.168.0.254",
+            "API_DB_UID": "api",
+            "API_DB_PWD": "password",
+            "API_DB_IC": "RedResQ_Test",
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
+        },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7171;http://localhost:5195"
     },
@@ -24,9 +34,14 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "API_DB_DS": "192.168.0.254",
+            "API_DB_UID": "api",
+            "API_DB_PWD": "password",
+            "API_DB_IC": "RedResQ_Test",
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
+        }
     },
     "Docker": {
       "commandName": "Docker",
@@ -34,7 +49,8 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
         "environmentVariables": {
             "ASPNETCORE_URLS": "http://+:80",
-            "ASPNETCORE_ENVIRONMENT": "Development"
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkof"
         },
       "publishAllPorts": true
     }
