@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib
 {
 	internal static class SqlHandler
 	{
-		internal static DataTable ExecuteQuery(string query, SqlParameter[]? parameters = null)
+		internal static DataTable ExecuteQuery(string storedProcdedure, SqlParameter[]? parameters = null)
 		{
 			DataTable? output = null;
 
@@ -18,8 +18,10 @@ namespace RedResQ_API.Lib
 			{
 				Console.WriteLine(connection.State);
 
-				using (var cmd = new SqlCommand(query, connection))
+				using (var cmd = new SqlCommand(storedProcdedure, connection))
 				{
+					cmd.CommandType = CommandType.StoredProcedure;
+
 					if(parameters != null)
 					{
 						foreach (SqlParameter parameter in parameters)
@@ -34,21 +36,21 @@ namespace RedResQ_API.Lib
 
 					output!.Load(reader);
 
-					connection.Close();
+					return output;
 				}
 			}
-
-			return output;
 		}
 
-		internal static int ExecuteNonQuery(string query, SqlParameter[]? parameters = null)
+		internal static int ExecuteNonQuery(string storedProcdedure, SqlParameter[]? parameters = null)
 		{
 			using (var connection = new SqlConnection(Constants.ConnectionString))
 			{
 				Console.WriteLine(connection.State);
 
-				using (var cmd = new SqlCommand(query, connection))
+				using (var cmd = new SqlCommand(storedProcdedure, connection))
 				{
+					cmd.CommandType = CommandType.StoredProcedure;
+
 					if (parameters != null)
 					{
 						foreach (SqlParameter parameter in parameters)
@@ -60,8 +62,6 @@ namespace RedResQ_API.Lib
 					connection.Open();
 
 					int output = cmd.ExecuteNonQuery();
-
-					connection.Close();
 
 					return output;
 				}

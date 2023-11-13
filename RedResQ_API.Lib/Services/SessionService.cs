@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -20,23 +21,21 @@ namespace RedResQ_API.Lib.Services
 			if (person != null)
 			{
 				List<SqlParameter> parameters = new List<SqlParameter>();
-				string query = "exec Register @username = #username, @firstname = #firstname, @lastname = #lastname, " +
-					"@email = #email, @birthdate = #birthdate, @hash = #hash, @sex = #sex, @languageId = #languageId, " +
-					"@locationId = #locationId, @roleId = #roleId";
+				string storedProcedure = "Register";
 				person.Hash = HashPassword(person);
 
-				parameters.Add(new SqlParameter { ParameterName = "#username", SqlDbType = SqlDbType.VarChar, Value = person.Username } );
-				parameters.Add(new SqlParameter { ParameterName = "#firstname", SqlDbType = SqlDbType.VarChar, Value = person.FirstName });
-				parameters.Add(new SqlParameter { ParameterName = "#lastname", SqlDbType = SqlDbType.VarChar, Value = person.LastName });
-				parameters.Add(new SqlParameter { ParameterName = "#email", SqlDbType = SqlDbType.VarChar, Value = person.Email });
-				parameters.Add(new SqlParameter { ParameterName = "#birthdate", SqlDbType = SqlDbType.DateTime, Value = person.Birthdate.ToString("yyyy-MM-ddTHH:mm:ss") });
-				parameters.Add(new SqlParameter { ParameterName = "#hash", SqlDbType = SqlDbType.VarChar, Value = person.Hash });
-				parameters.Add(new SqlParameter { ParameterName = "#sex", SqlDbType = SqlDbType.VarChar, Value = person.Sex.ToString() });
-				parameters.Add(new SqlParameter { ParameterName = "#languageId", SqlDbType = SqlDbType.VarChar, Value = person.Language.Id });
-				parameters.Add(new SqlParameter { ParameterName = "#locationId", SqlDbType = SqlDbType.VarChar, Value = person.Location.Id });
-				parameters.Add(new SqlParameter { ParameterName = "#roleId", SqlDbType = SqlDbType.VarChar, Value = person.Role.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = person.Username } );
+				parameters.Add(new SqlParameter { ParameterName = "@firstname", SqlDbType = SqlDbType.VarChar, Value = person.FirstName });
+				parameters.Add(new SqlParameter { ParameterName = "@lastname", SqlDbType = SqlDbType.VarChar, Value = person.LastName });
+				parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = person.Email });
+				parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = person.Birthdate });
+				parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = person.Hash });
+				parameters.Add(new SqlParameter { ParameterName = "@sex", SqlDbType = SqlDbType.VarChar, Value = person.Sex.ToString() });
+				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.VarChar, Value = person.Language.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.VarChar, Value = person.Location.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.VarChar, Value = person.Role.Id });
 
-				SqlHandler.ExecuteNonQuery(query, parameters.ToArray());
+				SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
 				return CreateToken(person);
 			}
@@ -107,7 +106,7 @@ namespace RedResQ_API.Lib.Services
 		{
 			string hash = BCrypt.Net.BCrypt.HashPassword(person.Hash);
 
-			return person.Hash;
+			return hash;
 		}
 
 		private static string CreateToken(Person person)

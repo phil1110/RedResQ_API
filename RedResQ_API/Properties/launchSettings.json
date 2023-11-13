@@ -10,7 +10,7 @@
             "API_DB_UID": "api",
             "API_DB_PWD": "password",
             "API_DB_IC": "RedResQ_Test",
-            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkof"
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
         },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5195"
@@ -25,7 +25,7 @@
             "API_DB_UID": "api",
             "API_DB_PWD": "password",
             "API_DB_IC": "RedResQ_Test",
-            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkof"
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
         },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7171;http://localhost:5195"
@@ -40,7 +40,7 @@
             "API_DB_UID": "api",
             "API_DB_PWD": "password",
             "API_DB_IC": "RedResQ_Test",
-            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkof"
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
         }
     },
     "Docker": {
