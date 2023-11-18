@@ -21,7 +21,7 @@
       "launchUrl": "swagger",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
-            "API_DB_DS": "192.168.8.254",
+            "API_DB_DS": "192.168.0.254",
             "API_DB_UID": "api",
             "API_DB_PWD": "password",
             "API_DB_IC": "RedResQ_Test",

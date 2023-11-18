@@ -18,14 +18,12 @@ namespace RedResQ_API.Controllers
 		[Authorize]
 		public ActionResult<Article> First()
 		{
-			JwtClaims claims = GetClaims();
+			string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string? username = User.FindFirstValue(ClaimTypes.Name);
+			string? email = User.FindFirstValue(ClaimTypes.Email);
+			int? Role = Convert.ToInt32(User.FindFirstValue(ClaimTypes.Role));
 
-			if(claims.Username != "string")
-			{
-				return Ok("Hello!" + claims);
-			}
-
-			return NotFound(claims);
+			return NotFound();
 		}
 
 		private JwtClaims GetClaims()
