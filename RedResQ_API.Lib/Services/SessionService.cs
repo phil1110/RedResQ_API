@@ -45,20 +45,31 @@ namespace RedResQ_API.Lib.Services
 
 		public static string Login(Credentials credentials)
 		{
-			if(credentials != null)
+			try
 			{
-				Person person;
-
-				if (credentials.Identifier.Contains("@"))
+				if (credentials != null)
 				{
-					person =  LoginEmail(credentials);
-				}
-				else
-				{
-					person = LoginUsername(credentials);
-				}
+					Person person;
 
-				return CreateToken(person);
+					if (credentials.Identifier.Contains("@"))
+					{
+						person = LoginEmail(credentials);
+					}
+					else
+					{
+						person = LoginUsername(credentials);
+					}
+
+					return CreateToken(person);
+				}
+			}
+			catch (KeyNotFoundException)
+			{
+				return null!;
+			}
+			catch (Exception ex)
+			{
+				return ex.Message;
 			}
 
 			throw new NullReferenceException("Credentials object was null!");
@@ -69,7 +80,7 @@ namespace RedResQ_API.Lib.Services
 			List<SqlParameter> parameters = new List<SqlParameter>();
 			string storedProcedure = "LoginEmail";
 
-			parameters.Add((SqlParameter)(new SqlParameter("@email", SqlDbType.VarChar).Value = credentials.Identifier));
+			parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
 			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
 
@@ -88,7 +99,7 @@ namespace RedResQ_API.Lib.Services
 			List<SqlParameter> parameters = new List<SqlParameter>();
 			string storedProcedure = "LoginUsername";
 
-			parameters.Add((SqlParameter)(new SqlParameter("@username", SqlDbType.VarChar).Value = credentials.Identifier));
+				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
 			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
 
