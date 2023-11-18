@@ -16,8 +16,10 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpGet("login")]
-		public ActionResult<Person> Login(Credentials credentials)
+		public ActionResult<Person> Login(string id, string secret)
 		{
+			Credentials credentials = new Credentials(id, secret);
+
 			try
 			{
 				var output = SessionService.Login(credentials)!;
