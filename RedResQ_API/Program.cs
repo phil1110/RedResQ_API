@@ -1,6 +1,9 @@
+global using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace RedResQ_API
 {
@@ -29,7 +32,17 @@ namespace RedResQ_API
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
+			builder.Services.AddSwaggerGen(options =>
+			{
+				options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+				{
+					In = ParameterLocation.Header,
+					Name = "Authorization",
+					Type = SecuritySchemeType.ApiKey
+				});
+
+				options.OperationFilter<SecurityRequirementsOperationFilter>();
+			});
 
 			var app = builder.Build();
 
@@ -43,7 +56,6 @@ namespace RedResQ_API
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();
-
 
 			app.MapControllers();
 

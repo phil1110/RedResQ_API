@@ -115,6 +115,7 @@ namespace RedResQ_API.Lib.Services
 			{
 				new Claim(ClaimTypes.NameIdentifier, ""),
 				new Claim(ClaimTypes.Name, person.Username),
+				new Claim(ClaimTypes.Email, person.Email),
 				new Claim(ClaimTypes.Role, $"{person.Role.Id}")
 			};
 
