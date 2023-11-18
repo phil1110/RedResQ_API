@@ -12,7 +12,7 @@ namespace RedResQ_API.Lib
 	{
 		internal static DataTable ExecuteQuery(string storedProcdedure, SqlParameter[]? parameters = null)
 		{
-			DataTable? output = null;
+			DataTable output = new DataTable();
 
 			using (var connection = new SqlConnection(Constants.ConnectionString))
 			{
@@ -34,7 +34,7 @@ namespace RedResQ_API.Lib
 
 					var reader = cmd.ExecuteReader();
 
-					output!.Load(reader);
+					output.Load(reader);
 
 					return output;
 				}

@@ -45,20 +45,31 @@ namespace RedResQ_API.Lib.Services
 
 		public static string Login(Credentials credentials)
 		{
-			if(credentials != null)
+			try
 			{
-				Person person;
-
-				if (credentials.Identifier.Contains("@"))
+				if (credentials != null)
 				{
-					person =  LoginEmail(credentials);
-				}
-				else
-				{
-					person = LoginUsername(credentials);
-				}
+					Person person;
 
-				return CreateToken(person);
+					if (credentials.Identifier.Contains("@"))
+					{
+						person = LoginEmail(credentials);
+					}
+					else
+					{
+						person = LoginUsername(credentials);
+					}
+
+					return CreateToken(person);
+				}
+			}
+			catch (KeyNotFoundException)
+			{
+				return null!;
+			}
+			catch (Exception ex)
+			{
+				return ex.Message;
 			}
 
 			throw new NullReferenceException("Credentials object was null!");
@@ -67,11 +78,11 @@ namespace RedResQ_API.Lib.Services
 		private static Person LoginEmail(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
-			string query = "exec LoginEmail @email = #email";
+			string storedProcedure = "LoginEmail";
 
-			parameters.Add((SqlParameter)(new SqlParameter("#email", SqlDbType.VarChar).Value = credentials.Identifier));
+			parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
-			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(query, parameters.ToArray()));
+			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
 
 			if(BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
 			{
@@ -86,11 +97,11 @@ namespace RedResQ_API.Lib.Services
 		private static Person LoginUsername(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
-			string query = "exec LoginUsername @username = #username";
+			string storedProcedure = "LoginUsername";
 
-			parameters.Add((SqlParameter)(new SqlParameter("#username", SqlDbType.VarChar).Value = credentials.Identifier));
+				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
-			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(query, parameters.ToArray()));
+			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
 
 			if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
 			{
@@ -113,7 +124,10 @@ namespace RedResQ_API.Lib.Services
 		{
 			List<Claim> claims = new List<Claim>
 			{
-				new Claim(ClaimTypes.Name, person.Username)
+				new Claim(ClaimTypes.NameIdentifier, ""),
+				new Claim(ClaimTypes.Name, person.Username),
+				new Claim(ClaimTypes.Email, person.Email),
+				new Claim(ClaimTypes.Role, $"{person.Role.Id}")
 			};
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));
