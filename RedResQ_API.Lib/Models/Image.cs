@@ -8,6 +8,22 @@ namespace RedResQ_API.Lib.Models
 {
 	public class Image
 	{
-		// WIP - Not yet implemented
+		#region Constructor
+
+		public Image(int id, string source)
+		{
+			Id = id;
+			Source = source;
+		}
+
+		#endregion
+
+		#region Properties
+
+		public int Id { get; private set; }
+
+		public string Source { get; private set; }
+
+		#endregion
 	}
 }
