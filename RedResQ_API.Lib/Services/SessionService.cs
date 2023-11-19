@@ -21,7 +21,7 @@ namespace RedResQ_API.Lib.Services
 			if (person != null)
 			{
 				List<SqlParameter> parameters = new List<SqlParameter>();
-				string storedProcedure = "Register";
+				string storedProcedure = "SP_Se_Register";
 				person.Hash = HashPassword(person);
 
 				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = person.Username } );
@@ -78,7 +78,7 @@ namespace RedResQ_API.Lib.Services
 		private static Person LoginEmail(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "LoginEmail";
+			string storedProcedure = "SP_Se_LoginEmail";
 
 			parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
@@ -97,7 +97,7 @@ namespace RedResQ_API.Lib.Services
 		private static Person LoginUsername(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "LoginUsername";
+			string storedProcedure = "SP_Se_LoginUsername";
 
 				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
