@@ -17,7 +17,7 @@ namespace RedResQ_API.Lib.Models
 		private string _email;
 		private DateTime _birthdate;
 		private string _hash;
-		private Sex _sex;
+		private int _gender;
 		private int _language;
 		private int _location;
 		private int _role;
@@ -27,7 +27,7 @@ namespace RedResQ_API.Lib.Models
 		#region Constructor
 
 		public Person(string username, string firstName, string lastName, string email, DateTime birthdate,
-			string hash, Sex sex, int language, int location, int role)
+			string hash, int gender, int language, int location, int role)
 		{
 			Username = username;
 			FirstName = firstName;
@@ -35,7 +35,7 @@ namespace RedResQ_API.Lib.Models
 			Email = email;
 			Birthdate = birthdate;
 			Hash = hash;
-			Sex = sex;
+			Gender = gender;
 			Language = language;
 			Location = location;
 			Role = role;
@@ -81,10 +81,10 @@ namespace RedResQ_API.Lib.Models
 			internal set => _hash = value;
 		}
 
-		public Sex Sex
+		public int Gender
 		{
-			get => _sex;
-			private set => _sex = value;
+			get => _gender;
+			private set => _gender = value;
 		}
 
 		public int Language
@@ -114,29 +114,17 @@ namespace RedResQ_API.Lib.Models
 			int length = row.ItemArray.Length - 1;
 
 			int role = Convert.ToInt32(row.ItemArray[length--]);
-
 			int loc = Convert.ToInt32(row.ItemArray[length--]);
-
 			int lang = Convert.ToInt32(row.ItemArray[length--]);
-
-			if (!Enum.TryParse(Convert.ToString(row.ItemArray[length--]), out Sex sex))
-			{
-				return null!;
-			}
-
+			int gender = Convert.ToInt32(row.ItemArray[length--]);
 			string hash = Convert.ToString(row.ItemArray[length--])!;
-
 			DateTime date = (DateTime)row.ItemArray[length--]!;
-
 			string email = Convert.ToString(row.ItemArray[length--])!;
-
 			string lastName = Convert.ToString(row.ItemArray[length--])!;
-
 			string firstName = Convert.ToString(row.ItemArray[length--])!;
-
 			string username = Convert.ToString(row.ItemArray[length--])!;
 
-			return new Person(username, firstName, lastName, email, date, hash, sex, lang, loc, role);
+			return new Person(username, firstName, lastName, email, date, hash, gender, lang, loc, role);
 		}
 
 		#endregion
