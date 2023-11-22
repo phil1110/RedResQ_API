@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,38 @@ namespace RedResQ_API.Lib.Models
 		public Image Image { get; private set; }
 
 		public Location Location { get; private set; }
+
+		#endregion
+
+		#region Methods
+
+		public static Article ConvertToArticle(DataRow row)
+		{
+			int length = row.ItemArray.Length - 1;
+
+			string postalCode = Convert.ToString(row.ItemArray[length--])!;
+			string city = Convert.ToString(row.ItemArray[length--])!;
+			string country = Convert.ToString(row.ItemArray[length--])!;
+			int locId = Convert.ToInt32(row.ItemArray[length--])!;
+
+			string source = Convert.ToString(row.ItemArray[length--])!;
+			int imageId = Convert.ToInt32(row.ItemArray[length--])!;
+
+			string langName = Convert.ToString(row.ItemArray[length--])!;
+			int langId = Convert.ToInt32(row.ItemArray[length--])!;
+
+			DateTime date = (DateTime)row.ItemArray[length--]!;
+			string author = Convert.ToString(row.ItemArray[length--])!;
+			string content = Convert.ToString(row.ItemArray[length--])!;
+			string title = Convert.ToString(row.ItemArray[length--])!;
+			int id = Convert.ToInt32(row.ItemArray[length--])!;
+
+			Location loc = new Location(locId, country, city, postalCode);
+			Image img = new Image(imageId, source);
+			Language lang = new Language(langId, langName);
+
+			return new Article(id, title, content, author, date, lang, img, loc);
+		}
 
 		#endregion
 	}
