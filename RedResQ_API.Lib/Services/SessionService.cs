@@ -147,7 +147,7 @@ namespace RedResQ_API.Lib.Services
 				new Claim(ClaimTypes.Email, person.Email),
 				new Claim(ClaimTypes.Role, $"{person.Role}")
 			};
-
+			 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));
 
 			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
