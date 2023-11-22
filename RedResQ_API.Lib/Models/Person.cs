@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Instance variables
 
-		private int _id;
 		private string _username;
 		private string _firstName;
 		private string _lastName;
@@ -18,19 +18,18 @@ namespace RedResQ_API.Lib.Models
 		private DateTime _birthdate;
 		private string _hash;
 		private Sex _sex;
-		private Language _language;
-		private Location _location;
-		private Settings _settings;
-		private Role _role;
+		private int _language;
+		private int _location;
+		private int _settings;
+		private int _role;
 
 		#endregion
 
 		#region Constructor
 
-		public Person(int id, string username, string firstName, string lastName, string email, DateTime birthdate,
-			string hash, Sex sex, Language language, Location location, Settings settings, Role role)
+		public Person(string username, string firstName, string lastName, string email, DateTime birthdate,
+			string hash, Sex sex, int language, int location, int settings, int role)
 		{
-			Id = id;
 			Username = username;
 			FirstName = firstName;
 			LastName = lastName;
@@ -47,12 +46,6 @@ namespace RedResQ_API.Lib.Models
 		#endregion
 
 		#region Properties
-
-		public int Id
-		{
-			get => _id;
-			private set => _id = value;
-		}
 
 		public string Username
 		{
@@ -96,28 +89,62 @@ namespace RedResQ_API.Lib.Models
 			private set => _sex = value;
 		}
 
-		public Language Language
+		public int Language
 		{
 			get => _language;
 			private set => _language = value;
 		}
 
-		public Location Location
+		public int Location
 		{
 			get => _location;
 			private set => _location = value;
 		}
 
-		public Settings Settings
+		public int Settings
 		{
 			get => _settings;
 			private set => _settings = value;
 		}
 
-		public Role Role
+		public int Role
 		{
 			get => _role;
 			private set => _role = value;
+		}
+
+		#endregion
+
+		#region Methods
+
+		internal static Person ConvertToPerson(DataRow row)
+		{
+			int length = row.ItemArray.Length - 1;
+
+			int role = Convert.ToInt32(row.ItemArray[length--]);
+
+			int loc = Convert.ToInt32(row.ItemArray[length--]);
+
+			int lang = Convert.ToInt32(row.ItemArray[length--]);
+
+			if (!Enum.TryParse(Convert.ToString(row.ItemArray[length--]), out Sex sex))
+			{
+				return null!;
+			}
+
+			string hash = Convert.ToString(row.ItemArray[length--])!;
+
+			DateTime date = (DateTime)row.ItemArray[length--]!;
+
+			string email = Convert.ToString(row.ItemArray[length--])!;
+
+			string lastName = Convert.ToString(row.ItemArray[length--])!;
+
+			string firstName = Convert.ToString(row.ItemArray[length--])!;
+
+			string username = Convert.ToString(row.ItemArray[length--])!;
+
+			return new Person(username, firstName, lastName, email, date, hash, sex, lang, loc, -1,role);
 		}
 
 		#endregion

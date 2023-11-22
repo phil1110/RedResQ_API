@@ -31,9 +31,9 @@ namespace RedResQ_API.Lib.Services
 				parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = person.Birthdate });
 				parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = person.Hash });
 				parameters.Add(new SqlParameter { ParameterName = "@sex", SqlDbType = SqlDbType.VarChar, Value = person.Sex.ToString() });
-				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.VarChar, Value = person.Language.Id });
-				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.VarChar, Value = person.Location.Id });
-				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.VarChar, Value = person.Role.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.VarChar, Value = person.Language });
+				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.VarChar, Value = person.Location });
+				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.VarChar, Value = person.Role });
 
 				SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
@@ -82,15 +82,24 @@ namespace RedResQ_API.Lib.Services
 
 			parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
-			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
+			DataTable person = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if(BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
+			if(person.Rows.Count == 1)
 			{
-				return output;
+				Person output = Person.ConvertToPerson(person.Rows[0]);
+
+				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
+				{
+					return output;
+				}
+				else
+				{
+					throw new UnauthorizedAccessException();
+				}
 			}
 			else
 			{
-				throw new UnauthorizedAccessException();
+				throw new Exception("User was not found!");
 			}
 		}
 
@@ -99,17 +108,26 @@ namespace RedResQ_API.Lib.Services
 			List<SqlParameter> parameters = new List<SqlParameter>();
 			string storedProcedure = "SP_Se_LoginUsername";
 
-				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
+			parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
-			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
+			DataTable person = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
+			if (person.Rows.Count == 1)
 			{
-				return output;
+				Person output = Person.ConvertToPerson(person.Rows[0]);
+
+				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
+				{
+					return output;
+				}
+				else
+				{
+					throw new UnauthorizedAccessException();
+				}
 			}
 			else
 			{
-				throw new UnauthorizedAccessException();
+				throw new Exception("User was not found!");
 			}
 		}
 
@@ -127,7 +145,7 @@ namespace RedResQ_API.Lib.Services
 				new Claim(ClaimTypes.NameIdentifier, ""),
 				new Claim(ClaimTypes.Name, person.Username),
 				new Claim(ClaimTypes.Email, person.Email),
-				new Claim(ClaimTypes.Role, $"{person.Role.Id}")
+				new Claim(ClaimTypes.Role, $"{person.Role}")
 			};
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));
