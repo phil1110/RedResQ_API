@@ -20,7 +20,6 @@ namespace RedResQ_API.Lib.Models
 		private Sex _sex;
 		private int _language;
 		private int _location;
-		private int _settings;
 		private int _role;
 
 		#endregion
@@ -28,7 +27,7 @@ namespace RedResQ_API.Lib.Models
 		#region Constructor
 
 		public Person(string username, string firstName, string lastName, string email, DateTime birthdate,
-			string hash, Sex sex, int language, int location, int settings, int role)
+			string hash, Sex sex, int language, int location, int role)
 		{
 			Username = username;
 			FirstName = firstName;
@@ -39,7 +38,6 @@ namespace RedResQ_API.Lib.Models
 			Sex = sex;
 			Language = language;
 			Location = location;
-			Settings = settings;
 			Role = role;
 		}
 
@@ -101,12 +99,6 @@ namespace RedResQ_API.Lib.Models
 			private set => _location = value;
 		}
 
-		public int Settings
-		{
-			get => _settings;
-			private set => _settings = value;
-		}
-
 		public int Role
 		{
 			get => _role;
@@ -144,7 +136,7 @@ namespace RedResQ_API.Lib.Models
 
 			string username = Convert.ToString(row.ItemArray[length--])!;
 
-			return new Person(username, firstName, lastName, email, date, hash, sex, lang, loc, -1,role);
+			return new Person(username, firstName, lastName, email, date, hash, sex, lang, loc, role);
 		}
 
 		#endregion
