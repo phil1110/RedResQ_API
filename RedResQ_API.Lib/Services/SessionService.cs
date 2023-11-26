@@ -30,10 +30,10 @@ namespace RedResQ_API.Lib.Services
 				parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = person.Email });
 				parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = person.Birthdate });
 				parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = person.Hash });
-				parameters.Add(new SqlParameter { ParameterName = "@gender", SqlDbType = SqlDbType.Int, Value = person.Gender });
-				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.VarChar, Value = person.Language });
-				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.VarChar, Value = person.Location });
-				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.VarChar, Value = person.Role });
+				parameters.Add(new SqlParameter { ParameterName = "@gender", SqlDbType = SqlDbType.BigInt, Value = person.Gender });
+				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = person.Language });
+				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.BigInt, Value = person.Location });
+				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = person.Role });
 
 				SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
