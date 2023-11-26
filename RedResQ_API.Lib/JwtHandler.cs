@@ -13,7 +13,7 @@ namespace RedResQ_API.Lib
 {
 	public class JwtHandler
 	{
-		public static string CreateToken(Person person)
+		public static string CreateToken(User person)
 		{
 			List<Claim> claims = new List<Claim>
 			{
