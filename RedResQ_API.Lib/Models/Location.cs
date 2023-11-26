@@ -10,12 +10,12 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Location(long id, string country, string city, string postalCode)
+		public Location(long id, string city, string postalCode, Country country)
 		{
 			Id = id;
-			Country = country;
 			City = city;
 			PostalCode = postalCode;
+			Country = country;
 		}
 
 		#endregion
@@ -24,11 +24,11 @@ namespace RedResQ_API.Lib.Models
 
 		public long Id { get; private set; }
 
-		public string Country { get; private set; }
-
 		public string City { get; private set; }
 
 		public string PostalCode { get; private set; }
+
+		public Country Country { get; private set; }
 
 		#endregion
 	}

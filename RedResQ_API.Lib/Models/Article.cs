@@ -52,9 +52,11 @@ namespace RedResQ_API.Lib.Models
 		{
 			int length = row.ItemArray.Length - 1;
 
+			string countryName = Convert.ToString(row.ItemArray[length--])!;
+			long coId = Convert.ToInt64(row.ItemArray[length--])!;
+
 			string postalCode = Convert.ToString(row.ItemArray[length--])!;
 			string city = Convert.ToString(row.ItemArray[length--])!;
-			string country = Convert.ToString(row.ItemArray[length--])!;
 			long locId = Convert.ToInt64(row.ItemArray[length--])!;
 
 			string source = Convert.ToString(row.ItemArray[length--])!;
@@ -69,7 +71,8 @@ namespace RedResQ_API.Lib.Models
 			string title = Convert.ToString(row.ItemArray[length--])!;
 			long id = Convert.ToInt64(row.ItemArray[length--])!;
 
-			Location loc = new Location(locId, country, city, postalCode);
+			Country co = new Country(coId, countryName);
+			Location loc = new Location(locId, city, postalCode, co);
 			Image img = new Image(imageId, source);
 			Language lang = new Language(langId, langName);
 
