@@ -10,10 +10,6 @@ namespace RedResQ_API.Controllers
 	[Route("[controller]")]
 	public class SessionController : ControllerBase
 	{
-		public SessionController()
-		{
-
-		}
 
 		[HttpGet("login")]
 		public ActionResult<Person> Login(string id, string secret)
