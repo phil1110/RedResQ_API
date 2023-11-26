@@ -16,13 +16,13 @@ namespace RedResQ_API.Lib.Services
 {
 	public static class SessionService
 	{
-		public static string Register(Person person)
+		public static string Register(RawUser person)
 		{
 			if (person != null)
 			{
 				List<SqlParameter> parameters = new List<SqlParameter>();
 				string storedProcedure = "SP_Se_Register";
-				person.Hash = HashPassword(person);
+				person.Hash = HashPassword(person.Hash);
 
 				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = person.Username } );
 				parameters.Add(new SqlParameter { ParameterName = "@firstname", SqlDbType = SqlDbType.VarChar, Value = person.FirstName });
@@ -49,7 +49,7 @@ namespace RedResQ_API.Lib.Services
 			{
 				if (credentials != null)
 				{
-					Person person;
+					User person;
 
 					if (credentials.Identifier.Contains("@"))
 					{
@@ -75,7 +75,7 @@ namespace RedResQ_API.Lib.Services
 			throw new NullReferenceException("Credentials object was null!");
 		}
 
-		private static Person LoginEmail(Credentials credentials)
+		private static User LoginEmail(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
 			string storedProcedure = "SP_Se_LoginEmail";
@@ -86,7 +86,7 @@ namespace RedResQ_API.Lib.Services
 
 			if(person.Rows.Count == 1)
 			{
-				Person output = Person.ConvertToPerson(person.Rows[0]);
+				User output = User.ConvertToPerson(person.Rows[0]);
 
 				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
 				{
@@ -103,7 +103,7 @@ namespace RedResQ_API.Lib.Services
 			}
 		}
 
-		private static Person LoginUsername(Credentials credentials)
+		private static User LoginUsername(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
 			string storedProcedure = "SP_Se_LoginUsername";
@@ -114,7 +114,7 @@ namespace RedResQ_API.Lib.Services
 
 			if (person.Rows.Count == 1)
 			{
-				Person output = Person.ConvertToPerson(person.Rows[0]);
+				User output = User.ConvertToPerson(person.Rows[0]);
 
 				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
 				{
@@ -131,11 +131,9 @@ namespace RedResQ_API.Lib.Services
 			}
 		}
 
-		private static string HashPassword(Person person)
+		private static string HashPassword(string hash)
 		{
-			string hash = BCrypt.Net.BCrypt.HashPassword(person.Hash);
-
-			return hash;
+			return BCrypt.Net.BCrypt.HashPassword(hash);
 		}
 	}
 }

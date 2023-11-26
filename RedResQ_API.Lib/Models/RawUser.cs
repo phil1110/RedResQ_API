@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class Person
+	public class RawUser
 	{
 		#region Instance variables
 
@@ -26,7 +26,7 @@ namespace RedResQ_API.Lib.Models
 
 		#region Constructor
 
-		public Person(string username, string firstName, string lastName, string email, DateTime birthdate,
+		public RawUser(string username, string firstName, string lastName, string email, DateTime birthdate,
 			string hash, long gender, long language, long location, long role)
 		{
 			Username = username;
@@ -103,28 +103,6 @@ namespace RedResQ_API.Lib.Models
 		{
 			get => _role;
 			private set => _role = value;
-		}
-
-		#endregion
-
-		#region Methods
-
-		internal static Person ConvertToPerson(DataRow row)
-		{
-			int length = row.ItemArray.Length - 1;
-
-			long role = Convert.ToInt64(row.ItemArray[length--]);
-			long loc = Convert.ToInt64(row.ItemArray[length--]);
-			long lang = Convert.ToInt64(row.ItemArray[length--]);
-			long gender = Convert.ToInt64(row.ItemArray[length--]);
-			string hash = Convert.ToString(row.ItemArray[length--])!;
-			DateTime date = (DateTime)row.ItemArray[length--]!;
-			string email = Convert.ToString(row.ItemArray[length--])!;
-			string lastName = Convert.ToString(row.ItemArray[length--])!;
-			string firstName = Convert.ToString(row.ItemArray[length--])!;
-			string username = Convert.ToString(row.ItemArray[length--])!;
-
-			return new Person(username, firstName, lastName, email, date, hash, gender, lang, loc, role);
 		}
 
 		#endregion

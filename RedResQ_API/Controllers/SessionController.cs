@@ -12,7 +12,7 @@ namespace RedResQ_API.Controllers
 	{
 
 		[HttpGet("login")]
-		public ActionResult<Person> Login(string id, string secret)
+		public ActionResult<User> Login(string id, string secret)
 		{
 			Credentials credentials = new Credentials(id, secret);
 
@@ -36,7 +36,7 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpPost("register")]
-		public ActionResult<Person> Register(Person person)
+		public ActionResult<User> Register(User person)
 		{
 			try
 			{
