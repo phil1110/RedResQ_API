@@ -11,7 +11,7 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Article(int id, string title, string content, string author, DateTime date, Language language,
+		public Article(long id, string title, string content, string author, DateTime date, Language language,
 			Image image, Location location)
 		{
 			Id = id;
@@ -28,7 +28,7 @@ namespace RedResQ_API.Lib.Models
 
 		#region Properties
 
-		public int Id { get; private set; }
+		public long Id { get; private set; }
 
 		public string Title { get; private set; }
 
@@ -55,19 +55,19 @@ namespace RedResQ_API.Lib.Models
 			string postalCode = Convert.ToString(row.ItemArray[length--])!;
 			string city = Convert.ToString(row.ItemArray[length--])!;
 			string country = Convert.ToString(row.ItemArray[length--])!;
-			int locId = Convert.ToInt32(row.ItemArray[length--])!;
+			long locId = Convert.ToInt64(row.ItemArray[length--])!;
 
 			string source = Convert.ToString(row.ItemArray[length--])!;
-			int imageId = Convert.ToInt32(row.ItemArray[length--])!;
+			long imageId = Convert.ToInt64(row.ItemArray[length--])!;
 
 			string langName = Convert.ToString(row.ItemArray[length--])!;
-			int langId = Convert.ToInt32(row.ItemArray[length--])!;
+			long langId = Convert.ToInt64(row.ItemArray[length--])!;
 
 			DateTime date = (DateTime)row.ItemArray[length--]!;
 			string author = Convert.ToString(row.ItemArray[length--])!;
 			string content = Convert.ToString(row.ItemArray[length--])!;
 			string title = Convert.ToString(row.ItemArray[length--])!;
-			int id = Convert.ToInt32(row.ItemArray[length--])!;
+			long id = Convert.ToInt64(row.ItemArray[length--])!;
 
 			Location loc = new Location(locId, country, city, postalCode);
 			Image img = new Image(imageId, source);

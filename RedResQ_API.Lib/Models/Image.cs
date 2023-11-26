@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Image(int id, string source)
+		public Image(long id, string source)
 		{
 			Id = id;
 			Source = source;
@@ -20,7 +20,7 @@ namespace RedResQ_API.Lib.Models
 
 		#region Properties
 
-		public int Id { get; private set; }
+		public long Id { get; private set; }
 
 		public string Source { get; private set; }
 

@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public JwtClaims(string id, string username, string email, int role)
+		public JwtClaims(string id, string username, string email, long role)
 		{
 			Id = id;
 			Username = username;
@@ -28,7 +28,7 @@ namespace RedResQ_API.Lib.Models
 
 		public string Email { get; private set; }
 
-		public int Role { get; private set; }
+		public long Role { get; private set; }
 
 		#endregion
 	}

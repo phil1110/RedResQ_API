@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Language(int id, string name)
+		public Language(long id, string name)
 		{
 			Id = id;
 			Name = name;
@@ -20,7 +20,7 @@ namespace RedResQ_API.Lib.Models
 
 		#region Properties
 
-		public int Id { get; private set; }
+		public long Id { get; private set; }
 
 		public string Name { get; private set; }
 

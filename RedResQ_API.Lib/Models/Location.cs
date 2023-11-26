@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Location(int id, string country, string city, string postalCode)
+		public Location(long id, string country, string city, string postalCode)
 		{
 			Id = id;
 			Country = country;
@@ -22,7 +22,7 @@ namespace RedResQ_API.Lib.Models
 
 		#region Properties
 
-		public int Id { get; private set; }
+		public long Id { get; private set; }
 
 		public string Country { get; private set; }
 

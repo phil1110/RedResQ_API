@@ -17,17 +17,17 @@ namespace RedResQ_API.Lib.Models
 		private string _email;
 		private DateTime _birthdate;
 		private string _hash;
-		private int _gender;
-		private int _language;
-		private int _location;
-		private int _role;
+		private long _gender;
+		private long _language;
+		private long _location;
+		private long _role;
 
 		#endregion
 
 		#region Constructor
 
 		public Person(string username, string firstName, string lastName, string email, DateTime birthdate,
-			string hash, int gender, int language, int location, int role)
+			string hash, long gender, long language, long location, long role)
 		{
 			Username = username;
 			FirstName = firstName;
@@ -81,25 +81,25 @@ namespace RedResQ_API.Lib.Models
 			internal set => _hash = value;
 		}
 
-		public int Gender
+		public long Gender
 		{
 			get => _gender;
 			private set => _gender = value;
 		}
 
-		public int Language
+		public long Language
 		{
 			get => _language;
 			private set => _language = value;
 		}
 
-		public int Location
+		public long Location
 		{
 			get => _location;
 			private set => _location = value;
 		}
 
-		public int Role
+		public long Role
 		{
 			get => _role;
 			private set => _role = value;
@@ -113,10 +113,10 @@ namespace RedResQ_API.Lib.Models
 		{
 			int length = row.ItemArray.Length - 1;
 
-			int role = Convert.ToInt32(row.ItemArray[length--]);
-			int loc = Convert.ToInt32(row.ItemArray[length--]);
-			int lang = Convert.ToInt32(row.ItemArray[length--]);
-			int gender = Convert.ToInt32(row.ItemArray[length--]);
+			long role = Convert.ToInt64(row.ItemArray[length--]);
+			long loc = Convert.ToInt64(row.ItemArray[length--]);
+			long lang = Convert.ToInt64(row.ItemArray[length--]);
+			long gender = Convert.ToInt64(row.ItemArray[length--]);
 			string hash = Convert.ToString(row.ItemArray[length--])!;
 			DateTime date = (DateTime)row.ItemArray[length--]!;
 			string email = Convert.ToString(row.ItemArray[length--])!;

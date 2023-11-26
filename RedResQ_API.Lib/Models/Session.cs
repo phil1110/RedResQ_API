@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Session(int id, string deviceId, Person person)
+		public Session(long id, string deviceId, Person person)
 		{
 			Id = id;
 			DeviceId = deviceId;
@@ -21,7 +21,7 @@ namespace RedResQ_API.Lib.Models
 
 		#region Properties
 
-		public int Id { get; private set; }
+		public long Id { get; private set; }
 
 		public string DeviceId { get; private set; }
 
