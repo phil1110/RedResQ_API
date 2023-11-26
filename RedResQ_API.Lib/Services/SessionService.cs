@@ -37,7 +37,7 @@ namespace RedResQ_API.Lib.Services
 
 				SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
-				return CreateToken(person);
+				return JwtHandler.CreateToken(person);
 			}
 
 			throw new NullReferenceException("Person object was null!");
@@ -60,7 +60,7 @@ namespace RedResQ_API.Lib.Services
 						person = LoginUsername(credentials);
 					}
 
-					return CreateToken(person);
+					return JwtHandler.CreateToken(person);
 				}
 			}
 			catch (KeyNotFoundException)
@@ -136,29 +136,6 @@ namespace RedResQ_API.Lib.Services
 			string hash = BCrypt.Net.BCrypt.HashPassword(person.Hash);
 
 			return hash;
-		}
-
-		private static string CreateToken(Person person)
-		{
-			List<Claim> claims = new List<Claim>
-			{
-				new Claim(ClaimTypes.NameIdentifier, ""),
-				new Claim(ClaimTypes.Name, person.Username),
-				new Claim(ClaimTypes.Email, person.Email),
-				new Claim(ClaimTypes.Role, $"{person.Role}")
-			};
-			 
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));
-
-			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-			var token = new JwtSecurityToken(
-					claims: claims,
-					expires: DateTime.UtcNow.AddDays(30),
-					signingCredentials: creds
-				);
-
-			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 	}
 }

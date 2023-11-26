@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RedResQ_API.Lib;
 using RedResQ_API.Lib.Models;
 using RedResQ_API.Lib.Services;
+using System.Text.Json.Serialization;
 
 namespace RedResQ_API.Controllers
 {
@@ -18,11 +19,11 @@ namespace RedResQ_API.Controllers
 		[Authorize]
 		public ActionResult<Article> First()
 		{
-			JwtClaims claims = GetClaims();
+			JwtClaims claims = JwtHandler.GetClaims(this);
 
 			if (claims.Username != "string")
 			{
-				return Ok("Hello!" + claims);
+				return Ok(claims);
 			}
 
 			return NotFound(claims);
