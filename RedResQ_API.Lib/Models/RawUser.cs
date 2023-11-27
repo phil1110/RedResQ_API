@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class RawUser
+	public class RawUser : IUser
 	{
 		#region Instance variables
 
@@ -38,6 +39,7 @@ namespace RedResQ_API.Lib.Models
 			Gender = gender;
 			Language = language;
 			Location = location;
+			Role = null!;
 		}
 
 		#endregion
@@ -96,6 +98,11 @@ namespace RedResQ_API.Lib.Models
 		{
 			get => _location;
 			private set => _location = value;
+		}
+
+		public Role Role
+		{
+			get;
 		}
 
 		#endregion

@@ -149,9 +149,9 @@ namespace RedResQ_API.Lib.Services
 				parameters.Add(new SqlParameter { ParameterName = "@content", SqlDbType = SqlDbType.BigInt, Value = article.Content });
 				parameters.Add(new SqlParameter { ParameterName = "@author", SqlDbType = SqlDbType.BigInt, Value = article.Author });
 				parameters.Add(new SqlParameter { ParameterName = "@date", SqlDbType = SqlDbType.DateTime, Value = article.Date });
-				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = article.Language.Id });
-				parameters.Add(new SqlParameter { ParameterName = "@imageId", SqlDbType = SqlDbType.BigInt, Value = article.Image.Id });
-				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.BigInt, Value = article.Location.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = article.Language });
+				parameters.Add(new SqlParameter { ParameterName = "@imageId", SqlDbType = SqlDbType.BigInt, Value = article.Image });
+				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.BigInt, Value = article.Location });
 
 				int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 

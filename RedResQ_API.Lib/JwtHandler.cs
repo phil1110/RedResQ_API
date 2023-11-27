@@ -13,14 +13,14 @@ namespace RedResQ_API.Lib
 {
 	public class JwtHandler
 	{
-		public static string CreateToken(User person)
+		public static string CreateToken(IUser user)
 		{
 			List<Claim> claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.NameIdentifier, ""),
-				new Claim(ClaimTypes.Name, person.Username),
-				new Claim(ClaimTypes.Email, person.Email),
-				new Claim(ClaimTypes.Role, $"{person.Role}")
+				new Claim(ClaimTypes.Name, user.Username),
+				new Claim(ClaimTypes.Email, user.Email),
+				new Claim(ClaimTypes.Role, $"{user.Role}")
 			};
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));

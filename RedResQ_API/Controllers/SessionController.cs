@@ -36,11 +36,11 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpPost("register")]
-		public ActionResult<User> Register(User person)
+		public ActionResult<User> Register(RawUser user)
 		{
 			try
 			{
-				return Ok(SessionService.Register(person));
+				return Ok(SessionService.Register(user));
 			}
 			catch (Exception e)
 			{

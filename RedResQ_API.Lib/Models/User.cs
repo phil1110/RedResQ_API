@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class User
+	public class User : IUser
 	{
 		#region Constructor
-
 
 		public User(long id, string username, string firstName, string lastName, string email, DateTime birthdate,
 			Gender gender, Language language, Location location, Role role)
 		{
+			Id = id;
 			Username = username;
 			FirstName = firstName;
 			LastName = lastName;
