@@ -38,7 +38,6 @@ namespace RedResQ_API.Lib.Models
 			Gender = gender;
 			Language = language;
 			Location = location;
-			Role = role;
 		}
 
 		#endregion
@@ -97,12 +96,6 @@ namespace RedResQ_API.Lib.Models
 		{
 			get => _location;
 			private set => _location = value;
-		}
-
-		public long Role
-		{
-			get => _role;
-			private set => _role = value;
 		}
 
 		#endregion
