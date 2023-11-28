@@ -12,7 +12,7 @@ namespace RedResQ_API.Controllers
 	[Route("[controller]")]
 	public class NewsController : ControllerBase
 	{
-		[HttpGet]
+		[HttpGet("fetch")]
 		[Authorize]
 		public ActionResult<Article[]> GetArticles(long? articleId, long? countryId, long? languageId)
 		{
@@ -60,7 +60,7 @@ namespace RedResQ_API.Controllers
 			}
 		}
 
-		[HttpPost]
+		[HttpPost("add")]
 		[Authorize]
 		public ActionResult AddArticle(RawArticle article)
 		{
@@ -79,6 +79,36 @@ namespace RedResQ_API.Controllers
 			catch (Exception ex)
 			{
 				return Forbid(ex.Message);
+			}
+		}
+
+		[HttpPut("update")]
+		[Authorize]
+		public ActionResult EditArticle(Article article)
+		{
+			try
+			{
+
+
+				throw new NotImplementedException();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpDelete("remove")]
+		[Authorize]
+		public ActionResult RemoveArticle(int articleId)
+		{
+			try
+			{
+				throw new NotImplementedException();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
 			}
 		}
 	}
