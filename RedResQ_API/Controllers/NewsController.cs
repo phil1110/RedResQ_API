@@ -60,6 +60,22 @@ namespace RedResQ_API.Controllers
 			}
 		}
 
+		[HttpGet("get")]
+		[Authorize]
+		public ActionResult<Article> GetArticle(long id)
+		{
+			try
+			{
+				Article article = NewsService.GetSingleArticle(id);
+
+				return Ok(article);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
 		[HttpPost("add")]
 		[Authorize]
 		public ActionResult AddArticle(RawArticle article)
@@ -88,9 +104,16 @@ namespace RedResQ_API.Controllers
 		{
 			try
 			{
+				bool articleEdited = NewsService.UpdateArticle(JwtHandler.GetClaims(this), article);
 
-
-				throw new NotImplementedException();
+				if(articleEdited)
+				{
+					return Ok($"Article (with ID {article.Id} ) was successfully edited!");
+				}
+				else
+				{
+					return BadRequest("Article was not edited!");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -100,11 +123,20 @@ namespace RedResQ_API.Controllers
 
 		[HttpDelete("remove")]
 		[Authorize]
-		public ActionResult RemoveArticle(int articleId)
+		public ActionResult RemoveArticle(long articleId)
 		{
 			try
 			{
-				throw new NotImplementedException();
+				bool articleDeleted = NewsService.DeleteArticle(JwtHandler.GetClaims(this), articleId);
+
+				if (articleDeleted)
+				{
+					return Ok($"Article (with ID {articleId} ) was successfully deleted!");
+				}
+				else
+				{
+					return BadRequest("Article was not deleted!");
+				}
 			}
 			catch (Exception ex)
 			{

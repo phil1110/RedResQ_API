@@ -43,7 +43,7 @@ namespace RedResQ_API.Lib
 			string? id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			string? username = user.FindFirst(ClaimTypes.Name)?.Value;
 			string? email = user.FindFirst(ClaimTypes.Email)?.Value;
-			int role = Convert.ToInt32(user.FindFirst(ClaimTypes.Role)?.Value);
+			long role = Convert.ToInt64(user.FindFirst(ClaimTypes.Role)?.Value);
 
 			return new JwtClaims(id!, username!, email!, role); ;
 		}
