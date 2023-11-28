@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class RawUser : IUser
+	public class RawUser
 	{
 		#region Instance variables
 
@@ -28,7 +28,7 @@ namespace RedResQ_API.Lib.Models
 		#region Constructor
 
 		public RawUser(string username, string firstName, string lastName, string email, DateTime birthdate,
-			string hash, long gender, long language, long location, long role)
+			string hash, long gender, long language, long location)
 		{
 			Username = username;
 			FirstName = firstName;
@@ -39,7 +39,6 @@ namespace RedResQ_API.Lib.Models
 			Gender = gender;
 			Language = language;
 			Location = location;
-			Role = null!;
 		}
 
 		#endregion
@@ -98,11 +97,6 @@ namespace RedResQ_API.Lib.Models
 		{
 			get => _location;
 			private set => _location = value;
-		}
-
-		public Role Role
-		{
-			get;
 		}
 
 		#endregion

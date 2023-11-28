@@ -34,11 +34,11 @@ namespace RedResQ_API.Lib.Services
 				parameters.Add(new SqlParameter { ParameterName = "@gender", SqlDbType = SqlDbType.BigInt, Value = user.Gender });
 				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = user.Language });
 				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.BigInt, Value = user.Location });
-				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = 1 });
+				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = 2 });
 
 				SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
-				return JwtHandler.CreateToken(user);
+				return "Registered Successfully!";
 			}
 
 			throw new NullReferenceException("Person object was null!");
