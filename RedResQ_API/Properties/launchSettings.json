@@ -9,7 +9,7 @@
             "API_DB_DS": "192.168.8.254",
             "API_DB_UID": "api",
             "API_DB_PWD": "password",
-            "API_DB_IC": "RedResQ_Test",
+            "API_DB_IC": "RedResQ",
             "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
         },
       "dotnetRunMessages": true,
@@ -24,7 +24,7 @@
             "API_DB_DS": "192.168.8.254",
             "API_DB_UID": "api",
             "API_DB_PWD": "password",
-            "API_DB_IC": "RedResQ_Test",
+            "API_DB_IC": "RedResQ",
             "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
         },
       "dotnetRunMessages": true,
@@ -39,7 +39,7 @@
             "API_DB_DS": "192.168.8.254",
             "API_DB_UID": "api",
             "API_DB_PWD": "password",
-            "API_DB_IC": "RedResQ_Test",
+            "API_DB_IC": "RedResQ",
             "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
         }
     },

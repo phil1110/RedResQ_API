@@ -10,13 +10,9 @@ namespace RedResQ_API.Controllers
 	[Route("[controller]")]
 	public class SessionController : ControllerBase
 	{
-		public SessionController()
-		{
-
-		}
 
 		[HttpGet("login")]
-		public ActionResult<Person> Login(string id, string secret)
+		public ActionResult<User> Login(string id, string secret)
 		{
 			Credentials credentials = new Credentials(id, secret);
 
@@ -40,11 +36,11 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpPost("register")]
-		public ActionResult<Person> Register(Person person)
+		public ActionResult<User> Register(RawUser user)
 		{
 			try
 			{
-				return Ok(SessionService.Register(person));
+				return Ok(SessionService.Register(user));
 			}
 			catch (Exception e)
 			{

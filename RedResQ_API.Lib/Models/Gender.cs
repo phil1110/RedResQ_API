@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class Image
+	public class Gender
 	{
 		#region Constructor
 
-		public Image(long id, string source)
+		public Gender(long id, string name)
 		{
 			Id = id;
-			Source = source;
+			Name = name;
 		}
 
 		#endregion
 
 		#region Properties
 
-		public long Id { get; private set; }
+		public long Id {  get; private set; }
 
-		public string Source { get; private set; }
+		public string Name { get; private set; }
 
 		#endregion
 	}

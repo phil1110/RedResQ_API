@@ -11,7 +11,7 @@ namespace RedResQ_API.Lib.Models
 
         #region Constructor
 
-        public Quiz(int id, string name, int maxScore, Question[] questions)
+        public Quiz(long id, string name, int maxScore, Question[] questions)
         {
             Id = id;
             Name = name;
@@ -23,7 +23,7 @@ namespace RedResQ_API.Lib.Models
 
         #region Properties
 
-        public int Id { get; private set; }
+        public long Id { get; private set; }
 
         public string Name { get; private set; }
 

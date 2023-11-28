@@ -1,58 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class Person
+	public class RawUser
 	{
 		#region Instance variables
 
-		private int _id;
 		private string _username;
 		private string _firstName;
 		private string _lastName;
 		private string _email;
 		private DateTime _birthdate;
 		private string _hash;
-		private Sex _sex;
-		private Language _language;
-		private Location _location;
-		private Settings _settings;
-		private Role _role;
+		private long _gender;
+		private long _language;
+		private long _location;
+		private long _role;
 
 		#endregion
 
 		#region Constructor
 
-		public Person(int id, string username, string firstName, string lastName, string email, DateTime birthdate,
-			string hash, Sex sex, Language language, Location location, Settings settings, Role role)
+		public RawUser(string username, string firstName, string lastName, string email, DateTime birthdate,
+			string hash, long gender, long language, long location)
 		{
-			Id = id;
 			Username = username;
 			FirstName = firstName;
 			LastName = lastName;
 			Email = email;
 			Birthdate = birthdate;
 			Hash = hash;
-			Sex = sex;
+			Gender = gender;
 			Language = language;
 			Location = location;
-			Settings = settings;
-			Role = role;
 		}
 
 		#endregion
 
 		#region Properties
-
-		public int Id
-		{
-			get => _id;
-			private set => _id = value;
-		}
 
 		public string Username
 		{
@@ -90,34 +81,22 @@ namespace RedResQ_API.Lib.Models
 			internal set => _hash = value;
 		}
 
-		public Sex Sex
+		public long Gender
 		{
-			get => _sex;
-			private set => _sex = value;
+			get => _gender;
+			private set => _gender = value;
 		}
 
-		public Language Language
+		public long Language
 		{
 			get => _language;
 			private set => _language = value;
 		}
 
-		public Location Location
+		public long Location
 		{
 			get => _location;
 			private set => _location = value;
-		}
-
-		public Settings Settings
-		{
-			get => _settings;
-			private set => _settings = value;
-		}
-
-		public Role Role
-		{
-			get => _role;
-			private set => _role = value;
 		}
 
 		#endregion

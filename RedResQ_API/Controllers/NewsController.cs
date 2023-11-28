@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RedResQ_API.Lib;
 using RedResQ_API.Lib.Models;
 using RedResQ_API.Lib.Services;
+using System.Data;
+using System.Text.Json.Serialization;
 
 namespace RedResQ_API.Controllers
 {
@@ -10,32 +12,136 @@ namespace RedResQ_API.Controllers
 	[Route("[controller]")]
 	public class NewsController : ControllerBase
 	{
-		public NewsController()
-		{
-		}
-
-		[HttpGet]
+		[HttpGet("fetch")]
 		[Authorize]
-		public ActionResult<Article> First()
+		public ActionResult<Article[]> GetArticles(long? articleId, long? countryId, long? languageId)
 		{
-			JwtClaims claims = GetClaims();
+			Article[] articles = null!;
 
-			if (claims.Username != "string")
+			try
 			{
-				return Ok("Hello!" + claims);
-			}
+				if (countryId.HasValue)
+				{
 
-			return NotFound(claims);
+					if (languageId.HasValue)
+					{
+						articles = NewsService.GetCountryAndLanguageArticles(countryId.Value, languageId.Value, articleId);
+					}
+					else
+					{
+						articles = NewsService.GetCountryArticles(countryId.Value, articleId);
+					}
+
+				}
+				else
+				{
+
+					if (languageId.HasValue)
+					{
+						articles = NewsService.GetLanguageArticles(languageId.Value, articleId);
+					}
+					else
+					{
+						articles = NewsService.GetGlobalArticles(articleId);
+					}
+
+				}
+
+				if (articles != null)
+				{
+					return Ok(articles);
+				}
+				else { return BadRequest(); }
+
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
-		private JwtClaims GetClaims()
+		[HttpGet("get")]
+		[Authorize]
+		public ActionResult<Article> GetArticle(long id)
 		{
-			string? id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			string? username = User.FindFirstValue(ClaimTypes.Name);
-			string? email = User.FindFirstValue(ClaimTypes.Email);
-			int role = Convert.ToInt32(User.FindFirstValue(ClaimTypes.Role));
+			try
+			{
+				Article article = NewsService.GetSingleArticle(id);
 
-			return new JwtClaims(id!, username!, email!, role); ;
+				return Ok(article);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost("add")]
+		[Authorize]
+		public ActionResult AddArticle(RawArticle article)
+		{
+			JwtClaims claims = JwtHandler.GetClaims(this);
+
+			try
+			{
+				int rowsaffected = NewsService.AddArticle(claims, article);
+
+				return Ok($"Article was successfully added. Number of rows affected: {rowsaffected}");
+			}
+			catch (DataException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (Exception ex)
+			{
+				return Forbid(ex.Message);
+			}
+		}
+
+		[HttpPut("update")]
+		[Authorize]
+		public ActionResult EditArticle(Article article)
+		{
+			try
+			{
+				bool articleEdited = NewsService.UpdateArticle(JwtHandler.GetClaims(this), article);
+
+				if(articleEdited)
+				{
+					return Ok($"Article (with ID {article.Id} ) was successfully edited!");
+				}
+				else
+				{
+					return BadRequest("Article was not edited!");
+				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpDelete("remove")]
+		[Authorize]
+		public ActionResult RemoveArticle(long articleId)
+		{
+			try
+			{
+				bool articleDeleted = NewsService.DeleteArticle(JwtHandler.GetClaims(this), articleId);
+
+				if (articleDeleted)
+				{
+					return Ok($"Article (with ID {articleId} ) was successfully deleted!");
+				}
+				else
+				{
+					return BadRequest("Article was not deleted!");
+				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

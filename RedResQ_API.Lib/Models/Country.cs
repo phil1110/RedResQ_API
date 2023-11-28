@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class Image
+	public class Country
 	{
 		#region Constructor
 
-		public Image(long id, string source)
+		public Country(long id, string countryName)
 		{
 			Id = id;
-			Source = source;
+			CountryName = countryName;
 		}
 
 		#endregion
@@ -22,7 +22,7 @@ namespace RedResQ_API.Lib.Models
 
 		public long Id { get; private set; }
 
-		public string Source { get; private set; }
+		public string CountryName { get; private set; }
 
 		#endregion
 	}

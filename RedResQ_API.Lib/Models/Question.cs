@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Question(int id, string text, Answer[] answers)
+		public Question(long id, string text, Answer[] answers)
 		{
 			Id = id;
 			Text = text;
@@ -21,7 +21,7 @@ namespace RedResQ_API.Lib.Models
 
 		#region Properties
 
-		public int Id { get; private set; }
+		public long Id { get; private set; }
 
 		public string Text { get; private set; }
 

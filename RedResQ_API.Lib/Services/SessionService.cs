@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,28 +17,28 @@ namespace RedResQ_API.Lib.Services
 {
 	public static class SessionService
 	{
-		public static string Register(Person person)
+		public static string Register(RawUser user)
 		{
-			if (person != null)
+			if (user != null)
 			{
 				List<SqlParameter> parameters = new List<SqlParameter>();
-				string storedProcedure = "Register";
-				person.Hash = HashPassword(person);
+				string storedProcedure = "SP_Se_Register";
+				user.Hash = HashPassword(user.Hash);
 
-				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = person.Username } );
-				parameters.Add(new SqlParameter { ParameterName = "@firstname", SqlDbType = SqlDbType.VarChar, Value = person.FirstName });
-				parameters.Add(new SqlParameter { ParameterName = "@lastname", SqlDbType = SqlDbType.VarChar, Value = person.LastName });
-				parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = person.Email });
-				parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = person.Birthdate });
-				parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = person.Hash });
-				parameters.Add(new SqlParameter { ParameterName = "@sex", SqlDbType = SqlDbType.VarChar, Value = person.Sex.ToString() });
-				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.VarChar, Value = person.Language.Id });
-				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.VarChar, Value = person.Location.Id });
-				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.VarChar, Value = person.Role.Id });
+				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = user.Username } );
+				parameters.Add(new SqlParameter { ParameterName = "@firstname", SqlDbType = SqlDbType.VarChar, Value = user.FirstName });
+				parameters.Add(new SqlParameter { ParameterName = "@lastname", SqlDbType = SqlDbType.VarChar, Value = user.LastName });
+				parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = user.Email });
+				parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = user.Birthdate });
+				parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = user.Hash });
+				parameters.Add(new SqlParameter { ParameterName = "@gender", SqlDbType = SqlDbType.BigInt, Value = user.Gender });
+				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = user.Language });
+				parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.BigInt, Value = user.Location });
+				parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = 2 });
 
 				SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
-				return CreateToken(person);
+				return "Registered Successfully!";
 			}
 
 			throw new NullReferenceException("Person object was null!");
@@ -49,18 +50,18 @@ namespace RedResQ_API.Lib.Services
 			{
 				if (credentials != null)
 				{
-					Person person;
+					User user;
 
 					if (credentials.Identifier.Contains("@"))
 					{
-						person = LoginEmail(credentials);
+						user = LoginEmail(credentials);
 					}
 					else
 					{
-						person = LoginUsername(credentials);
+						user = LoginUsername(credentials);
 					}
 
-					return CreateToken(person);
+					return JwtHandler.CreateToken(user);
 				}
 			}
 			catch (KeyNotFoundException)
@@ -75,72 +76,77 @@ namespace RedResQ_API.Lib.Services
 			throw new NullReferenceException("Credentials object was null!");
 		}
 
-		private static Person LoginEmail(Credentials credentials)
+		private static User LoginEmail(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "LoginEmail";
+			string storedProcedure = "SP_Se_LoginEmail";
 
 			parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
-			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
+			DataTable userTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if(BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
+			if(userTable.Rows.Count == 1)
 			{
-				return output;
+				User output = User.ConvertToPerson(userTable.Rows[0]);
+
+				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, GetHash(output)))
+				{
+					return output;
+				}
+				else
+				{
+					throw new UnauthorizedAccessException();
+				}
 			}
 			else
 			{
-				throw new UnauthorizedAccessException();
+				throw new Exception("User was not found!");
 			}
 		}
 
-		private static Person LoginUsername(Credentials credentials)
+		private static User LoginUsername(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "LoginUsername";
+			string storedProcedure = "SP_Se_LoginUsername";
 
-				parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
+			parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = credentials.Identifier });
 
-			Person output = PersonService.ConvertToPerson(SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()));
+			DataTable userTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if (BCrypt.Net.BCrypt.Verify(credentials.Secret, output.Hash))
+			if (userTable.Rows.Count == 1)
 			{
-				return output;
+				User output = User.ConvertToPerson(userTable.Rows[0]);
+
+				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, GetHash(output)))
+				{
+					return output;
+				}
+				else
+				{
+					throw new UnauthorizedAccessException();
+				}
 			}
 			else
 			{
-				throw new UnauthorizedAccessException();
+				throw new Exception("User was not found!");
 			}
 		}
 
-		private static string HashPassword(Person person)
+		private static string HashPassword(string hash)
 		{
-			string hash = BCrypt.Net.BCrypt.HashPassword(person.Hash);
-
-			return hash;
+			return BCrypt.Net.BCrypt.HashPassword(hash);
 		}
 
-		private static string CreateToken(Person person)
+		private static string GetHash(User user)
 		{
-			List<Claim> claims = new List<Claim>
-			{
-				new Claim(ClaimTypes.NameIdentifier, ""),
-				new Claim(ClaimTypes.Name, person.Username),
-				new Claim(ClaimTypes.Email, person.Email),
-				new Claim(ClaimTypes.Role, $"{person.Role.Id}")
-			};
+			List<SqlParameter> parameters = new List<SqlParameter>();
+			string storedProcedure = "SP_Pe_GetHash";
 
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));
+			parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = user.Id });
 
-			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+			DataTable hash = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			var token = new JwtSecurityToken(
-					claims: claims,
-					expires: DateTime.UtcNow.AddDays(30),
-					signingCredentials: creds
-				);
-
-			return new JwtSecurityTokenHandler().WriteToken(token);
+			return Convert.ToString(hash!.Rows[0]!.ItemArray[0]!)!;
 		}
 	}
 }
