@@ -20,7 +20,7 @@ namespace RedResQ_API.Lib
 				new Claim(ClaimTypes.NameIdentifier, ""),
 				new Claim(ClaimTypes.Name, user.Username),
 				new Claim(ClaimTypes.Email, user.Email),
-				new Claim(ClaimTypes.Role, $"{user.Role}")
+				new Claim(ClaimTypes.Role, $"{user.Role.Id}")
 			};
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("API_TOKEN_KEY")!));
