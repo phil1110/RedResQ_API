@@ -132,7 +132,7 @@ namespace RedResQ_API.Lib.Services
 			}
 		}
 
-		private static string HashPassword(string hash)
+		internal static string HashPassword(string hash)
 		{
 			return BCrypt.Net.BCrypt.HashPassword(hash);
 		}
