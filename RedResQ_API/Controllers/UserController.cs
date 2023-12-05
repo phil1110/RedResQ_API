@@ -48,5 +48,20 @@ namespace RedResQ_API.Controllers
                 return BadRequest("Error! Message: " + ex.Message);
             }
         }
+
+		[HttpGet("reset/verify")]
+		public ActionResult<bool> CheckValidity(int code, string email)
+		{
+			try
+			{
+				bool isValid = UserService.CheckValidity(code, email);
+
+				return Ok(isValid);
+            }
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }

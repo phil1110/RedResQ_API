@@ -46,5 +46,25 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
         }
+
+        public static bool CheckValidity(int confirmationCode, string email)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Rr_CheckValidity";
+
+            parameters.Add(new SqlParameter { ParameterName = "@confirmationCode", SqlDbType = SqlDbType.Int, Value = confirmationCode });
+            parameters.Add(new SqlParameter { ParameterName = "@personEmail", SqlDbType = SqlDbType.VarChar, Value = email });
+
+            int response = (int)SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()).Rows[0].ItemArray[0]!;
+
+            if (response == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }
