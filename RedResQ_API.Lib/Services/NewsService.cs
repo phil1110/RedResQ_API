@@ -157,7 +157,7 @@ namespace RedResQ_API.Lib.Services
 
 		public static int AddArticle(JwtClaims claims, RawArticle article)
 		{
-			if(claims.Role > 3)
+			if(PermissionService.IsPermitted("publishArticle", claims.Role))
 			{
 				List<SqlParameter> parameters = new List<SqlParameter>();
 				string storedProcedure = "SP_Ne_NewArticle";
@@ -195,7 +195,7 @@ namespace RedResQ_API.Lib.Services
 
 		public static bool UpdateArticle(JwtClaims claims, Article article)
 		{
-			if(claims.Role > 3)
+			if(PermissionService.IsPermitted("editArticle", claims.Role))
 			{
 				string storedProcedure = "SP_Ne_UpdateArticle";
 				List<SqlParameter> parameters = new List<SqlParameter>();
@@ -239,7 +239,7 @@ namespace RedResQ_API.Lib.Services
 
 		public static bool DeleteArticle(JwtClaims claims, long articleId)
 		{
-			if (claims.Role > 4)
+			if (PermissionService.IsPermitted("deleteArticle", claims.Role))
 			{
 				string storedProcedure = "SP_Ne_DeleteArticle";
 				List<SqlParameter> parameters = new List<SqlParameter>();
