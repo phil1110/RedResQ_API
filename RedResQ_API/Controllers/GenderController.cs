@@ -3,19 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using RedResQ_API.Lib;
 using RedResQ_API.Lib.Models;
 using RedResQ_API.Lib.Services;
-using System.Diagnostics.Metrics;
+using System.Xml.Linq;
 
 namespace RedResQ_API.Controllers
 {
     [ApiController, Route("[controller]")]
-    public class CountryController : ControllerBase
+    public class GenderController : ControllerBase
     {
         [HttpGet("fetch")]
-        public ActionResult<Country[]> GetAll()
+        public ActionResult<Gender> GetAll()
         {
             try
             {
-                return Ok(CountryService.GetAllCountries());
+                return Ok(GenderService.GetAll());
             }
             catch (Exception ex)
             {
@@ -24,11 +24,11 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpGet("get")]
-        public ActionResult<Country> Get(long id)
+        public ActionResult<Gender> Get(long id)
         {
             try
             {
-                return Ok(CountryService.GetCountry(id));
+                return Ok(GenderService.Get(id));
             }
             catch (Exception ex)
             {
@@ -37,24 +37,11 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpPost("add"), Authorize]
-        public ActionResult<bool> Add(string countryName)
+        public ActionResult<bool> Add(string name)
         {
             try
             {
-                return Ok(CountryService.AddCountry(JwtHandler.GetClaims(this), countryName));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost("add/list"), Authorize]
-        public ActionResult<bool> AddArray(string[] countryNames)
-        {
-            try
-            {
-                return Ok(CountryService.AddCountryArray(JwtHandler.GetClaims(this), countryNames));
+                return Ok(GenderService.Add(JwtHandler.GetClaims(this), name));
             }
             catch (Exception ex)
             {
@@ -63,11 +50,11 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpPut("update"), Authorize]
-        public ActionResult<bool> Edit(Country country)
+        public ActionResult<bool> Edit(Gender gender)
         {
             try
             {
-                return Ok(CountryService.EditCountry(JwtHandler.GetClaims(this), country));
+                return Ok(GenderService.Edit(JwtHandler.GetClaims(this), gender));
             }
             catch (Exception ex)
             {
@@ -80,7 +67,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                return Ok(CountryService.DeleteCountry(JwtHandler.GetClaims(this), id));
+                return Ok(GenderService.Delete(JwtHandler.GetClaims(this), id));
             }
             catch (Exception ex)
             {
