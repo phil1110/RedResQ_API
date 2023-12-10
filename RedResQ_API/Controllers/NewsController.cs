@@ -118,7 +118,7 @@ namespace RedResQ_API.Controllers
 			}
 		}
 
-		[HttpDelete("remove")]
+		[HttpDelete("delete")]
 		[Authorize]
 		public ActionResult RemoveArticle(long articleId)
 		{

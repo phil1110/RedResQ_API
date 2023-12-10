@@ -76,7 +76,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpPut("set")]
+        [HttpPut("update")]
         [Authorize]
         public ActionResult<bool> UpdatePermission(string name, long role)
         {
