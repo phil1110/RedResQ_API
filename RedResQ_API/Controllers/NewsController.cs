@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib;
-using RedResQ_API.Lib.Models;
-using RedResQ_API.Lib.Services;
 using System.Data;
 using System.Text.Json.Serialization;
 

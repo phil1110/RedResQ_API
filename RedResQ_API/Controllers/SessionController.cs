@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib.Models;
-using RedResQ_API.Lib.Services;
 using System.Net;
 using System.Runtime.CompilerServices;
 

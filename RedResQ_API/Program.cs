@@ -1,4 +1,7 @@
 global using System.Security.Claims;
+global using RedResQ_API.Lib;
+global using RedResQ_API.Lib.Models;
+global using RedResQ_API.Lib.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
