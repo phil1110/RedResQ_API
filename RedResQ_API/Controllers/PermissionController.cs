@@ -11,6 +11,7 @@ namespace RedResQ_API.Controllers
     public class PermissionController : ControllerBase
     {
         [HttpGet("get")]
+        [Authorize]
         public ActionResult<Permission> GetPermission(string name)
         {
             try
@@ -33,6 +34,7 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpGet("fetch")]
+        [Authorize]
         public ActionResult<Permission[]> GetAllPermissions()
         {
             try
@@ -55,6 +57,7 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpGet("fetchRole")]
+        [Authorize]
         public ActionResult<Permission[]> GetAllPermissions(long roleId)
         {
             try
