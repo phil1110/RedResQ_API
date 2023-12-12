@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib;
-using RedResQ_API.Lib.Models;
-using RedResQ_API.Lib.Services;
 
 namespace RedResQ_API.Controllers
 {
@@ -79,7 +76,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpPut("set")]
+        [HttpPut("update")]
         [Authorize]
         public ActionResult<bool> UpdatePermission(string name, long role)
         {

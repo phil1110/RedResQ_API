@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib.Services;
 
 namespace RedResQ_API.Controllers
 {

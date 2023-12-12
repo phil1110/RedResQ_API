@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib;
-using RedResQ_API.Lib.Models;
-using RedResQ_API.Lib.Services;
 using System.Xml.Linq;
 
 namespace RedResQ_API.Controllers
@@ -15,7 +12,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                return Ok(GenderService.GetAll());
+                return Ok(GenderService.GetAll(JwtHandler.GetClaims(this)));
             }
             catch (Exception ex)
             {
