@@ -12,7 +12,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                return Ok(GenderService.GetAll());
+                return Ok(GenderService.GetAll(JwtHandler.GetClaims(this)));
             }
             catch (Exception ex)
             {

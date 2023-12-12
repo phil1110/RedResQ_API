@@ -13,21 +13,24 @@ namespace RedResQ_API.Lib.Services
 {
     public static class GenderService
     {
-        public static Gender[] GetAll()
+        public static Gender[] GetAll(JwtClaims claims)
         {
-            List<Gender> genders = new List<Gender>();
-            string storedProcedure = "SP_Ge_GetAllGenders";
-
-            DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure);
-
-            if (genderTable.Rows.Count > 0)
+            if (PermissionService.IsPermitted("getGender", claims.Role))
             {
-                foreach (DataRow row in genderTable.Rows)
-                {
-                    genders.Add(Gender.ConvertToGender(row));
-                }
+                List<Gender> genders = new List<Gender>();
+                string storedProcedure = "SP_Ge_GetAllGenders";
 
-                return genders.ToArray();
+                DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure);
+
+                if (genderTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in genderTable.Rows)
+                    {
+                        genders.Add(Gender.ConvertToGender(row));
+                    }
+
+                    return genders.ToArray();
+                }
             }
 
             throw new Exception("No Genders were found!");
@@ -66,11 +69,9 @@ namespace RedResQ_API.Lib.Services
                 {
                     return true;
                 }
-
-                return false;
             }
 
-            throw new Exception("Not permitted to complete this action!");
+            return false;
         }
 
         public static bool Edit(JwtClaims claims, Gender gender)
@@ -89,11 +90,9 @@ namespace RedResQ_API.Lib.Services
                 {
                     return true;
                 }
-
-                return false;
             }
 
-            throw new Exception("Not permitted to complete this action!");
+            return false;
         }
 
         public static bool Delete(JwtClaims claims, long id)
@@ -111,11 +110,9 @@ namespace RedResQ_API.Lib.Services
                 {
                     return true;
                 }
-
-                return false;
             }
 
-            throw new Exception("Not permitted to complete this action!");
+            return false;
         }
     }
 }

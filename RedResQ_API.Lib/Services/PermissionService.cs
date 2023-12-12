@@ -44,7 +44,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            return false;
+            throw new Exception("Not permitted to complete this action!");
         }
 
         /// <summary>
