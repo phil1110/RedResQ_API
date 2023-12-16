@@ -5,12 +5,10 @@ using System.Text.Json.Serialization;
 
 namespace RedResQ_API.Controllers
 {
-	[ApiController]
-	[Route("[controller]")]
+	[ApiController, Route("[controller]"), Authorize]
 	public class NewsController : ControllerBase
 	{
 		[HttpGet("fetch")]
-		[Authorize]
 		public ActionResult<Article[]> GetArticles(long? articleId, long? countryId, long? languageId)
 		{
 			Article[] articles = null!;
@@ -58,7 +56,6 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpGet("get")]
-		[Authorize]
 		public ActionResult<Article> GetArticle(long id)
 		{
 			try
@@ -74,7 +71,6 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpPost("add")]
-		[Authorize]
 		public ActionResult AddArticle(RawArticle article)
 		{
 			JwtClaims claims = JwtHandler.GetClaims(this);
@@ -96,7 +92,6 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpPut("update")]
-		[Authorize]
 		public ActionResult EditArticle(Article article)
 		{
 			try
@@ -119,7 +114,6 @@ namespace RedResQ_API.Controllers
 		}
 
 		[HttpDelete("delete")]
-		[Authorize]
 		public ActionResult RemoveArticle(long articleId)
 		{
 			try
