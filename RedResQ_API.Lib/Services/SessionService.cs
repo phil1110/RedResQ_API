@@ -76,7 +76,7 @@ namespace RedResQ_API.Lib.Services
 			throw new NullReferenceException("Credentials object was null!");
 		}
 
-		private static User LoginEmail(Credentials credentials)
+        internal static User LoginEmail(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
 			string storedProcedure = "SP_Se_LoginEmail";
@@ -104,7 +104,7 @@ namespace RedResQ_API.Lib.Services
 			}
 		}
 
-		private static User LoginUsername(Credentials credentials)
+		internal static User LoginUsername(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();
 			string storedProcedure = "SP_Se_LoginUsername";

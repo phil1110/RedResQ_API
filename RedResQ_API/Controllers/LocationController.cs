@@ -17,7 +17,6 @@ namespace RedResQ_API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            throw new NotImplementedException();
         }
 
         [HttpGet("search")]
@@ -40,7 +39,6 @@ namespace RedResQ_API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            throw new NotImplementedException();
         }
 
         [HttpGet("fetch")]
@@ -54,7 +52,6 @@ namespace RedResQ_API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            throw new NotImplementedException();
         }
 
         [HttpPost("add")]
@@ -68,7 +65,6 @@ namespace RedResQ_API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            throw new NotImplementedException();
         }
 
         [HttpPut("update")]
@@ -82,7 +78,6 @@ namespace RedResQ_API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            throw new NotImplementedException();
         }
 
         [HttpDelete("delete")]
@@ -96,7 +91,6 @@ namespace RedResQ_API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            throw new NotImplementedException();
         }
     }
 }
