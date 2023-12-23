@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-	public class User : IUser
+	public class User
 	{
 		#region Constructor
 
