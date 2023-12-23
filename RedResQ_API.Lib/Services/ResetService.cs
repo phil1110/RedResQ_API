@@ -19,7 +19,7 @@ namespace RedResQ_API.Lib.Services
 
             int confirmationCode = (int)SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()).Rows[0].ItemArray[0]!;
 
-            EmailService.SendEmail(email, EmailService.GetEmail(confirmationCode));
+            EmailHandler.SendEmail(email, EmailHandler.GetEmail(confirmationCode));
 
             return true;
         }

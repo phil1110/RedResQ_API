@@ -2,9 +2,9 @@
 using System.Net.Mail;
 using System.Text;
 
-namespace RedResQ_API.Lib.Services
+namespace RedResQ_API.Lib
 {
-    internal static class EmailService
+    internal static class EmailHandler
     {
         private static SmtpClient _client = new SmtpClient("smtp.gmail.com", 587)
         {
