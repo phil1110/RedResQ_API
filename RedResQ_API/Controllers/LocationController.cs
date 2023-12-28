@@ -55,11 +55,33 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpPost("add")]
-        public ActionResult<bool> Add(string city, string postalCode, long countryId)
+        public ActionResult<long> Add(string city, string postalCode, long countryId)
         {
             try
             {
-                return Ok(LocationService.Add(JwtHandler.GetClaims(this), city, postalCode, countryId));
+                JwtClaims claims = JwtHandler.GetClaims(this);
+
+                long id = LocationService.Search(claims, city, postalCode, countryId);
+
+                if(id > 0)
+                {
+                    return Ok(id);
+                }
+                else
+                {
+                    LocationService.Add(claims, city, postalCode, countryId);
+
+                    id = LocationService.Search(claims, city, postalCode, countryId);
+
+                    if( id > 0)
+                    {
+                        return Ok(id);
+                    }
+                    else
+                    {
+                        throw new Exception("Location was not added");
+                    }
+                }
             }
             catch (Exception ex)
             {
