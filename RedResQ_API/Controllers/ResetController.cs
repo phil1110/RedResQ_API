@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RedResQ_API.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("[controller]"), Authorize]
     public class ResetController : ControllerBase
     {
         [HttpGet("request")]
@@ -10,7 +11,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                bool wasSuccessful = ResetService.RequestReset(email);
+                bool wasSuccessful = ResetService.RequestReset(JwtHandler.GetClaims(this), email);
 
                 if (wasSuccessful)
                 {
@@ -32,7 +33,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                bool wasSuccessful = ResetService.ConfirmReset(confirmationCode, email, password);
+                bool wasSuccessful = ResetService.ConfirmReset(JwtHandler.GetClaims(this), confirmationCode, email, password);
 
                 if (wasSuccessful)
                 {
@@ -54,7 +55,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                bool isValid = ResetService.CheckValidity(code, email);
+                bool isValid = ResetService.CheckValidity(JwtHandler.GetClaims(this), code, email);
 
                 return Ok(isValid);
             }
