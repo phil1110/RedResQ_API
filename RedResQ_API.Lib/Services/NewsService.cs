@@ -163,8 +163,8 @@ namespace RedResQ_API.Lib.Services
 				string storedProcedure = "SP_Ne_NewArticle";
 
 				parameters.Add(new SqlParameter { ParameterName = "@title", SqlDbType = SqlDbType.VarChar, Value = article.Title });
-				parameters.Add(new SqlParameter { ParameterName = "@content", SqlDbType = SqlDbType.BigInt, Value = article.Content });
-				parameters.Add(new SqlParameter { ParameterName = "@author", SqlDbType = SqlDbType.BigInt, Value = article.Author });
+				parameters.Add(new SqlParameter { ParameterName = "@content", SqlDbType = SqlDbType.VarChar, Value = article.Content });
+				parameters.Add(new SqlParameter { ParameterName = "@author", SqlDbType = SqlDbType.VarChar, Value = article.Author });
 				parameters.Add(new SqlParameter { ParameterName = "@date", SqlDbType = SqlDbType.DateTime, Value = article.Date });
 				parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = article.Language });
 				parameters.Add(new SqlParameter { ParameterName = "@imageId", SqlDbType = SqlDbType.BigInt, Value = article.Image });

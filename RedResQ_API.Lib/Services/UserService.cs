@@ -215,7 +215,7 @@ namespace RedResQ_API.Lib.Services
                 }
                 if (user.Language.Id != oldUser.Language.Id)
                 {
-                    parameters.Add(new SqlParameter { ParameterName = "@languagId", SqlDbType = SqlDbType.BigInt, Value = user.Language.Id });
+                    parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = user.Language.Id });
                 }
                 if (user.Location.Id != oldUser.Location.Id)
                 {
