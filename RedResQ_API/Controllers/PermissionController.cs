@@ -3,17 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RedResQ_API.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+    [ApiController, Route("[controller]"), Authorize]
     public class PermissionController : ControllerBase
     {
         [HttpGet("get")]
-        [Authorize]
         public ActionResult<Permission> GetPermission(string name)
         {
             try
             {
-                Permission permission = PermissionService.GetPermission(name);
+                Permission permission = PermissionService.GetPermission(JwtHandler.GetClaims(this), name);
 
                 if (permission != null)
                 {
@@ -31,12 +29,11 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpGet("fetch")]
-        [Authorize]
         public ActionResult<Permission[]> GetAllPermissions()
         {
             try
             {
-                Permission[] permissions = PermissionService.GetAllPermissions();
+                Permission[] permissions = PermissionService.GetAllPermissions(JwtHandler.GetClaims(this));
 
                 if(permissions != null)
                 {
@@ -53,13 +50,12 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpGet("fetchRole")]
-        [Authorize]
+        [HttpGet("fetchForRole")]
         public ActionResult<Permission[]> GetAllPermissions(long roleId)
         {
             try
             {
-                Permission[] permissions = PermissionService.GetAllPermissionsForRole(roleId);
+                Permission[] permissions = PermissionService.GetAllPermissionsForRole(JwtHandler.GetClaims(this), roleId);
 
                 if (permissions != null)
                 {
@@ -77,7 +73,6 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpPut("update")]
-        [Authorize]
         public ActionResult<bool> UpdatePermission(string name, long role)
         {
             try
