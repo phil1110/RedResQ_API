@@ -13,39 +13,45 @@ namespace RedResQ_API.Lib.Services
 {
     public static class CountryService
     {
-        public static Country[] GetAllCountries()
+        public static Country[] GetAllCountries(JwtClaims claims)
         {
-            List<Country> countries = new List<Country>();
-            string storedProcedure = "SP_Co_GetCountries";
-
-            DataTable countryTable = SqlHandler.ExecuteQuery(storedProcedure);
-
-            if(countryTable.Rows.Count > 0)
+            if(PermissionService.IsPermitted("getCountry", claims.Role))
             {
-                foreach(DataRow row in countryTable.Rows )
-                {
-                    countries.Add(Country.ConvertToCountry(row));
-                }
+                List<Country> countries = new List<Country>();
+                string storedProcedure = "SP_Co_GetCountries";
 
-                return countries.ToArray();
+                DataTable countryTable = SqlHandler.ExecuteQuery(storedProcedure);
+
+                if (countryTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in countryTable.Rows)
+                    {
+                        countries.Add(Country.ConvertToCountry(row));
+                    }
+
+                    return countries.ToArray();
+                }
             }
 
             throw new Exception("No Countries were found!");
         }
 
-        public static Country GetCountry(long id)
+        public static Country GetCountry(JwtClaims claims, long id)
         {
-            List<Country> countries = new List<Country>();
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_Co_GetCountry";
-
-            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
-
-            DataTable countryTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-            if (countryTable.Rows.Count == 1)
+            if(PermissionService.IsPermitted("getCountry", claims.Role))
             {
-                return Country.ConvertToCountry(countryTable.Rows[0]);
+                List<Country> countries = new List<Country>();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Co_GetCountry";
+
+                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
+
+                DataTable countryTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+                if (countryTable.Rows.Count == 1)
+                {
+                    return Country.ConvertToCountry(countryTable.Rows[0]);
+                }
             }
 
             throw new Exception("Row count was not 1!");
