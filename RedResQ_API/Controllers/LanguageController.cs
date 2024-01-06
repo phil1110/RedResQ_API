@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RedResQ_API.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("[controller]"), Authorize]
     public class LanguageController : ControllerBase
     {
         [HttpGet("fetch")]
@@ -12,7 +12,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                return Ok(LanguageService.GetAll());
+                return Ok(LanguageService.GetAll(JwtHandler.GetClaims(this)));
             }
             catch (Exception ex)
             {
@@ -25,7 +25,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                return Ok(LanguageService.Get(id));
+                return Ok(LanguageService.Get(JwtHandler.GetClaims(this), id));
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpPost("add"), Authorize]
+        [HttpPost("add")]
         public ActionResult<bool> Add(string name)
         {
             try
@@ -46,7 +46,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpPut("update"), Authorize]
+        [HttpPut("update")]
         public ActionResult<bool> Edit(Language lang)
         {
             try
@@ -59,7 +59,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpDelete("delete"), Authorize]
+        [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
             try

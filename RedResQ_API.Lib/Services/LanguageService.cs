@@ -12,40 +12,46 @@ namespace RedResQ_API.Lib.Services
 {
     public static class LanguageService
     {
-        public static Language[] GetAll()
+        public static Language[] GetAll(JwtClaims claims)
         {
-            List<Language> languages = new List<Language>();
-            string storedProcedure = "SP_La_GetAllLanguages";
-
-            DataTable languageTable = SqlHandler.ExecuteQuery(storedProcedure);
-
-            if (languageTable.Rows.Count > 0)
+            if(PermissionService.IsPermitted("getLanguage", claims.Role))
             {
-                foreach (DataRow row in languageTable.Rows)
-                {
-                    languages.Add(Language.ConvertToLanguage(row));
-                }
+                List<Language> languages = new List<Language>();
+                string storedProcedure = "SP_La_GetAllLanguages";
 
-                return languages.ToArray();
+                DataTable languageTable = SqlHandler.ExecuteQuery(storedProcedure);
+
+                if (languageTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in languageTable.Rows)
+                    {
+                        languages.Add(Language.ConvertToLanguage(row));
+                    }
+
+                    return languages.ToArray();
+                }
             }
 
             throw new Exception("No Languages were found!");
         }
 
-        public static Language Get(long id)
+        public static Language Get(JwtClaims claims, long id)
         {
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_La_GetLanguage";
-
-            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
-
-            DataTable countryTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-            if (countryTable.Rows.Count == 1)
+            if (PermissionService.IsPermitted("getLanguage", claims.Role))
             {
-                return Language.ConvertToLanguage(countryTable.Rows[0]);
-            }
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_La_GetLanguage";
 
+                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
+
+                DataTable countryTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+                if (countryTable.Rows.Count == 1)
+                {
+                    return Language.ConvertToLanguage(countryTable.Rows[0]);
+                }
+            }
+            
             throw new Exception("Row count was not 1!");
         }
 
