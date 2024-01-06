@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace RedResQ_API.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("[controller]"), Authorize]
     public class GenderController : ControllerBase
     {
         [HttpGet("fetch")]
@@ -25,7 +25,7 @@ namespace RedResQ_API.Controllers
         {
             try
             {
-                return Ok(GenderService.Get(id));
+                return Ok(GenderService.Get(JwtHandler.GetClaims(this), id));
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpPost("add"), Authorize]
+        [HttpPost("add")]
         public ActionResult<bool> Add(string name)
         {
             try
@@ -46,7 +46,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpPut("update"), Authorize]
+        [HttpPut("update")]
         public ActionResult<bool> Edit(Gender gender)
         {
             try
@@ -59,7 +59,7 @@ namespace RedResQ_API.Controllers
             }
         }
 
-        [HttpDelete("delete"), Authorize]
+        [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
             try
