@@ -20,11 +20,11 @@ namespace RedResQ_API.Controllers
 
 					if (languageId.HasValue)
 					{
-						articles = NewsService.GetCountryAndLanguageArticles(countryId.Value, languageId.Value, articleId);
+						articles = NewsService.GetCountryAndLanguageArticles(JwtHandler.GetClaims(this), countryId.Value, languageId.Value, articleId);
 					}
 					else
 					{
-						articles = NewsService.GetCountryArticles(countryId.Value, articleId);
+						articles = NewsService.GetCountryArticles(JwtHandler.GetClaims(this), countryId.Value, articleId);
 					}
 
 				}
@@ -33,11 +33,11 @@ namespace RedResQ_API.Controllers
 
 					if (languageId.HasValue)
 					{
-						articles = NewsService.GetLanguageArticles(languageId.Value, articleId);
+						articles = NewsService.GetLanguageArticles(JwtHandler.GetClaims(this), languageId.Value, articleId);
 					}
 					else
 					{
-						articles = NewsService.GetGlobalArticles(articleId);
+						articles = NewsService.GetGlobalArticles(JwtHandler.GetClaims(this), articleId);
 					}
 
 				}
@@ -60,7 +60,7 @@ namespace RedResQ_API.Controllers
 		{
 			try
 			{
-				Article article = NewsService.GetSingleArticle(id);
+				Article article = NewsService.GetSingleArticle(JwtHandler.GetClaims(this), id);
 
 				return Ok(article);
 			}
