@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RedResQ_API.Lib.Exceptions;
 
 namespace RedResQ_API.Controllers
 {
@@ -9,24 +10,20 @@ namespace RedResQ_API.Controllers
         [HttpGet("get")]
         public ActionResult<Location> Get(long id)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(LocationService.Get(JwtHandler.GetClaims(this), id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("search")]
         public ActionResult<long> Search(string city, string postalCode, long countryId)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 long result = LocationService.Search(JwtHandler.GetClaims(this), city, postalCode, countryId);
 
-                if(result > 0)
+                if (result > 0)
                 {
                     return Ok(result);
                 }
@@ -34,36 +31,28 @@ namespace RedResQ_API.Controllers
                 {
                     return NotFound(result);
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("fetch")]
         public ActionResult<Location> Fetch(long? id)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(LocationService.Fetch(JwtHandler.GetClaims(this), id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPost("add")]
         public ActionResult<long> Add(string city, string postalCode, long countryId)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 JwtClaims claims = JwtHandler.GetClaims(this);
 
                 long id = LocationService.Search(claims, city, postalCode, countryId);
 
-                if(id > 0)
+                if (id > 0)
                 {
                     return Ok(id);
                 }
@@ -73,7 +62,7 @@ namespace RedResQ_API.Controllers
 
                     id = LocationService.Search(claims, city, postalCode, countryId);
 
-                    if( id > 0)
+                    if (id > 0)
                     {
                         return Ok(id);
                     }
@@ -82,37 +71,25 @@ namespace RedResQ_API.Controllers
                         throw new Exception("Location was not added");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPut("update")]
         public ActionResult<bool> Edit(Location loc)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(LocationService.Edit(JwtHandler.GetClaims(this), loc));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(LocationService.Delete(JwtHandler.GetClaims(this), id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RedResQ_API.Lib.Models;
 using System.Reflection.Metadata.Ecma335;
+using RedResQ_API.Lib.Exceptions;
 
 namespace RedResQ_API.Lib.Services
 {
@@ -17,7 +18,17 @@ namespace RedResQ_API.Lib.Services
         /// </summary>
         /// <param name="permissionName">The identifier of the targeted Permission</param>
         /// <returns>The requested Permission</returns>
-        public static Permission GetPermission(string permissionName)
+        public static Permission GetPermission(JwtClaims claims, string permissionName)
+        {
+            if (IsPermitted("getPermission", claims.Role))
+            {
+                return GetPermission(permissionName);
+            }
+
+            return null!;
+        }
+
+        private static Permission GetPermission(string permissionName)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
             string storedProcedure = "SP_Pm_GetPermission";
@@ -44,30 +55,34 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            throw new Exception("Not permitted to complete this action!");
+            throw new AuthException("Required role was " + permission.RequiredRole.Name + "! Not authorised to complete this action!");
         }
 
         /// <summary>
         /// Returns of existing Permissions
         /// </summary>
         /// <returns>An array of all Permissions</returns>
-        public static Permission[] GetAllPermissions()
+        public static Permission[] GetAllPermissions(JwtClaims claims)
         {
-            List<Permission> permissions = new List<Permission>();
-            string storedProcedure = "SP_Pm_GetAllPermissions";
-
-            DataTable roleTable = SqlHandler.ExecuteQuery(storedProcedure);
-
-            if(roleTable.Rows.Count > 0)
+            if(IsPermitted("getPermission", claims.Role))
             {
-                foreach(DataRow row in roleTable.Rows)
-                {
-                    permissions.Add(Permission.ConvertToPermission(row));
-                }
+                List<Permission> permissions = new List<Permission>();
+                string storedProcedure = "SP_Pm_GetAllPermissions";
 
-                return permissions.ToArray();
+                DataTable roleTable = SqlHandler.ExecuteQuery(storedProcedure);
+
+                if (roleTable.Rows.Count > 0)
+                {
+                    foreach (DataRow row in roleTable.Rows)
+                    {
+                        permissions.Add(Permission.ConvertToPermission(row));
+                    }
+
+                    return permissions.ToArray();
+                }
             }
-            else { return null!; }
+
+            return null!;
         }
 
         /// <summary>
@@ -75,27 +90,31 @@ namespace RedResQ_API.Lib.Services
         /// </summary>
         /// <param name="roleId">The identifier of the role in question</param>
         /// <returns>An array of all permitted actions</returns>
-        public static Permission[] GetAllPermissionsForRole(long roleId)
+        public static Permission[] GetAllPermissionsForRole(JwtClaims claims, long roleId)
         {
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_Pm_GetAllPermissionsForRole";
-
-            parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = roleId });
-
-            DataTable roleTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-            if (roleTable.Rows.Count > 0)
+            if (IsPermitted("getPermission", claims.Role))
             {
-                List<Permission> permissions = new List<Permission>();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Pm_GetAllPermissionsForRole";
 
-                foreach (DataRow row in roleTable.Rows)
+                parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = roleId });
+
+                DataTable roleTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+                if (roleTable.Rows.Count > 0)
                 {
-                    permissions.Add(Permission.ConvertToPermission(row));
-                }
+                    List<Permission> permissions = new List<Permission>();
 
-                return permissions.ToArray();
+                    foreach (DataRow row in roleTable.Rows)
+                    {
+                        permissions.Add(Permission.ConvertToPermission(row));
+                    }
+
+                    return permissions.ToArray();
+                }
             }
-            else { return null!; }
+
+            return null!;
         }
 
         /// <summary>

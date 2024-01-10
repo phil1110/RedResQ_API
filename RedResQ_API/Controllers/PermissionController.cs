@@ -3,17 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RedResQ_API.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+    [ApiController, Route("[controller]"), Authorize]
     public class PermissionController : ControllerBase
     {
         [HttpGet("get")]
-        [Authorize]
         public ActionResult<Permission> GetPermission(string name)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
-                Permission permission = PermissionService.GetPermission(name);
+                Permission permission = PermissionService.GetPermission(JwtHandler.GetClaims(this), name);
 
                 if (permission != null)
                 {
@@ -23,22 +21,17 @@ namespace RedResQ_API.Controllers
                 {
                     return BadRequest("Permission was null!");
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("fetch")]
-        [Authorize]
         public ActionResult<Permission[]> GetAllPermissions()
         {
-            try
+            return ActionService.Execute(this, () =>
             {
-                Permission[] permissions = PermissionService.GetAllPermissions();
+                Permission[] permissions = PermissionService.GetAllPermissions(JwtHandler.GetClaims(this));
 
-                if(permissions != null)
+                if (permissions != null)
                 {
                     return Ok(permissions);
                 }
@@ -46,20 +39,15 @@ namespace RedResQ_API.Controllers
                 {
                     return BadRequest("No exisiting permissions!");
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
-        [HttpGet("fetchRole")]
-        [Authorize]
+        [HttpGet("fetchForRole")]
         public ActionResult<Permission[]> GetAllPermissions(long roleId)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
-                Permission[] permissions = PermissionService.GetAllPermissionsForRole(roleId);
+                Permission[] permissions = PermissionService.GetAllPermissionsForRole(JwtHandler.GetClaims(this), roleId);
 
                 if (permissions != null)
                 {
@@ -69,18 +57,13 @@ namespace RedResQ_API.Controllers
                 {
                     return BadRequest("No permissions for role with id: " + roleId);
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPut("update")]
-        [Authorize]
         public ActionResult<bool> UpdatePermission(string name, long role)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 int rowsAffected = PermissionService.UpdatePermission(JwtHandler.GetClaims(this), name, role);
 
@@ -90,11 +73,7 @@ namespace RedResQ_API.Controllers
                 }
 
                 return BadRequest(false + "" + rowsAffected);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
     }
 }

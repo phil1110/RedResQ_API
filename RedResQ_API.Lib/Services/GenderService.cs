@@ -36,20 +36,23 @@ namespace RedResQ_API.Lib.Services
             throw new Exception("No Genders were found!");
         }
 
-        public static Gender Get(long id)
+        public static Gender Get(JwtClaims claims, long id)
         {
-            List<Gender> genders = new List<Gender>();
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_Ge_GetGender";
-
-            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
-
-            DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-            if (genderTable.Rows.Count == 1)
+            if (PermissionService.IsPermitted("getGender", claims.Role))
             {
-                return Gender.ConvertToGender(genderTable.Rows[0]);
-            }
+                List<Gender> genders = new List<Gender>();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Ge_GetGender";
+
+                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
+
+                DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+                if (genderTable.Rows.Count == 1)
+                {
+                    return Gender.ConvertToGender(genderTable.Rows[0]);
+                }
+            }            
 
             throw new Exception("Row count was not 1!");
         }

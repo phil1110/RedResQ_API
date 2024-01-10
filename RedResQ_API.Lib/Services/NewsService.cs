@@ -15,140 +15,165 @@ namespace RedResQ_API.Lib.Services
 	{
 		#region Get - Methods
 
-		public static Article[] GetGlobalArticles(long? articleId)
+		public static Article[] GetGlobalArticles(JwtClaims claims, long? articleId)
 		{
-			List<Article> output = new List<Article>();
-			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "SP_Ne_LatestArticles_Global";
-
-			if (articleId.HasValue)
+			if(PermissionService.IsPermitted("", claims.Role))
 			{
-				parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
-			}
+                List<Article> output = new List<Article>();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Ne_LatestArticles_Global";
 
-			DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+                if (articleId.HasValue)
+                {
+                    parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
+                }
 
-			if(articles.Rows.Count > 0)
-			{
-				foreach (DataRow row in articles.Rows)
-				{
-					output.Add(Article.ConvertToArticle(row));
-				}
+                DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-				return output.ToArray();
-			}
-			else
-			{
-				throw new Exception("No Articles were found!");
-			}
+                if (articles.Rows.Count > 0)
+                {
+                    foreach (DataRow row in articles.Rows)
+                    {
+                        output.Add(Article.ConvertToArticle(row));
+                    }
+
+                    return output.ToArray();
+                }
+                else
+                {
+                    throw new Exception("No Articles were found!");
+                }
+            }
+
+			throw new Exception("Not Authorized!");
 		}
 
-		public static Article[] GetCountryArticles(long countryId, long? articleId)
+		public static Article[] GetCountryArticles(JwtClaims claims, long countryId, long? articleId)
 		{
-			List<Article> output = new List<Article>();
-			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "SP_Ne_LatestArticles_Country";
+            if (PermissionService.IsPermitted("", claims.Role))
+            {
+                List<Article> output = new List<Article>();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Ne_LatestArticles_Country";
 
-			parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
+                parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
 
-			if (articleId.HasValue)
-			{
-				parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
-			}
+                if (articleId.HasValue)
+                {
+                    parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
+                }
 
-			DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+                DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if (articles.Rows.Count > 0)
-			{
-				foreach (DataRow row in articles.Rows)
-				{
-					output.Add(Article.ConvertToArticle(row));
-				}
+                if (articles.Rows.Count > 0)
+                {
+                    foreach (DataRow row in articles.Rows)
+                    {
+                        output.Add(Article.ConvertToArticle(row));
+                    }
 
-				return output.ToArray();
-			}
-			else
-			{
-				throw new Exception("No Articles were found!");
-			}
+                    return output.ToArray();
+                }
+                else
+                {
+                    throw new Exception("No Articles were found!");
+                }
+            }
+
+            throw new Exception("Not Authorized!");
 		}
 
-		public static Article[] GetLanguageArticles(long languageId, long? articleId)
+		public static Article[] GetLanguageArticles(JwtClaims claims, long languageId, long? articleId)
 		{
-			List<Article> output = new List<Article>();
-			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "SP_Ne_LatestArticles_Language";
+            if (PermissionService.IsPermitted("", claims.Role))
+            {
+                List<Article> output = new List<Article>();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Ne_LatestArticles_Language";
 
-			parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
+                parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
 
-			if (articleId.HasValue)
-			{
-				parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
-			}
+                if (articleId.HasValue)
+                {
+                    parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
+                }
 
-			DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+                DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if (articles.Rows.Count > 0)
-			{
-				foreach (DataRow row in articles.Rows)
-				{
-					output.Add(Article.ConvertToArticle(row));
-				}
+                if (articles.Rows.Count > 0)
+                {
+                    foreach (DataRow row in articles.Rows)
+                    {
+                        output.Add(Article.ConvertToArticle(row));
+                    }
 
-				return output.ToArray();
-			}
-			else
-			{
-				throw new Exception("No Articles were found!");
-			}
+                    return output.ToArray();
+                }
+                else
+                {
+                    throw new Exception("No Articles were found!");
+                }
+            }
+
+            throw new Exception("Not Authorized!");
 		}
 
-		public static Article[] GetCountryAndLanguageArticles(long countryId, long languageId, long? articleId)
+		public static Article[] GetCountryAndLanguageArticles(JwtClaims claims, long countryId, long languageId, long? articleId)
 		{
-			List<Article> output = new List<Article>();
-			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "SP_Ne_LatestArticles_CountryAndLanguage";
+            if (PermissionService.IsPermitted("", claims.Role))
+            {
+                List<Article> output = new List<Article>();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Ne_LatestArticles_CountryAndLanguage";
 
-			parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
-			parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
+                parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
+                parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
 
-			if (articleId.HasValue)
-			{
-				parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
-			}
+                if (articleId.HasValue)
+                {
+                    parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
+                }
 
-			DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+                DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if (articles.Rows.Count > 0)
-			{
-				foreach (DataRow row in articles.Rows)
-				{
-					output.Add(Article.ConvertToArticle(row));
-				}
+                if (articles.Rows.Count > 0)
+                {
+                    foreach (DataRow row in articles.Rows)
+                    {
+                        output.Add(Article.ConvertToArticle(row));
+                    }
 
-				return output.ToArray();
-			}
-			else
-			{
-				throw new Exception("No Articles were found!");
-			}
+                    return output.ToArray();
+                }
+                else
+                {
+                    throw new Exception("No Articles were found!");
+                }
+            }
+
+            throw new Exception("Not Authorized!");
 		}
 
-		public static Article GetSingleArticle(long articleId)
+		public static Article GetSingleArticle(JwtClaims claims, long articleId)
 		{
-			List<SqlParameter> parameters = new List<SqlParameter>();
-			string storedProcedure = "SP_Ne_SpecificArticle";
+            if (PermissionService.IsPermitted("", claims.Role))
+            {
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Ne_SpecificArticle";
 
-			parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = articleId });
+                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = articleId });
 
-			DataTable articleTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+                DataTable articleTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			if(articleTable.Rows.Count  == 1)
-			{
-				return Article.ConvertToArticle(articleTable.Rows[0]);
-			}
+                if (articleTable.Rows.Count == 1)
+                {
+                    return Article.ConvertToArticle(articleTable.Rows[0]);
+                }
 
-			throw new NullReferenceException("This article does not exist in the database!");
+                throw new NullReferenceException("This article does not exist in the database!");
+            }
+
+            throw new Exception("Not Authorized!");
 		}
 
 		#endregion
@@ -199,7 +224,7 @@ namespace RedResQ_API.Lib.Services
 			{
 				string storedProcedure = "SP_Ne_UpdateArticle";
 				List<SqlParameter> parameters = new List<SqlParameter>();
-				Article oldArticle = GetSingleArticle(article.Id);
+				Article oldArticle = GetSingleArticle(claims, article.Id);
 
 				parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = article.Id });
 
