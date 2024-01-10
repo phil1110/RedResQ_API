@@ -9,16 +9,19 @@ namespace RedResQ_API.Controllers
 	{
 		[HttpGet]
 		[Authorize]
-		public ActionResult<JwtClaims> Test()
+		public ActionResult<JwtClaims> Test(string temp)
 		{
-			JwtClaims claims = JwtHandler.GetClaims(this);
-
-			if (claims.Username != "string")
+			return ActionService.Execute(this, () =>
 			{
-				return Ok(claims);
-			}
+				JwtClaims claims = JwtHandler.GetClaims(this);
 
-			return NotFound(claims);
+				if (claims.Username != "string")
+				{
+					return Ok(claims);
+				}
+
+				return NotFound(claims);
+			});
 		}
 	}
 }

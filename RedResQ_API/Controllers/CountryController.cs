@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RedResQ_API.Lib.Exceptions;
 using System.Diagnostics.Metrics;
 
 namespace RedResQ_API.Controllers
@@ -10,79 +11,55 @@ namespace RedResQ_API.Controllers
         [HttpGet("fetch")]
         public ActionResult<Country[]> GetAll()
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(CountryService.GetAllCountries(JwtHandler.GetClaims(this)));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("get")]
         public ActionResult<Country> Get(long id)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(CountryService.GetCountry(JwtHandler.GetClaims(this), id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPost("add")]
         public ActionResult<bool> Add(string countryName)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(CountryService.AddCountry(JwtHandler.GetClaims(this), countryName));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPost("add/list")]
         public ActionResult<bool> AddArray(string[] countryNames)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(CountryService.AddCountryArray(JwtHandler.GetClaims(this), countryNames));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPut("update")]
         public ActionResult<bool> Edit(Country country)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(CountryService.EditCountry(JwtHandler.GetClaims(this), country));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(CountryService.DeleteCountry(JwtHandler.GetClaims(this), id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
     }
 }

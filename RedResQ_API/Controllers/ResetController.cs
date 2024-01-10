@@ -9,7 +9,7 @@ namespace RedResQ_API.Controllers
         [HttpGet("request")]
         public ActionResult RequestPasswordReset(string email)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool wasSuccessful = ResetService.RequestReset(JwtHandler.GetClaims(this), email);
 
@@ -21,17 +21,13 @@ namespace RedResQ_API.Controllers
                 {
                     return BadRequest("This point should be unreachable.");
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error! Message: " + ex.Message);
-            }
+            });
         }
 
         [HttpGet("confirm")]
         public ActionResult ConfirmPasswordReset(int confirmationCode, string email, string password)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool wasSuccessful = ResetService.ConfirmReset(JwtHandler.GetClaims(this), confirmationCode, email, password);
 
@@ -43,26 +39,18 @@ namespace RedResQ_API.Controllers
                 {
                     return BadRequest("Password Request was not successful.");
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error! Message: " + ex.Message);
-            }
+            });
         }
 
         [HttpGet("verify")]
         public ActionResult<bool> CheckValidity(int code, string email)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool isValid = ResetService.CheckValidity(JwtHandler.GetClaims(this), code, email);
 
                 return Ok(isValid);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
     }
 }

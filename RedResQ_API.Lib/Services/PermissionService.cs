@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RedResQ_API.Lib.Models;
 using System.Reflection.Metadata.Ecma335;
+using RedResQ_API.Lib.Exceptions;
 
 namespace RedResQ_API.Lib.Services
 {
@@ -54,7 +55,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            throw new Exception("Not permitted to complete this action!");
+            throw new AuthException("Required role was " + permission.RequiredRole.Name + "! Not authorised to complete this action!");
         }
 
         /// <summary>

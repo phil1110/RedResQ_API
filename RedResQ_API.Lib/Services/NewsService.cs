@@ -224,7 +224,7 @@ namespace RedResQ_API.Lib.Services
 			{
 				string storedProcedure = "SP_Ne_UpdateArticle";
 				List<SqlParameter> parameters = new List<SqlParameter>();
-				Article oldArticle = GetSingleArticle(article.Id);
+				Article oldArticle = GetSingleArticle(claims, article.Id);
 
 				parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = article.Id });
 

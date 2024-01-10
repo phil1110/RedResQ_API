@@ -34,7 +34,7 @@ namespace RedResQ_API.Lib.Services
         {
             if (PermissionService.IsPermitted("confirmReset", claims.Role))
             {
-                string hash = SessionService.HashPassword(password);
+                string hash = AuthService.HashPassword(password);
 
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 string storedProcedure = "SP_Rr_ConfirmPasswordReset";

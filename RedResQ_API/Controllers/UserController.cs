@@ -10,40 +10,32 @@ namespace RedResQ_API.Controllers
         [HttpGet("fetch")]
         public ActionResult<User[]> Fetch(long? id, int? amount)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 return Ok(UserService.Fetch(JwtHandler.GetClaims(this), id, amount));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("search")]
         public ActionResult<User[]> Search(string query)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
-                if(query.Length < 2)
+                if (query.Length < 2)
                 {
                     throw new Exception("A minimum of three letters is required to complete the search!");
                 }
 
                 return Ok(UserService.Search(JwtHandler.GetClaims(this), query));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("get")]
         public ActionResult<User> Get(long? id)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
-                if(id.HasValue)
+                if (id.HasValue)
                 {
                     return Ok(UserService.GetAny(JwtHandler.GetClaims(this), id.Value));
                 }
@@ -51,17 +43,13 @@ namespace RedResQ_API.Controllers
                 {
                     return Ok(UserService.GetPersonal(JwtHandler.GetClaims(this)));
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("check/username")]
         public ActionResult<bool> CheckUsername(string username)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool result = UserService.CheckUsername(JwtHandler.GetClaims(this), username);
 
@@ -71,17 +59,13 @@ namespace RedResQ_API.Controllers
                 }
 
                 return BadRequest(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpGet("check/email")]
         public ActionResult<bool> CheckEmail(string email)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool result = UserService.CheckEmail(JwtHandler.GetClaims(this), email);
 
@@ -91,17 +75,13 @@ namespace RedResQ_API.Controllers
                 }
 
                 return BadRequest(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPut("update")]
         public ActionResult<bool> Edit(User user)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool result = UserService.Edit(JwtHandler.GetClaims(this), user);
 
@@ -111,17 +91,13 @@ namespace RedResQ_API.Controllers
                 }
 
                 return BadRequest(result);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpPut("promote")]
         public ActionResult<bool> Promote(long userId, long roleId)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool result = UserService.Promote(JwtHandler.GetClaims(this), userId, roleId);
 
@@ -131,17 +107,13 @@ namespace RedResQ_API.Controllers
                 }
 
                 return BadRequest(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
 
         [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
-            try
+            return ActionService.Execute(this, () =>
             {
                 bool result = UserService.Delete(JwtHandler.GetClaims(this), id);
 
@@ -151,11 +123,7 @@ namespace RedResQ_API.Controllers
                 }
 
                 return BadRequest(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            });
         }
     }
 }

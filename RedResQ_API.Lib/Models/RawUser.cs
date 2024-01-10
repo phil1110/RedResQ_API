@@ -21,7 +21,6 @@ namespace RedResQ_API.Lib.Models
 		private long _gender;
 		private long _language;
 		private long _location;
-		private long _role;
 
 		#endregion
 

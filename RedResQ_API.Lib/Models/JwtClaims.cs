@@ -10,25 +10,41 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public JwtClaims(string id, string username, string email, long role)
+		public JwtClaims(TokenType tokenType, long id, string username, string email, long role, DateTime expiryDate)
 		{
+			TokenType = tokenType;
 			Id = id;
 			Username = username;
 			Email = email;
 			Role = role;
+			ExpiryDate = expiryDate;
+		}
+
+		public JwtClaims(TokenType tokenType, long role, DateTime expiryDate)
+		{
+			TokenType=tokenType;
+			Id = -1;
+			Username = null!;
+			Email = null!;
+			Role = role;
+			ExpiryDate = expiryDate;
 		}
 
 		#endregion
 
 		#region Properties
 
-		public string Id { get; set; }
+		public TokenType TokenType { get; set; }
+
+		public long Id { get; set; }
 
 		public string Username { get; private set; }
 
 		public string Email { get; private set; }
 
 		public long Role { get; private set; }
+
+		public DateTime ExpiryDate { get; set; }
 
 		#endregion
 	}
