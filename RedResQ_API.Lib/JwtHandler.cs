@@ -104,7 +104,7 @@ namespace RedResQ_API.Lib
 		{
 			TokenType tokenType = claims.TokenType;
 			DateTime timestamp = DateTime.UtcNow;
-			string ipAddress = controller.Request.Host.Host;
+			string ipAddress = controller.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             long? userId = claims.Id == -1 ? null : claims.Id;
 			string url = controller.Request.GetDisplayUrl().Split('?')[0];
 			string method = controller.Request.Method;
