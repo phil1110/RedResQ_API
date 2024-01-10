@@ -16,7 +16,7 @@ namespace RedResQ_API.Lib
 	{
 		public static string CreateToken(ControllerBase controller, User user)
         {
-            string ipAddress = controller.HttpContext.Connection.RemoteIpAddress.ToString();
+            string ipAddress = controller.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             DateTime expiryDate = DateTime.UtcNow.AddDays(30);
 
 			List<Claim> claims = new List<Claim>
@@ -36,7 +36,7 @@ namespace RedResQ_API.Lib
 
 		public static string CreateGuestToken(ControllerBase controller)
         {
-            string ipAddress = controller.Request.Host.Host;
+            string ipAddress = controller.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             DateTime expiryDate = DateTime.UtcNow.AddMinutes(15);
 
             List<Claim> claims = new List<Claim>
