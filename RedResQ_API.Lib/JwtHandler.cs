@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using System.Data.SqlClient;
 using System.Data;
 using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace RedResQ_API.Lib
 {
@@ -16,7 +17,7 @@ namespace RedResQ_API.Lib
 	{
 		public static string CreateToken(ControllerBase controller, User user)
         {
-            string ipAddress = controller.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            string ipAddress = GetIpAddress(controller.HttpContext.Request);
             DateTime expiryDate = DateTime.UtcNow.AddDays(30);
 
 			List<Claim> claims = new List<Claim>
@@ -36,7 +37,7 @@ namespace RedResQ_API.Lib
 
 		public static string CreateGuestToken(ControllerBase controller)
         {
-            string ipAddress = controller.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            string ipAddress = GetIpAddress(controller.HttpContext.Request);
             DateTime expiryDate = DateTime.UtcNow.AddMinutes(15);
 
             List<Claim> claims = new List<Claim>
@@ -104,7 +105,7 @@ namespace RedResQ_API.Lib
 		{
 			TokenType tokenType = claims.TokenType;
 			DateTime timestamp = DateTime.UtcNow;
-			string ipAddress = controller.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            string ipAddress = GetIpAddress(controller.HttpContext.Request);
             long? userId = claims.Id == -1 ? null : claims.Id;
 			string url = controller.Request.GetDisplayUrl().Split('?')[0];
 			string method = controller.Request.Method;
@@ -145,6 +146,16 @@ namespace RedResQ_API.Lib
             parameters.Add(new SqlParameter { ParameterName = "@validUntil", SqlDbType = SqlDbType.VarChar, Value = expiryDate });
 
             SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
+        }
+
+        private static string GetIpAddress(HttpRequest request)
+        {
+            if(request.Headers.TryGetValue("X-Real-IP", out var ip))
+            {
+                return ip;
+            }
+
+            return request.Host.Host;
         }
 	}
 }
