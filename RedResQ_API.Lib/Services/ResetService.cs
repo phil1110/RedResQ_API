@@ -66,9 +66,9 @@ namespace RedResQ_API.Lib.Services
 
                 int response = (int)SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray()).Rows[0].ItemArray[0]!;
 
-                if (response == 0)
+                if (response == 1)
                 {
-                    return false;
+                    return true;
                 }
             }
 
