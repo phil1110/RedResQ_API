@@ -73,6 +73,16 @@ namespace RedResQ_API.Lib.Services
 			throw new UnauthorizedAccessException("Credentials object was null!");
 		}
 
+		public static bool CheckToken(ControllerBase controller, JwtClaims claims)
+		{
+			if (claims.ExpiryDate > DateTime.UtcNow)
+			{
+				throw new AuthException("Please proceed to Login!");
+			}
+
+			return true;
+		}
+
         internal static User LoginEmail(Credentials credentials)
 		{
 			List<SqlParameter> parameters = new List<SqlParameter>();

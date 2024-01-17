@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RedResQ_API.Lib.Models;
 using System.Net;
 using System.Runtime.CompilerServices;
 
@@ -37,5 +38,14 @@ namespace RedResQ_API.Controllers
                 return Ok(AuthService.Register(JwtHandler.GetClaims(this), user));
             });
 		}
+
+        [HttpGet("checktoken")]
+        public ActionResult<bool> CheckToken()
+        {
+            return ActionService.Execute(this, () =>
+            {
+                return Ok(AuthService.CheckToken(this, JwtHandler.GetClaims(this)));
+            });
+        }
 	}
 }
