@@ -7,18 +7,15 @@ using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-    public class Quiz
+    public class QuizType
     {
-
         #region Constructor
 
-        public Quiz(long id, string name, int maxScore, Question[] questions, QuizType type)
+        public QuizType(long id, string name, QuizTypeStage[] stages)
         {
             Id = id;
             Name = name;
-            MaxScore = maxScore;
-            Questions = questions;
-            Type = type;
+            Stages = stages;
         }
 
         #endregion
@@ -29,19 +26,20 @@ namespace RedResQ_API.Lib.Models
 
         public string Name { get; private set; }
 
-        public int MaxScore { get; private set; }
-
-        public Question[] Questions { get; private set; }
-
-        public QuizType Type { get; private set; }
+        public QuizTypeStage[] Stages { get; private set; }
 
         #endregion
 
         #region Methods
 
-        public static Quiz ConvertToQuiz(DataRow row)
+        public static QuizType ConvertToQuizType(DataRow row, QuizTypeStage[] stages)
         {
-            throw new NotImplementedException();
+            int length = row.ItemArray.Length - 1;
+
+            string name = Convert.ToString(row.ItemArray[length--])!;
+            long id = Convert.ToInt64(row.ItemArray[length--])!;
+
+            return new QuizType(id, name, stages);
         }
 
         #endregion

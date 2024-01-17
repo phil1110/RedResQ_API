@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,15 @@ namespace RedResQ_API.Lib.Models
 
 		public Answer[] Answers { get; private set; }
 
-		#endregion
-	}
+        #endregion
+
+        #region Methods
+
+		public static Question ConvertToQuestion(DataRow row)
+		{
+			throw new NotImplementedException();
+		}
+
+        #endregion
+    }
 }

@@ -33,8 +33,8 @@ namespace RedResQ_API.Lib.Models
 		{
             int length = row.ItemArray.Length - 1;
 
-            long id = Convert.ToInt64(row.ItemArray[length--])!;
             string base64 = Convert.ToString(row.ItemArray[length--])!;
+            long id = Convert.ToInt64(row.ItemArray[length--])!;
 
             return new Image(id, base64);
         }
