@@ -11,9 +11,9 @@ namespace RedResQ_API.Lib.Models
     {
         #region Constructor
 
-        public QuizTypeStage(long quizID, int stage, Image image)
+        public QuizTypeStage(long quizTypeId, int stage, Image image)
         {
-            QuizID = quizID;
+            QuizTypeID = quizTypeId;
             Stage = stage;
             Image = image;
         }
@@ -22,7 +22,7 @@ namespace RedResQ_API.Lib.Models
 
         #region Properties
 
-        public long QuizID { get; private set; }
+        public long QuizTypeID { get; private set; }
 
         public int Stage { get; private set; }
 
@@ -40,11 +40,11 @@ namespace RedResQ_API.Lib.Models
             long imageId = Convert.ToInt64(row.ItemArray[length--])!;
 
             int stage = Convert.ToInt32(row.ItemArray[length--])!;
-            long quizId = Convert.ToInt64(row.ItemArray[length--])!;
+            long quizTypeId = Convert.ToInt64(row.ItemArray[length--])!;
 
             Image img = new Image(imageId, base64);
 
-            return new QuizTypeStage(quizId, stage, img);
+            return new QuizTypeStage(quizTypeId, stage, img);
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RedResQ_API.Lib.Services;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,18 +12,21 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Question(long id, string text, Answer[] answers)
+		public Question(long quizId, long id, string text, Answer[] answers)
 		{
+			QuizId = quizId;
 			Id = id;
 			Text = text;
 			Answers = answers;
 		}
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		public long Id { get; private set; }
+        public long QuizId { get; private set; }
+
+        public long Id { get; private set; }
 
 		public string Text { get; private set; }
 
@@ -34,8 +38,14 @@ namespace RedResQ_API.Lib.Models
 
 		public static Question ConvertToQuestion(DataRow row)
 		{
-			throw new NotImplementedException();
-		}
+            int length = row.ItemArray.Length - 1;
+
+            string text = Convert.ToString(row.ItemArray[length--])!;
+            long id = Convert.ToInt64(row.ItemArray[length--])!;
+            long quizId = Convert.ToInt64(row.ItemArray[length--])!;
+
+            return new Question(quizId, id, text, AnswerService.GetForQuestion(quizId, id));
+        }
 
         #endregion
     }
