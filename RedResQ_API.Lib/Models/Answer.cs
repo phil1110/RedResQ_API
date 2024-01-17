@@ -11,25 +11,28 @@ namespace RedResQ_API.Lib.Models
 	{
 		#region Constructor
 
-		public Answer(long id, string text, bool isTrue, long questionId)
-		{
-			Id = id;
+		public Answer(long quizId, long questionId, long id, string text, bool isTrue)
+        {
+            QuizId = quizId;
+            QuestionId = questionId;
+            Id = id;
 			Text = text;
 			IsTrue = isTrue;
-			QuestionID = questionId;
 		}
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		public long Id { get; private set; }
+        public long QuizId { get; private set; }
+
+        public long QuestionId { get; private set; }
+
+        public long Id { get; private set; }
 
 		public string Text { get; private set; }
 
 		public bool IsTrue { get; private set; }
-
-		public long QuestionID { get; private set; }
 
         #endregion
 
@@ -39,12 +42,13 @@ namespace RedResQ_API.Lib.Models
 		{
             int length = row.ItemArray.Length - 1;
 
-            long questionId = Convert.ToInt64(row.ItemArray[length--])!;
             bool isTrue = Convert.ToBoolean(Convert.ToInt16(row.ItemArray[length--])!);
             string text = Convert.ToString(row.ItemArray[length--])!;
             long id = Convert.ToInt64(row.ItemArray[length--])!;
+            long questionId = Convert.ToInt64(row.ItemArray[length--])!;
+            long quizId = Convert.ToInt64(row.ItemArray[length--])!;
 
-            return new Answer(id, text, isTrue, questionId);
+            return new Answer(quizId, questionId, id, text, isTrue);
         }
 
         #endregion
