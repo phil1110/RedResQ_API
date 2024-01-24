@@ -12,7 +12,7 @@ namespace RedResQ_API.Lib.Models
 		#region Constructor
 
 		public Article(long id, string title, string content, string author, DateTime date, Language language,
-			Image image, Location location)
+			Image image, Country country)
 		{
 			Id = id;
 			Title = title;
@@ -21,7 +21,7 @@ namespace RedResQ_API.Lib.Models
 			Date = date;
 			Language = language;
 			Image = image;
-			Location = location;
+			Country = country;
 		}
 
 		#endregion
@@ -42,7 +42,7 @@ namespace RedResQ_API.Lib.Models
 
 		public Image Image { get; private set; }
 
-		public Location Location { get; private set; }
+		public Country Country { get; private set; }
 
 		#endregion
 
@@ -54,10 +54,6 @@ namespace RedResQ_API.Lib.Models
 
 			string countryName = Convert.ToString(row.ItemArray[length--])!;
 			long coId = Convert.ToInt64(row.ItemArray[length--])!;
-
-			string postalCode = Convert.ToString(row.ItemArray[length--])!;
-			string city = Convert.ToString(row.ItemArray[length--])!;
-			long locId = Convert.ToInt64(row.ItemArray[length--])!;
 
 			string base64 = Convert.ToString(row.ItemArray[length--])!;
 			long imageId = Convert.ToInt64(row.ItemArray[length--])!;
@@ -72,11 +68,10 @@ namespace RedResQ_API.Lib.Models
 			long id = Convert.ToInt64(row.ItemArray[length--])!;
 
 			Country co = new Country(coId, countryName);
-			Location loc = new Location(locId, city, postalCode, co);
 			Image img = new Image(imageId, base64);
 			Language lang = new Language(langId, langName);
 
-			return new Article(id, title, content, author, date, lang, img, loc);
+			return new Article(id, title, content, author, date, lang, img, co);
 		}
 
 		#endregion
