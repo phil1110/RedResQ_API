@@ -38,7 +38,7 @@ namespace RedResQ_API.Lib.Models
 
 		public static Question ConvertToQuestion(DataRow row)
 		{
-            int length = row.ItemArray.Length - 1;
+            int length = row.ItemArray.Length - 1; 
 
             string text = Convert.ToString(row.ItemArray[length--])!;
             long id = Convert.ToInt64(row.ItemArray[length--])!;
