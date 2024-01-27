@@ -21,7 +21,7 @@ namespace RedResQ_API.Lib.Services
 			{
                 List<Article> output = new List<Article>();
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ne_LatestArticles_Global";
+                string storedProcedure = "SP_Ar_LatestArticles_Global";
 
                 if (articleId.HasValue)
                 {
@@ -54,7 +54,7 @@ namespace RedResQ_API.Lib.Services
             {
                 List<Article> output = new List<Article>();
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ne_LatestArticles_Country";
+                string storedProcedure = "SP_Ar_LatestArticles_Country";
 
                 parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
 
@@ -89,7 +89,7 @@ namespace RedResQ_API.Lib.Services
             {
                 List<Article> output = new List<Article>();
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ne_LatestArticles_Language";
+                string storedProcedure = "SP_Ar_LatestArticles_Language";
 
                 parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
 
@@ -124,7 +124,7 @@ namespace RedResQ_API.Lib.Services
             {
                 List<Article> output = new List<Article>();
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ne_LatestArticles_CountryAndLanguage";
+                string storedProcedure = "SP_Ar_LatestArticles_CountryAndLanguage";
 
                 parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
                 parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
@@ -159,7 +159,7 @@ namespace RedResQ_API.Lib.Services
             if (PermissionService.IsPermitted("", claims.Role))
             {
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ne_SpecificArticle";
+                string storedProcedure = "SP_Ar_SpecificArticle";
 
                 parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = articleId });
 
@@ -185,7 +185,7 @@ namespace RedResQ_API.Lib.Services
 			if(PermissionService.IsPermitted("publishArticle", claims.Role))
 			{
 				List<SqlParameter> parameters = new List<SqlParameter>();
-				string storedProcedure = "SP_Ne_NewArticle";
+				string storedProcedure = "SP_Ar_NewArticle";
 
 				parameters.Add(new SqlParameter { ParameterName = "@title", SqlDbType = SqlDbType.VarChar, Value = article.Title });
 				parameters.Add(new SqlParameter { ParameterName = "@content", SqlDbType = SqlDbType.VarChar, Value = article.Content });
@@ -222,7 +222,7 @@ namespace RedResQ_API.Lib.Services
 		{
 			if(PermissionService.IsPermitted("editArticle", claims.Role))
 			{
-				string storedProcedure = "SP_Ne_UpdateArticle";
+				string storedProcedure = "SP_Ar_UpdateArticle";
 				List<SqlParameter> parameters = new List<SqlParameter>();
 				Article oldArticle = GetSingleArticle(claims, article.Id);
 
@@ -266,7 +266,7 @@ namespace RedResQ_API.Lib.Services
 		{
 			if (PermissionService.IsPermitted("deleteArticle", claims.Role))
 			{
-				string storedProcedure = "SP_Ne_DeleteArticle";
+				string storedProcedure = "SP_Ar_DeleteArticle";
 				List<SqlParameter> parameters = new List<SqlParameter>();
 
 				parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = articleId });
