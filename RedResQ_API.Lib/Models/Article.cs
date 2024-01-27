@@ -45,35 +45,5 @@ namespace RedResQ_API.Lib.Models
 		public Country Country { get; private set; }
 
 		#endregion
-
-		#region Methods
-
-		public static Article ConvertToArticle(DataRow row)
-		{
-			int length = row.ItemArray.Length - 1;
-
-			string countryName = Convert.ToString(row.ItemArray[length--])!;
-			long coId = Convert.ToInt64(row.ItemArray[length--])!;
-
-			string base64 = Convert.ToString(row.ItemArray[length--])!;
-			long imageId = Convert.ToInt64(row.ItemArray[length--])!;
-
-			string langName = Convert.ToString(row.ItemArray[length--])!;
-			long langId = Convert.ToInt64(row.ItemArray[length--])!;
-
-			DateTime date = (DateTime)row.ItemArray[length--]!;
-			string author = Convert.ToString(row.ItemArray[length--])!;
-			string content = Convert.ToString(row.ItemArray[length--])!;
-			string title = Convert.ToString(row.ItemArray[length--])!;
-			long id = Convert.ToInt64(row.ItemArray[length--])!;
-
-			Country co = new Country(coId, countryName);
-			Image img = new Image(imageId, base64);
-			Language lang = new Language(langId, langName);
-
-			return new Article(id, title, content, author, date, lang, img, co);
-		}
-
-		#endregion
 	}
 }

@@ -62,7 +62,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (locationTable.Rows.Count == 1)
                 {
-                    return Convert.ToInt64(locationTable.Rows[0].ItemArray[0]);
+                    return Converter.ToInt64(locationTable.Rows[0].ItemArray[0]);
                 }
             }
 

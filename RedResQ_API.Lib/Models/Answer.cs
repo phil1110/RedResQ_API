@@ -35,22 +35,5 @@ namespace RedResQ_API.Lib.Models
 		public bool IsTrue { get; private set; }
 
         #endregion
-
-        #region Methods
-
-		public static Answer ConvertToAnswer(DataRow row)
-		{
-            int length = row.ItemArray.Length - 1;
-
-            bool isTrue = Convert.ToBoolean(Convert.ToInt16(row.ItemArray[length--])!);
-            string text = Convert.ToString(row.ItemArray[length--])!;
-            long id = Convert.ToInt64(row.ItemArray[length--])!;
-            long questionId = Convert.ToInt64(row.ItemArray[length--])!;
-            long quizId = Convert.ToInt64(row.ItemArray[length--])!;
-
-            return new Answer(quizId, questionId, id, text, isTrue);
-        }
-
-        #endregion
     }
 }

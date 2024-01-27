@@ -29,24 +29,5 @@ namespace RedResQ_API.Lib.Models
         public Image Image { get; private set; }
 
         #endregion
-
-        #region Methods
-
-        public static QuizTypeStage ConvertToQuizTypeStage(DataRow row)
-        {
-            int length = row.ItemArray.Length - 1;
-
-            string base64 = Convert.ToString(row.ItemArray[length--])!;
-            long imageId = Convert.ToInt64(row.ItemArray[length--])!;
-
-            int stage = Convert.ToInt32(row.ItemArray[length--])!;
-            long quizTypeId = Convert.ToInt64(row.ItemArray[length--])!;
-
-            Image img = new Image(imageId, base64);
-
-            return new QuizTypeStage(quizTypeId, stage, img);
-        }
-
-        #endregion
     }
 }

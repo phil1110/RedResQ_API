@@ -36,14 +36,5 @@ namespace RedResQ_API.Lib.Models
         public QuizType Type { get; private set; }
 
         #endregion
-
-        #region Methods
-
-        public static Quiz ConvertToQuiz(DataRow row)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 }

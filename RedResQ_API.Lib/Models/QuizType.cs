@@ -29,19 +29,5 @@ namespace RedResQ_API.Lib.Models
         public QuizTypeStage[] Stages { get; private set; }
 
         #endregion
-
-        #region Methods
-
-        public static QuizType ConvertToQuizType(DataRow row, QuizTypeStage[] stages)
-        {
-            int length = row.ItemArray.Length - 1;
-
-            string name = Convert.ToString(row.ItemArray[length--])!;
-            long id = Convert.ToInt64(row.ItemArray[length--])!;
-
-            return new QuizType(id, name, stages);
-        }
-
-        #endregion
     }
 }

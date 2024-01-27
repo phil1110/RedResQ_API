@@ -143,7 +143,7 @@ namespace RedResQ_API.Lib.Services
 
 			DataTable hash = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			return Convert.ToString(hash!.Rows[0]!.ItemArray[0]!)!;
+			return Converter.ToString(hash!.Rows[0]!.ItemArray[0]!)!;
 		}
 	}
 }

@@ -26,19 +26,5 @@ namespace RedResQ_API.Lib.Models
 		public string Name { get; private set; }
 
 		#endregion
-
-		#region Methods
-
-		internal static Role ConvertToRole(DataRow row)
-		{
-			int length = row.ItemArray.Length - 1;
-
-			string roleName = Convert.ToString(row.ItemArray[length--])!;
-			long roleId = Convert.ToInt64(row.ItemArray[length--]);
-
-			return new Role(roleId, roleName);
-		}
-
-		#endregion
 	}
 }

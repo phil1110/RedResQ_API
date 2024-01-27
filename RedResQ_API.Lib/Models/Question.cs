@@ -33,20 +33,5 @@ namespace RedResQ_API.Lib.Models
 		public Answer[] Answers { get; private set; }
 
         #endregion
-
-        #region Methods
-
-		public static Question ConvertToQuestion(DataRow row)
-		{
-            int length = row.ItemArray.Length - 1; 
-
-            string text = Convert.ToString(row.ItemArray[length--])!;
-            long id = Convert.ToInt64(row.ItemArray[length--])!;
-            long quizId = Convert.ToInt64(row.ItemArray[length--])!;
-
-            return new Question(quizId, id, text, AnswerService.GetForQuestion(quizId, id));
-        }
-
-        #endregion
     }
 }

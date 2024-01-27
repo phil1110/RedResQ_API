@@ -26,19 +26,5 @@ namespace RedResQ_API.Lib.Models
 		public string CountryName { get; private set; }
 
         #endregion
-
-        #region Methods
-
-		public static Country ConvertToCountry(DataRow row)
-		{
-            int length = row.ItemArray.Length - 1;
-
-            string name = Convert.ToString(row.ItemArray[length--])!;
-            long id = Convert.ToInt64(row.ItemArray[length--])!;
-
-            return new Country(id, name);
-        }
-
-        #endregion
     }
 }

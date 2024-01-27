@@ -34,7 +34,7 @@ namespace RedResQ_API.Lib.Services
             throw new NotFoundException();
         }
 
-        public static long Add(JwtClaims claims, string base64)
+        public static long Add(JwtClaims claims, string desc, byte[] bytes)
         {
             if(PermissionService.IsPermitted("addImage", claims.Role))
             {
@@ -71,7 +71,7 @@ namespace RedResQ_API.Lib.Services
             return false;
         }
 
-        public static long Search(JwtClaims claims,  string base64)
+        public static long Search(JwtClaims claims, string desc)
         {
             if (PermissionService.IsPermitted("searchImage", claims.Role))
             {
