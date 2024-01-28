@@ -75,18 +75,18 @@ namespace RedResQ_API.Lib
 
 			if (tokenType == TokenType.Guest)
             {
-                long ticks = Converter.ToInt64(user.FindFirst(ClaimTypes.Expiration)?.Value);
-                long role = Converter.ToInt64(user.FindFirst(ClaimTypes.Role)?.Value);
+                long ticks = Convert.ToInt64(user.FindFirst(ClaimTypes.Expiration)?.Value);
+                long role = Convert.ToInt64(user.FindFirst(ClaimTypes.Role)?.Value);
 
                 claims = new JwtClaims(tokenType, role, new DateTime(ticks));
             }
 			else if (tokenType == TokenType.User)
             {
-                long ticks = Converter.ToInt64(user.FindFirst(ClaimTypes.Expiration)?.Value);
-                long id = Converter.ToInt64(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                long ticks = Convert.ToInt64(user.FindFirst(ClaimTypes.Expiration)?.Value);
+                long id = Convert.ToInt64(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                 string? username = user.FindFirst(ClaimTypes.Name)?.Value;
                 string? email = user.FindFirst(ClaimTypes.Email)?.Value;
-                long role = Converter.ToInt64(user.FindFirst(ClaimTypes.Role)?.Value);
+                long role = Convert.ToInt64(user.FindFirst(ClaimTypes.Role)?.Value);
 
                 claims = new JwtClaims(tokenType, id, username!, email!, role, new DateTime(ticks));
             }

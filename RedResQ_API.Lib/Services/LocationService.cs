@@ -31,7 +31,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (locationTable.Rows.Count == 1)
                 {
-                    return Location.ConvertToLocation(locationTable.Rows[0]);
+                    return Converter.ToLocation(locationTable.Rows[0].ItemArray.ToList()!);
                 }
             }
 
@@ -62,7 +62,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (locationTable.Rows.Count == 1)
                 {
-                    return Converter.ToInt64(locationTable.Rows[0].ItemArray[0]);
+                    return Convert.ToInt64(locationTable.Rows[0].ItemArray[0]);
                 }
             }
 
@@ -95,7 +95,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in locationTable.Rows)
                     {
-                        locations.Add(Location.ConvertToLocation(row));
+                        locations.Add(Converter.ToLocation(row.ItemArray.ToList()!));
                     }
 
                     return locations.ToArray();

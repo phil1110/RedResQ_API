@@ -25,7 +25,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in languageTable.Rows)
                     {
-                        languages.Add(Language.ConvertToLanguage(row));
+                        languages.Add(Converter.ToLanguage(row.ItemArray.ToList()!));
                     }
 
                     return languages.ToArray();
@@ -48,7 +48,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (countryTable.Rows.Count == 1)
                 {
-                    return Language.ConvertToLanguage(countryTable.Rows[0]);
+                    return Converter.ToLanguage(countryTable.Rows[0].ItemArray.ToList()!);
                 }
             }
             

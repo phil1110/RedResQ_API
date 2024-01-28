@@ -84,7 +84,7 @@ namespace RedResQ_API.Lib.Services
 
 			if(userTable.Rows.Count == 1)
 			{
-				User output = User.ConvertToPerson(userTable.Rows[0]);
+				User output = Converter.ToUser(userTable.Rows[0].ItemArray.ToList()!);
 
 				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, GetHash(output)))
 				{
@@ -112,7 +112,7 @@ namespace RedResQ_API.Lib.Services
 
 			if (userTable.Rows.Count == 1)
 			{
-				User output = User.ConvertToPerson(userTable.Rows[0]);
+				User output = Converter.ToUser(userTable.Rows[0].ItemArray.ToList()!);
 
 				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, GetHash(output)))
 				{
@@ -143,7 +143,7 @@ namespace RedResQ_API.Lib.Services
 
 			DataTable hash = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-			return Converter.ToString(hash!.Rows[0]!.ItemArray[0]!)!;
+			return Convert.ToString(hash!.Rows[0]!.ItemArray[0]!)!;
 		}
 	}
 }

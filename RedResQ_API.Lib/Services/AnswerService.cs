@@ -28,7 +28,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (answerTable.Rows.Count == 1)
                 {
-                    return Answer.ConvertToAnswer(answerTable.Rows[0]);
+                    return Converter.ToAnswer(answerTable.Rows[0].ItemArray.ToList()!);
                 }
             }
 
@@ -60,7 +60,7 @@ namespace RedResQ_API.Lib.Services
             {
                 foreach (DataRow row in answerTable.Rows)
                 {
-                    answers.Add(Answer.ConvertToAnswer(row));
+                    answers.Add(Converter.ToAnswer(row.ItemArray.ToList()!));
                 }
 
                 return answers.ToArray();
@@ -94,7 +94,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in answerTable.Rows)
                     {
-                        answers.Add(Answer.ConvertToAnswer(row));
+                        answers.Add(Converter.ToAnswer(row.ItemArray.ToList()!));
                     }
 
                     return answers.ToArray();
@@ -115,7 +115,7 @@ namespace RedResQ_API.Lib.Services
                 parameters.Add(new SqlParameter { ParameterName = "@questionId", SqlDbType = SqlDbType.BigInt, Value = answer.QuestionId });
                 parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = answer.Id });
                 parameters.Add(new SqlParameter { ParameterName = "@text", SqlDbType = SqlDbType.BigInt, Value = answer.Text });
-                parameters.Add(new SqlParameter { ParameterName = "@isTrue", SqlDbType = SqlDbType.Bit, Value = Converter.ToInt16(answer.IsTrue) });
+                parameters.Add(new SqlParameter { ParameterName = "@isTrue", SqlDbType = SqlDbType.Bit, Value = Convert.ToInt16(answer.IsTrue) });
 
                 int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
@@ -161,7 +161,7 @@ namespace RedResQ_API.Lib.Services
                 parameters.Add(new SqlParameter { ParameterName = "@questionId", SqlDbType = SqlDbType.BigInt, Value = answer.QuestionId });
                 parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = answer.Id });
                 parameters.Add(new SqlParameter { ParameterName = "@text", SqlDbType = SqlDbType.BigInt, Value = answer.Text });
-                parameters.Add(new SqlParameter { ParameterName = "@isTrue", SqlDbType = SqlDbType.Bit, Value = Converter.ToInt16(answer.IsTrue) });
+                parameters.Add(new SqlParameter { ParameterName = "@isTrue", SqlDbType = SqlDbType.Bit, Value = Convert.ToInt16(answer.IsTrue) });
 
                 int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 

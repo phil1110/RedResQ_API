@@ -31,7 +31,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (roleTable.Rows.Count == 1)
                 {
-                    return Role.ConvertToRole(roleTable.Rows[0]);
+                    return Converter.ToRole(roleTable.Rows[0].ItemArray.ToList()!);
                 }
             }
 
@@ -57,7 +57,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in roleTable.Rows)
                     {
-                        roles.Add(Role.ConvertToRole(row));
+                        roles.Add(Converter.ToRole(row.ItemArray.ToList()!));
                     }
 
                     return roles.ToArray();

@@ -103,7 +103,7 @@ namespace RedResQ_API.Lib
 
         public static Permission ToPermission(List<object> items)
         {
-            
+            int pos = 0;
 
             string permName = Convert.ToString(items[pos++])!;
 
@@ -112,63 +112,86 @@ namespace RedResQ_API.Lib
             return new Permission(permName, role);
         }
 
-        public static Question ToQuestion(List<object> items)
+        public static QuizViewRow ToQuizViewRow(List<object> items)
         {
-            throw new NotImplementedException();
-        }
+            int pos = 0;
 
-        public static QuizType ToQuizType(List<object> items)
-        {
-            throw new NotImplementedException();
-        }
+            long quiz_id = Convert.ToInt64(items[pos++])!;
+            string quiz_name = Convert.ToString(items[pos++])!;
+            int quiz_maxScore = Convert.ToInt32(items[pos++])!;
+            long quiz_typeId = Convert.ToInt64(items[pos++])!;
 
-        public static QuizTypeStage ToQuizTypeStage(List<object> items)
-        {
-            throw new NotImplementedException();
+            long quizType_id = Convert.ToInt64(items[pos++])!;
+            string quizType_name = Convert.ToString(items[pos++])!;
+
+            long quizTypeStage_quizTypeId = Convert.ToInt64(items[pos++])!;
+            int quizTypeStage_stage = Convert.ToInt32(items[pos++])!;
+            long quizTypeStage_imageId = Convert.ToInt64(items[pos++])!;
+
+            long image_id = Convert.ToInt64(items[pos++])!;
+            string image_description = Convert.ToString(items[pos++])!;
+            byte[] image_bytes = (byte[])items[pos++]!;
+
+            long question_quizId = Convert.ToInt64(items[pos++])!;
+            long question_id = Convert.ToInt64(items[pos++])!;
+            string question_text = Convert.ToString(items[pos++])!;
+
+            long answer_quizId = Convert.ToInt64(items[pos++])!;
+            long answer_questionId = Convert.ToInt64(items[pos++])!;
+            long answer_id = Convert.ToInt64(items[pos++])!;
+            string answer_text = Convert.ToString(items[pos++])!;
+            bool answer_isTrue = Convert.ToBoolean(Convert.ToInt16(items[pos])!);
+
+            return new QuizViewRow(quiz_id, quiz_name, quiz_maxScore, quiz_typeId, 
+                quizType_id, quizType_name, 
+                quizTypeStage_quizTypeId, quizTypeStage_stage, quizTypeStage_imageId,
+                image_id, image_description, image_bytes, 
+                question_quizId, question_id, question_text, 
+                answer_quizId, answer_questionId, answer_id, answer_text, answer_isTrue);
         }
 
         internal static Role ToRole(List<object> items)
         {
-            int length = row.ItemArray.Length - 1;
+            int pos = 0;
 
-            string roleName = Convert.ToString(row.ItemArray[length--])!;
-            long roleId = Convert.ToInt64(row.ItemArray[length--]);
+            long roleId = Convert.ToInt64(items[pos++]);
+            string roleName = Convert.ToString(items[pos])!;
 
             return new Role(roleId, roleName);
         }
 
         public static User ToUser(List<object> items)
         {
-            int length = row.ItemArray.Length - 1;
+            int pos = 0;
 
-            string roleName = Convert.ToString(row.ItemArray[length--])!;
-            long roleId = Convert.ToInt64(row.ItemArray[length--])!;
+            long id = Convert.ToInt64(items[pos++])!;
+            string username = Convert.ToString(items[pos++])!;
+            string firstName = Convert.ToString(items[pos++])!;
+            string lastName = Convert.ToString(items[pos++])!;
+            string email = Convert.ToString(items[pos++])!;
+            DateTime birthdate = (DateTime)items[pos++]!;
 
-            string countryName = Convert.ToString(row.ItemArray[length--])!;
-            long countryId = Convert.ToInt64(row.ItemArray[length--])!;
+            long genderId = Convert.ToInt64(items[pos++])!;
+            string genderName = Convert.ToString(items[pos++])!;
 
-            string postalCode = Convert.ToString(row.ItemArray[length--])!;
-            string city = Convert.ToString(row.ItemArray[length--])!;
-            long locationId = Convert.ToInt64(row.ItemArray[length--])!;
+            long languageId = Convert.ToInt64(items[pos++])!;
+            string languageName = Convert.ToString(items[pos++])!;
 
-            string languageName = Convert.ToString(row.ItemArray[length--])!;
-            long languageId = Convert.ToInt64(row.ItemArray[length--])!;
+            long locationId = Convert.ToInt64(items[pos++])!;
+            string city = Convert.ToString(items[pos++])!;
+            string postalCode = Convert.ToString(items[pos++])!;
 
-            string genderName = Convert.ToString(row.ItemArray[length--])!;
-            long genderId = Convert.ToInt64(row.ItemArray[length--])!;
+            long countryId = Convert.ToInt64(items[pos++])!;
+            string countryName = Convert.ToString(items[pos++])!;
 
-            DateTime birthdate = (DateTime)row.ItemArray[length--]!;
-            string email = Convert.ToString(row.ItemArray[length--])!;
-            string lastName = Convert.ToString(row.ItemArray[length--])!;
-            string firstName = Convert.ToString(row.ItemArray[length--])!;
-            string username = Convert.ToString(row.ItemArray[length--])!;
-            long id = Convert.ToInt64(row.ItemArray[length--])!;
+            long roleId = Convert.ToInt64(items[pos++])!;
+            string roleName = Convert.ToString(items[pos])!;
 
-            Role role = new Role(roleId, roleName);
+            Gender gender = new Gender(genderId, genderName);
+            Language language = new Language(languageId, languageName);
             Country country = new Country(countryId, countryName);
             Location location = new Location(locationId, city, postalCode, country);
-            Language language = new Language(languageId, languageName);
-            Gender gender = new Gender(genderId, genderName);
+            Role role = new Role(roleId, roleName);
 
             return new User(id, username, firstName, lastName, email, birthdate, gender, language, location, role);
         }

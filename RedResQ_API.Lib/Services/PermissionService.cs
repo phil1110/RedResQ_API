@@ -37,7 +37,7 @@ namespace RedResQ_API.Lib.Services
 
             DataTable permissionTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-            return Permission.ConvertToPermission(permissionTable.Rows[0]);
+            return Converter.ToPermission(permissionTable.Rows[0].ItemArray.ToList()!);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in roleTable.Rows)
                     {
-                        permissions.Add(Permission.ConvertToPermission(row));
+                        permissions.Add(Converter.ToPermission(row.ItemArray.ToList()!));
                     }
 
                     return permissions.ToArray();
@@ -107,7 +107,7 @@ namespace RedResQ_API.Lib.Services
 
                     foreach (DataRow row in roleTable.Rows)
                     {
-                        permissions.Add(Permission.ConvertToPermission(row));
+                        permissions.Add(Converter.ToPermission(row.ItemArray.ToList()!));
                     }
 
                     return permissions.ToArray();

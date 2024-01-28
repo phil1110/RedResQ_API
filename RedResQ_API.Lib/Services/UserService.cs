@@ -44,7 +44,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in userTable.Rows)
                     {
-                        users.Add(User.ConvertToPerson(row));
+                        users.Add(Converter.ToUser(row.ItemArray.ToList()!));
                     }
 
                     return users.ToArray();
@@ -77,7 +77,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in userTable.Rows)
                     {
-                        users.Add(User.ConvertToPerson(row));
+                        users.Add(Converter.ToUser(row.ItemArray.ToList()!));
                     }
 
                     return users.ToArray();
@@ -107,7 +107,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (userTable.Rows.Count == 1)
                 {
-                    return User.ConvertToPerson(userTable.Rows[0]);
+                    return Converter.ToUser(userTable.Rows[0].ItemArray.ToList()!);
                 }
             }
 
@@ -133,7 +133,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (userTable.Rows.Count == 1)
                 {
-                    return User.ConvertToPerson(userTable.Rows[0]);
+                    return Converter.ToUser(userTable.Rows[0].ItemArray.ToList()!);
                 }
             }
 

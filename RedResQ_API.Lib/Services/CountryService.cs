@@ -26,7 +26,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in countryTable.Rows)
                     {
-                        countries.Add(Country.ConvertToCountry(row));
+                        countries.Add(Converter.ToCountry(row.ItemArray.ToList()!));
                     }
 
                     return countries.ToArray();
@@ -50,7 +50,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (countryTable.Rows.Count == 1)
                 {
-                    return Country.ConvertToCountry(countryTable.Rows[0]);
+                    return Converter.ToCountry(countryTable.Rows[0].ItemArray.ToList()!);
                 }
             }
 

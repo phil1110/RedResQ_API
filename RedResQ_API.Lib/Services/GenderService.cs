@@ -26,7 +26,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in genderTable.Rows)
                     {
-                        genders.Add(Gender.ConvertToGender(row));
+                        genders.Add(Converter.ToGender(row.ItemArray.ToList()!));
                     }
 
                     return genders.ToArray();
@@ -40,7 +40,6 @@ namespace RedResQ_API.Lib.Services
         {
             if (PermissionService.IsPermitted("getGender", claims.Role))
             {
-                List<Gender> genders = new List<Gender>();
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 string storedProcedure = "SP_Ge_GetGender";
 
@@ -50,7 +49,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (genderTable.Rows.Count == 1)
                 {
-                    return Gender.ConvertToGender(genderTable.Rows[0]);
+                    return Converter.ToGender(genderTable.Rows[0].ItemArray.ToList()!);
                 }
             }            
 

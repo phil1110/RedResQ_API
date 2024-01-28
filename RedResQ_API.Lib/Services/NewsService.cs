@@ -34,7 +34,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in articles.Rows)
                     {
-                        output.Add(Article.ConvertToArticle(row));
+                        output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
                     }
 
                     return output.ToArray();
@@ -69,7 +69,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in articles.Rows)
                     {
-                        output.Add(Article.ConvertToArticle(row));
+                        output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
                     }
 
                     return output.ToArray();
@@ -104,7 +104,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in articles.Rows)
                     {
-                        output.Add(Article.ConvertToArticle(row));
+                        output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
                     }
 
                     return output.ToArray();
@@ -140,7 +140,7 @@ namespace RedResQ_API.Lib.Services
                 {
                     foreach (DataRow row in articles.Rows)
                     {
-                        output.Add(Article.ConvertToArticle(row));
+                        output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
                     }
 
                     return output.ToArray();
@@ -167,7 +167,7 @@ namespace RedResQ_API.Lib.Services
 
                 if (articleTable.Rows.Count == 1)
                 {
-                    return Article.ConvertToArticle(articleTable.Rows[0]);
+                    return Converter.ToArticle(articleTable.Rows[0].ItemArray.ToList()!);
                 }
 
                 throw new NullReferenceException("This article does not exist in the database!");

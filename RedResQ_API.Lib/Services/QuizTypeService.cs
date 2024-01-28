@@ -9,9 +9,6 @@ namespace RedResQ_API.Lib.Services
 {
     public static class QuizTypeService
     {
-        public static QuizType[] GetQuizTypes()
-        {
-
-        }
+        
     }
 }
