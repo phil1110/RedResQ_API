@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
@@ -11,22 +13,25 @@ namespace RedResQ_API.Lib.Models
     {
         #region Constructor
 
-        public QuizType(long id, string name, QuizTypeStage[] stages)
+        [JsonConstructor]
+        public QuizType(long id, string name, QuizTypeStage[]? stages = null)
         {
             Id = id;
             Name = name;
-            Stages = stages;
+            Stages = stages ?? Array.Empty<QuizTypeStage>();
         }
 
         #endregion
 
         #region Properties
 
-        public long Id { get; private set; }
+        [JsonRequired]
+        public long Id { get; set; }
 
-        public string Name { get; private set; }
+        [JsonRequired]
+        public string Name { get; set; }
 
-        public QuizTypeStage[] Stages { get; private set; }
+        public QuizTypeStage[]? Stages { get; private set; }
 
         #endregion
     }

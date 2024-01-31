@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
@@ -25,11 +26,11 @@ namespace RedResQ_API.Lib.Models
 
         #region Properties
 
-        public long Id { get; private set; }
+        public long Id { get; set; }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
-        public int MaxScore { get; private set; }
+        public int MaxScore { get; set; }
 
         public Question[] Questions { get; private set; }
 

@@ -112,6 +112,17 @@ namespace RedResQ_API.Lib
             return new Permission(permName, role);
         }
 
+        public static Quiz ToQuiz(List<object> items, Question[] questions, QuizType quizType)
+        {
+            int pos = 0;
+
+            long id = Convert.ToInt64(items[pos++])!;
+            string name = Convert.ToString(items[pos++])!;
+            int maxScore = Convert.ToInt32(items[pos])!;
+
+            return new Quiz(id, name, maxScore, questions, quizType);
+        }
+
         public static QuizViewRow ToQuizViewRow(List<object> items)
         {
             int pos = 0;
