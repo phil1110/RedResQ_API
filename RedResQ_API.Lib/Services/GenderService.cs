@@ -1,4 +1,5 @@
-﻿using RedResQ_API.Lib.Models;
+﻿using RedResQ_API.Lib.Exceptions;
+using RedResQ_API.Lib.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,85 +14,73 @@ namespace RedResQ_API.Lib.Services
 {
     public static class GenderService
     {
-        public static Gender[] GetAll(JwtClaims claims)
+        public static Gender[] GetAll()
         {
-            if (PermissionService.IsPermitted("getGender", claims.Role))
+            List<Gender> genders = new List<Gender>();
+            string storedProcedure = "SP_Ge_GetAllGenders";
+
+            DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure);
+
+            if (genderTable.Rows.Count > 0)
             {
-                List<Gender> genders = new List<Gender>();
-                string storedProcedure = "SP_Ge_GetAllGenders";
-
-                DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure);
-
-                if (genderTable.Rows.Count > 0)
+                foreach (DataRow row in genderTable.Rows)
                 {
-                    foreach (DataRow row in genderTable.Rows)
-                    {
-                        genders.Add(Converter.ToGender(row.ItemArray.ToList()!));
-                    }
-
-                    return genders.ToArray();
+                    genders.Add(Converter.ToGender(row.ItemArray.ToList()!));
                 }
+
+                return genders.ToArray();
             }
 
-            throw new Exception("No Genders were found!");
+            throw new NotFoundException("No Genders were found!");
         }
 
-        public static Gender Get(JwtClaims claims, long id)
+        public static Gender Get(long id)
         {
-            if (PermissionService.IsPermitted("getGender", claims.Role))
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Ge_GetGender";
+
+            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
+
+            DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+            if (genderTable.Rows.Count == 1)
             {
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ge_GetGender";
+                return Converter.ToGender(genderTable.Rows[0].ItemArray.ToList()!);
+            }
 
-                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
-
-                DataTable genderTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-                if (genderTable.Rows.Count == 1)
-                {
-                    return Converter.ToGender(genderTable.Rows[0].ItemArray.ToList()!);
-                }
-            }            
-
-            throw new Exception("Row count was not 1!");
+            throw new NotFoundException("No Genders were found!");
         }
 
         public static bool Add(JwtClaims claims, string name)
         {
-            if (PermissionService.IsPermitted("addGender", claims.Role))
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Ge_AddGender";
+
+            parameters.Add(new SqlParameter { ParameterName = "@genderName", SqlDbType = SqlDbType.VarChar, Value = name });
+
+            int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
+
+            if (rowsAffected == 1)
             {
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ge_AddGender";
-
-                parameters.Add(new SqlParameter { ParameterName = "@genderName", SqlDbType = SqlDbType.VarChar, Value = name });
-
-                int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
-
-                if (rowsAffected == 1)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
 
-        public static bool Edit(JwtClaims claims, Gender gender)
+        public static bool Edit(Gender gender)
         {
-            if (PermissionService.IsPermitted("editGender", claims.Role))
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Ge_EditGender";
+
+            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = gender.Id });
+            parameters.Add(new SqlParameter { ParameterName = "@genderName", SqlDbType = SqlDbType.VarChar, Value = gender.Name });
+
+            int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
+
+            if (rowsAffected == 1)
             {
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ge_EditGender";
-
-                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = gender.Id });
-                parameters.Add(new SqlParameter { ParameterName = "@genderName", SqlDbType = SqlDbType.VarChar, Value = gender.Name });
-
-                int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
-
-                if (rowsAffected == 1)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -99,19 +88,16 @@ namespace RedResQ_API.Lib.Services
 
         public static bool Delete(JwtClaims claims, long id)
         {
-            if (PermissionService.IsPermitted("deleteGender", claims.Role))
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Ge_DeleteGender";
+
+            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
+
+            int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
+
+            if (rowsAffected == 1)
             {
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                string storedProcedure = "SP_Ge_DeleteGender";
-
-                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
-
-                int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
-
-                if (rowsAffected == 1)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

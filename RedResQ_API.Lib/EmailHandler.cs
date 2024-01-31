@@ -15,23 +15,16 @@ namespace RedResQ_API.Lib
 
         public static string SendEmail(string recipient, string content)
         {
-            try
+            MailMessage message = new MailMessage
             {
-                MailMessage message = new MailMessage
-                {
-                    From = new MailAddress("mail.redresq@gmail.com"),
-                    Subject = $"{DateTime.Now.ToString("dd. MMMM yyyy")}: RedResQ Password Request",
-                    Body = content,
-                    IsBodyHtml = true,
-                };
-                message.To.Add(recipient);
+                From = new MailAddress("mail.redresq@gmail.com"),
+                Subject = $"{DateTime.Now.ToString("dd. MMMM yyyy")}: RedResQ Password Request",
+                Body = content,
+                IsBodyHtml = true,
+            };
+            message.To.Add(recipient);
 
-                _client.Send(message);
-            }
-            catch (Exception e)
-            {
-                return "!ERROR: " + e.Message;
-            }
+            _client.Send(message);
 
             return "E-Mail was sent successfully!";
         }

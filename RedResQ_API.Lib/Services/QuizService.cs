@@ -69,9 +69,9 @@ namespace RedResQ_API.Lib.Services
 
                     foreach (var stage in quizTypeStages)
                     {
-                        var imagesTemp = images.Where(q => q.Image_ID == stage.QuizTypeStage_ImageID).ToList();
+                        var imagesForStage = images.Where(q => q.Image_ID == stage.QuizTypeStage_ImageID).ToList();
 
-                        Image img = new Image(imagesTemp[0].Image_ID, imagesTemp[0].Image_Description, imagesTemp[0].Image_bytes);
+                        Image img = new Image(imagesForStage[0].Image_ID, imagesForStage[0].Image_Description, imagesForStage[0].Image_bytes);
 
                         stages.Add(new QuizTypeStage(stage.QuizTypeStage_QuizTypeID, stage.QuizTypeStage_Stage, img));
                     }
@@ -79,9 +79,9 @@ namespace RedResQ_API.Lib.Services
                     foreach (var question in questionList)
                     {
                         List<Answer> answers = new List<Answer>();
-                        var answersTemp = answerList.Where(q => q.Answer_QuizID == question.Question_QuizID && q.Answer_QuestionID == question.Question_ID).ToList();
+                        var answersForQuestion = answerList.Where(q => q.Answer_QuizID == question.Question_QuizID && q.Answer_QuestionID == question.Question_ID).ToList();
 
-                        foreach (var answer in answersTemp)
+                        foreach (var answer in answersForQuestion)
                         {
                             answers.Add(new Answer(answer.Answer_QuizID, answer.Answer_QuestionID, answer.Answer_ID, answer.Answer_text, answer.Answer_isTrue));
                         }

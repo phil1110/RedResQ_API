@@ -9,9 +9,9 @@ namespace RedResQ_API.Controllers
         [HttpGet("get")]
         public ActionResult<Permission> GetPermission(string name)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getPermission", () =>
             {
-                Permission permission = PermissionService.GetPermission(JwtHandler.GetClaims(this), name);
+                Permission permission = PermissionService.GetPermission(name);
 
                 if (permission != null)
                 {
@@ -27,9 +27,9 @@ namespace RedResQ_API.Controllers
         [HttpGet("fetch")]
         public ActionResult<Permission[]> GetAllPermissions()
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getPermission", () =>
             {
-                Permission[] permissions = PermissionService.GetAllPermissions(JwtHandler.GetClaims(this));
+                Permission[] permissions = PermissionService.GetAllPermissions();
 
                 if (permissions != null)
                 {
@@ -45,9 +45,9 @@ namespace RedResQ_API.Controllers
         [HttpGet("fetchForRole")]
         public ActionResult<Permission[]> GetAllPermissions(long roleId)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getPermission", () =>
             {
-                Permission[] permissions = PermissionService.GetAllPermissionsForRole(JwtHandler.GetClaims(this), roleId);
+                Permission[] permissions = PermissionService.GetAllPermissionsForRole(roleId);
 
                 if (permissions != null)
                 {
@@ -63,9 +63,9 @@ namespace RedResQ_API.Controllers
         [HttpPut("update")]
         public ActionResult<bool> UpdatePermission(string name, long role)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "updatePermission", () =>
             {
-                int rowsAffected = PermissionService.UpdatePermission(JwtHandler.GetClaims(this), name, role);
+                int rowsAffected = PermissionService.UpdatePermission(name, role);
 
                 if (rowsAffected == 1)
                 {
