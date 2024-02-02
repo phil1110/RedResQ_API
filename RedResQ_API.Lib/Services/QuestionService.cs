@@ -44,6 +44,25 @@ namespace RedResQ_API.Lib.Services
             return false;
         }
 
+        public static bool Edit(long quizId, long id, string text)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Qn_EditQuestion";
+
+            parameters.Add(new SqlParameter { ParameterName = "@quizId", SqlDbType = SqlDbType.BigInt, Value = quizId });
+            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
+            parameters.Add(new SqlParameter { ParameterName = "@text", SqlDbType = SqlDbType.VarChar, Value = text });
+
+            int rowsAffected = SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
+
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool Delete(long quizId, long id)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
