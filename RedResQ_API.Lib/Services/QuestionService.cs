@@ -12,6 +12,30 @@ namespace RedResQ_API.Lib.Services
 {
     public static class QuestionService
     {
+        public static Question[] Fetch(long quizId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Qn_FetchQuestions";
+
+            parameters.Add(new SqlParameter { ParameterName = "@quizId", SqlDbType = SqlDbType.BigInt, Value = quizId });
+
+            DataTable questionViewTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+            if (questionViewTable.Rows.Count > 0)
+            {
+                List<Question> questions = new List<Question>();
+
+                foreach (DataRow row in questionViewTable.Rows)
+                {
+                    questions.Add(Converter.ToQuestion(row.ItemArray.ToList()!, null!));
+                }
+
+                return questions.ToArray();
+            }
+
+            throw new NotFoundException();
+        }
+
         public static Question Get(long quizId, long id)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
@@ -77,7 +101,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            return false;
+            throw new UnprocessableEntityException();
         }
 
         public static bool Edit(long quizId, long id, string text)
@@ -96,7 +120,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            return false;
+            throw new UnprocessableEntityException();
         }
 
         public static bool Delete(long quizId, long id)
@@ -114,7 +138,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            return false;
+            throw new UnprocessableEntityException();
         }
     }
 }

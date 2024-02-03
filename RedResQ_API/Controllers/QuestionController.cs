@@ -9,8 +9,17 @@ namespace RedResQ_API.Controllers
     [ApiController, Route("[controller]"), Authorize]
     public class QuestionController : ControllerBase
     {
+        [HttpGet("fetch")]
+        public ActionResult<Question[]> Fetch(long quizId)
+        {
+            return ActionService.Execute(this, "getQuestion", () =>
+            {
+                return Ok(QuestionService.Fetch(quizId));
+            });
+        }
+
         [HttpGet("get")]
-        public ActionResult Get(long quizId, long id)
+        public ActionResult<Question> Get(long quizId, long id)
         {
             return ActionService.Execute(this, "getQuestion", () =>
             {

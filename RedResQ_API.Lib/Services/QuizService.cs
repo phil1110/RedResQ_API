@@ -155,7 +155,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            return false;
+            throw new UnprocessableEntityException();
         }
 
         public static bool Edit(long id, string? name, int? maxScore, long? typeId)
@@ -184,7 +184,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            return false;
+            throw new UnprocessableEntityException();
         }
 
         public static bool Delete(long id)
@@ -201,7 +201,7 @@ namespace RedResQ_API.Lib.Services
                 return true;
             }
 
-            return false;
+            throw new UnprocessableEntityException();
         }
     }
 }

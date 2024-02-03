@@ -117,6 +117,17 @@ namespace RedResQ_API.Lib
             return new Permission(permName, role);
         }
 
+        public static Question ToQuestion(List<object> items, Answer[] answers)
+        {
+            int pos = 0;
+
+            long quizId = Convert.ToInt64(items[pos++])!;
+            long id = Convert.ToInt64(items[pos++])!;
+            string text = Convert.ToString(items[pos])!;
+
+            return new Question(quizId, id, text, answers);
+        }
+
         public static QuestionViewRow ToQuestionViewRow(List<object> items)
         {
             int pos = 0;
