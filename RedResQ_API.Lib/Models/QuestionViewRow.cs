@@ -10,7 +10,18 @@ namespace RedResQ_API.Lib.Models
     {
         #region Constructor
 
-        
+        public QuestionViewRow(long questionQuizID, long questionId, string questionText, long answerQuizID, 
+            long answerQuestionID, long answerID, string answerText, bool answerIsTrue)
+        {
+            QuestionQuizID = questionQuizID;
+            QuestionId = questionId;
+            QuestionText = questionText;
+            AnswerQuizID = answerQuizID;
+            AnswerQuestionID = answerQuestionID;
+            AnswerID = answerID;
+            AnswerText = answerText;
+            AnswerIsTrue = answerIsTrue;
+        }
 
         #endregion
 

@@ -38,7 +38,12 @@ namespace RedResQ_API.Lib
 
             pos += 2;
 
-            Image img = ToImage(items.GetRange(pos, 3));
+            Image img = null!;
+
+            if (items[pos] is not DBNull)
+            {
+                img = ToImage(items.GetRange(pos, 3));
+            }
 
             pos += 3;
 
@@ -112,6 +117,23 @@ namespace RedResQ_API.Lib
             return new Permission(permName, role);
         }
 
+        public static QuestionViewRow ToQuestionViewRow(List<object> items)
+        {
+            int pos = 0;
+
+            long question_quizId = Convert.ToInt64(items[pos++])!;
+            long question_id = Convert.ToInt64(items[pos++])!;
+            string question_text = Convert.ToString(items[pos++])!;
+
+            long answer_quizId = Convert.ToInt64(items[pos++])!;
+            long answer_questionId = Convert.ToInt64(items[pos++])!;
+            long answer_id = Convert.ToInt64(items[pos++])!;
+            string answer_text = Convert.ToString(items[pos++])!;
+            bool answer_isTrue = Convert.ToBoolean(Convert.ToInt16(items[pos])!);
+
+            return new QuestionViewRow(question_quizId, question_id, question_text, answer_quizId, answer_questionId, answer_id, answer_text, answer_isTrue);
+        }
+
         public static Quiz ToQuiz(List<object> items, Question[] questions, QuizType quizType)
         {
             int pos = 0;
@@ -121,6 +143,16 @@ namespace RedResQ_API.Lib
             int maxScore = Convert.ToInt32(items[pos])!;
 
             return new Quiz(id, name, maxScore, questions, quizType);
+        }
+
+        public static QuizType ToQuizType(List<object> items)
+        {
+            int pos = 0;
+
+            long id = Convert.ToInt64(items[pos++])!;
+            string name = Convert.ToString(items[pos])!;
+
+            return new QuizType(id, name);
         }
 
         public static QuizViewRow ToQuizViewRow(List<object> items)
@@ -135,14 +167,6 @@ namespace RedResQ_API.Lib
             long quizType_id = Convert.ToInt64(items[pos++])!;
             string quizType_name = Convert.ToString(items[pos++])!;
 
-            long quizTypeStage_quizTypeId = Convert.ToInt64(items[pos++])!;
-            int quizTypeStage_stage = Convert.ToInt32(items[pos++])!;
-            long quizTypeStage_imageId = Convert.ToInt64(items[pos++])!;
-
-            long image_id = Convert.ToInt64(items[pos++])!;
-            string image_description = Convert.ToString(items[pos++])!;
-            byte[] image_bytes = (byte[])items[pos++]!;
-
             long question_quizId = Convert.ToInt64(items[pos++])!;
             long question_id = Convert.ToInt64(items[pos++])!;
             string question_text = Convert.ToString(items[pos++])!;
@@ -154,10 +178,7 @@ namespace RedResQ_API.Lib
             bool answer_isTrue = Convert.ToBoolean(Convert.ToInt16(items[pos])!);
 
             return new QuizViewRow(quiz_id, quiz_name, quiz_maxScore, quiz_typeId, 
-                quizType_id, quizType_name, 
-                quizTypeStage_quizTypeId, quizTypeStage_stage, quizTypeStage_imageId,
-                image_id, image_description, image_bytes, 
-                question_quizId, question_id, question_text, 
+                quizType_id, quizType_name, question_quizId, question_id, question_text, 
                 answer_quizId, answer_questionId, answer_id, answer_text, answer_isTrue);
         }
 

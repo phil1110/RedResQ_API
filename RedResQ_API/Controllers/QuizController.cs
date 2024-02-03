@@ -8,7 +8,7 @@ namespace RedResQ_API.Controllers
     public class QuizController : ControllerBase
     {
         [HttpGet("fetch")]
-        public ActionResult<Quiz> Fetch(long? id, int? amount)
+        public ActionResult<Quiz[]> Fetch(long? id, int? amount)
         {
             return ActionService.Execute(this, "getQuiz", () =>
             {

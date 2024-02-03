@@ -9,6 +9,15 @@ namespace RedResQ_API.Controllers
     [ApiController, Route("[controller]"), Authorize]
     public class QuestionController : ControllerBase
     {
+        [HttpGet("get")]
+        public ActionResult Get(long quizId, long id)
+        {
+            return ActionService.Execute(this, "getQuestion", () =>
+            {
+                return Ok(QuestionService.Get(quizId, id));
+            });
+        }
+
         [HttpPost("add")]
         public ActionResult<bool> Add(Question question)
         {

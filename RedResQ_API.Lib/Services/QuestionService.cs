@@ -12,6 +12,42 @@ namespace RedResQ_API.Lib.Services
 {
     public static class QuestionService
     {
+        public static Question Get(long quizId, long id)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            List<QuestionViewRow> questionViewRows = new List<QuestionViewRow>();
+            string storedProcedure = "SP_Qn_GetQuestion";
+
+            parameters.Add(new SqlParameter { ParameterName = "@quizId", SqlDbType = SqlDbType.BigInt, Value = quizId });
+            parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
+
+            DataTable questionViewTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+            if (questionViewTable.Rows.Count > 0)
+            {
+                List<Answer> answerList = new List<Answer>();
+
+                foreach (DataRow row in questionViewTable.Rows)
+                {
+                    questionViewRows.Add(Converter.ToQuestionViewRow(row.ItemArray.ToList()!));
+                }
+
+                var answers = questionViewRows.Select(q => new { q.AnswerQuizID, q.AnswerQuestionID, q.AnswerID, q.AnswerText, q.AnswerIsTrue })
+                    .GroupBy(q => new { q.AnswerQuizID, q.AnswerQuestionID, q.AnswerID, q.AnswerText, q.AnswerIsTrue })
+                    .Select(group => group.First())
+                    .ToList();
+
+                foreach (var a in answers)
+                {
+                    answerList.Add(new Answer(a.AnswerQuizID, a.AnswerQuestionID, a.AnswerID, a.AnswerText, a.AnswerIsTrue));
+                }
+
+                return new Question(questionViewRows[0].QuestionQuizID, questionViewRows[0].QuestionId, questionViewRows[0].QuestionText, answerList.ToArray());
+            }
+
+            throw new NotFoundException();
+        }
+
         public static bool Add(Question question)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();

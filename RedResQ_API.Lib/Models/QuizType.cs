@@ -13,25 +13,19 @@ namespace RedResQ_API.Lib.Models
     {
         #region Constructor
 
-        [JsonConstructor]
-        public QuizType(long id, string name, QuizTypeStage[]? stages = null)
+        public QuizType(long id, string name)
         {
             Id = id;
             Name = name;
-            Stages = stages ?? Array.Empty<QuizTypeStage>();
         }
 
         #endregion
 
         #region Properties
 
-        [JsonRequired]
         public long Id { get; set; }
 
-        [JsonRequired]
         public string Name { get; set; }
-
-        public QuizTypeStage[]? Stages { get; private set; }
 
         #endregion
     }

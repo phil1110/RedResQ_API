@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RedResQ_API.Lib.Exceptions;
+using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace RedResQ_API.Lib.Services
 {
@@ -35,10 +37,12 @@ namespace RedResQ_API.Lib.Services
 
             foreach (DataRow row in quizTable.Rows)
             {
-                quizzes.Add(Converter.ToQuiz(row.ItemArray.ToList()!, null!, null!));
+                QuizType quizType = Converter.ToQuizType(row.ItemArray.Skip(3).Take(2).ToList()!);
+
+                quizzes.Add(Converter.ToQuiz(row.ItemArray.ToList()!, null!, quizType));
             }
 
-            if(quizzes.Count > 0)
+            if (quizzes.Count > 0)
             {
                 return quizzes.ToArray();
             }
@@ -59,7 +63,6 @@ namespace RedResQ_API.Lib.Services
 
             if (quizTable.Rows.Count > 0)
             {
-                List<QuizTypeStage> stages = new List<QuizTypeStage>();
                 List<Question> questions = new List<Question>();
 
                 foreach (DataRow row in quizTable.Rows)
@@ -79,16 +82,6 @@ namespace RedResQ_API.Lib.Services
                     .Select(group => group.First())
                     .ToList();
 
-                var images = quizViewRows.Select(q => new { q.Image_ID, q.Image_Description, q.Image_bytes })
-                    .GroupBy(q => new { q.Image_ID, q.Image_Description, q.Image_bytes })
-                    .Select(group => group.First())
-                    .ToList();
-
-                var quizTypeStages = quizViewRows.Select(q => new { q.QuizTypeStage_QuizTypeID, q.QuizTypeStage_Stage, q.QuizTypeStage_ImageID })
-                    .GroupBy(q => new { q.QuizTypeStage_QuizTypeID, q.QuizTypeStage_Stage, q.QuizTypeStage_ImageID })
-                    .Select(group => group.First())
-                    .ToList();
-
                 var quizTypes = quizViewRows.GroupBy(q => new { q.QuizType_ID, q.QuizType_Name })
                     .SelectMany(group => group.Select(q => new { q.QuizType_ID, q.QuizType_Name }))
                     .ToList();
@@ -99,15 +92,6 @@ namespace RedResQ_API.Lib.Services
                     .ToList();
 
                 #endregion
-
-                foreach (var stage in quizTypeStages)
-                {
-                    var imagesForStage = images.Where(q => q.Image_ID == stage.QuizTypeStage_ImageID).ToList();
-
-                    Image img = new Image(imagesForStage[0].Image_ID, imagesForStage[0].Image_Description, imagesForStage[0].Image_bytes);
-
-                    stages.Add(new QuizTypeStage(stage.QuizTypeStage_QuizTypeID, stage.QuizTypeStage_Stage, img));
-                }
 
                 foreach (var question in questionList)
                 {
@@ -122,7 +106,7 @@ namespace RedResQ_API.Lib.Services
                     questions.Add(new Question(question.Question_QuizID, question.Question_ID, question.Question_text, answers.ToArray()));
                 }
 
-                QuizType quizType = new QuizType(quizTypes[0].QuizType_ID, quizTypes[0].QuizType_Name, stages.ToArray());
+                QuizType quizType = new QuizType(quizTypes[0].QuizType_ID, quizTypes[0].QuizType_Name);
 
                 return new Quiz(quizData[0].Quiz_ID, quizData[0].Quiz_Name, quizData[0].Quiz_MaxScore, questions.ToArray(), quizType);
             }
