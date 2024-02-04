@@ -2,28 +2,30 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-    public class Permission
+    public class QuizType
     {
         #region Constructor
 
-        public Permission(string name, Role requiredRole)
+        public QuizType(long id, string name)
         {
+            Id = id;
             Name = name;
-            RequiredRole = requiredRole;
         }
 
         #endregion
 
         #region Properties
 
-        public string Name { get; private set; }
+        public long Id { get; set; }
 
-        public Role RequiredRole { get; private set; }
+        public string Name { get; set; }
 
         #endregion
     }

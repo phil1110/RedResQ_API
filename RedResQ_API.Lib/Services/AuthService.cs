@@ -21,56 +21,50 @@ namespace RedResQ_API.Lib.Services
 	{
 		public static string Register(JwtClaims claims, RawUser user)
 		{
-            if (PermissionService.IsPermitted("register", claims.Role))
+            if (user != null)
             {
-                if (user != null)
-                {
-                    List<SqlParameter> parameters = new List<SqlParameter>();
-                    string storedProcedure = "SP_Se_Register";
-                    user.Hash = HashPassword(user.Hash);
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string storedProcedure = "SP_Se_Register";
+                user.Hash = HashPassword(user.Hash);
 
-                    parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = user.Username });
-                    parameters.Add(new SqlParameter { ParameterName = "@firstname", SqlDbType = SqlDbType.VarChar, Value = user.FirstName });
-                    parameters.Add(new SqlParameter { ParameterName = "@lastname", SqlDbType = SqlDbType.VarChar, Value = user.LastName });
-                    parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = user.Email });
-                    parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = user.Birthdate });
-                    parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = user.Hash });
-                    parameters.Add(new SqlParameter { ParameterName = "@gender", SqlDbType = SqlDbType.BigInt, Value = user.Gender });
-                    parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = user.Language });
-                    parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.BigInt, Value = user.Location });
-                    parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = 2 });
+                parameters.Add(new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Value = user.Username });
+                parameters.Add(new SqlParameter { ParameterName = "@firstname", SqlDbType = SqlDbType.VarChar, Value = user.FirstName });
+                parameters.Add(new SqlParameter { ParameterName = "@lastname", SqlDbType = SqlDbType.VarChar, Value = user.LastName });
+                parameters.Add(new SqlParameter { ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value = user.Email });
+                parameters.Add(new SqlParameter { ParameterName = "@birthdate", SqlDbType = SqlDbType.DateTime, Value = user.Birthdate });
+                parameters.Add(new SqlParameter { ParameterName = "@hash", SqlDbType = SqlDbType.VarChar, Value = user.Hash });
+                parameters.Add(new SqlParameter { ParameterName = "@gender", SqlDbType = SqlDbType.BigInt, Value = user.Gender });
+                parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = user.Language });
+                parameters.Add(new SqlParameter { ParameterName = "@locationId", SqlDbType = SqlDbType.BigInt, Value = user.Location });
+                parameters.Add(new SqlParameter { ParameterName = "@roleId", SqlDbType = SqlDbType.BigInt, Value = 2 });
 
-                    SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
+                SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
 
-                    return "Registered Successfully!";
-                }
+                return "Registered Successfully!";
             }
-            
-			throw new UnauthorizedAccessException("Person object was null!");
+
+            throw new AuthException("Person object was null!");
 		}
 
 		public static string Login(ControllerBase controller, JwtClaims claims, Credentials credentials)
 		{
-            if (PermissionService.IsPermitted("login", claims.Role))
+            if (credentials != null)
             {
-                if (credentials != null)
+                User user;
+
+                if (credentials.Identifier.Contains("@"))
                 {
-                    User user;
-
-                    if (credentials.Identifier.Contains("@"))
-                    {
-                        user = LoginEmail(credentials);
-                    }
-                    else
-                    {
-                        user = LoginUsername(credentials);
-                    }
-
-                    return JwtHandler.CreateToken(controller, user);
+                    user = LoginEmail(credentials);
                 }
+                else
+                {
+                    user = LoginUsername(credentials);
+                }
+
+                return JwtHandler.CreateToken(controller, user);
             }
 
-			throw new UnauthorizedAccessException("Credentials object was null!");
+            throw new AuthException("Credentials object was null!");
 		}
 
 		public static bool CheckToken(ControllerBase controller, JwtClaims claims)
@@ -94,7 +88,7 @@ namespace RedResQ_API.Lib.Services
 
 			if(userTable.Rows.Count == 1)
 			{
-				User output = User.ConvertToPerson(userTable.Rows[0]);
+				User output = Converter.ToUser(userTable.Rows[0].ItemArray.ToList()!);
 
 				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, GetHash(output)))
 				{
@@ -102,12 +96,12 @@ namespace RedResQ_API.Lib.Services
 				}
 				else
 				{
-					throw new ForbidException();
+					throw new AuthException();
 				}
 			}
 			else
 			{
-				throw new Exception("User was not found!");
+				throw new NotFoundException("User was not found!");
 			}
 		}
 
@@ -122,7 +116,7 @@ namespace RedResQ_API.Lib.Services
 
 			if (userTable.Rows.Count == 1)
 			{
-				User output = User.ConvertToPerson(userTable.Rows[0]);
+				User output = Converter.ToUser(userTable.Rows[0].ItemArray.ToList()!);
 
 				if (BCrypt.Net.BCrypt.Verify(credentials.Secret, GetHash(output)))
 				{
@@ -130,12 +124,12 @@ namespace RedResQ_API.Lib.Services
 				}
 				else
 				{
-					throw new UnauthorizedAccessException();
+					throw new AuthException();
 				}
 			}
 			else
 			{
-				throw new Exception("User was not found!");
+				throw new NotFoundException("User was not found!");
 			}
 		}
 

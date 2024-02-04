@@ -9,9 +9,9 @@ namespace RedResQ_API.Controllers
         [HttpGet("request")]
         public ActionResult RequestPasswordReset(string email)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "requestReset", () =>
             {
-                bool wasSuccessful = ResetService.RequestReset(JwtHandler.GetClaims(this), email);
+                bool wasSuccessful = ResetService.RequestReset(email);
 
                 if (wasSuccessful)
                 {
@@ -27,9 +27,9 @@ namespace RedResQ_API.Controllers
         [HttpGet("confirm")]
         public ActionResult ConfirmPasswordReset(int confirmationCode, string email, string password)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "confirmReset", () =>
             {
-                bool wasSuccessful = ResetService.ConfirmReset(JwtHandler.GetClaims(this), confirmationCode, email, password);
+                bool wasSuccessful = ResetService.ConfirmReset(confirmationCode, email, password);
 
                 if (wasSuccessful)
                 {
@@ -45,9 +45,9 @@ namespace RedResQ_API.Controllers
         [HttpGet("verify")]
         public ActionResult<bool> CheckValidity(int code, string email)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "confirmReset", () =>
             {
-                bool isValid = ResetService.CheckValidity(JwtHandler.GetClaims(this), code, email);
+                bool isValid = ResetService.CheckValidity(code, email);
 
                 return Ok(isValid);
             });

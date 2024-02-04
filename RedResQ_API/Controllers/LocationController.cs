@@ -10,18 +10,18 @@ namespace RedResQ_API.Controllers
         [HttpGet("get")]
         public ActionResult<Location> Get(long id)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getLocation", () =>
             {
-                return Ok(LocationService.Get(JwtHandler.GetClaims(this), id));
+                return Ok(LocationService.Get(id));
             });
         }
 
         [HttpGet("search")]
         public ActionResult<long> Search(string city, string postalCode, long countryId)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "searchLocation", () =>
             {
-                long result = LocationService.Search(JwtHandler.GetClaims(this), city, postalCode, countryId);
+                long result = LocationService.Search(city, postalCode, countryId);
 
                 if (result > 0)
                 {
@@ -37,7 +37,7 @@ namespace RedResQ_API.Controllers
         [HttpGet("fetch")]
         public ActionResult<Location> Fetch(long? id)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getLocation", () =>
             {
                 return Ok(LocationService.Fetch(JwtHandler.GetClaims(this), id));
             });
@@ -46,11 +46,11 @@ namespace RedResQ_API.Controllers
         [HttpPost("add")]
         public ActionResult<long> Add(string city, string postalCode, long countryId)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "addLocation", () =>
             {
                 JwtClaims claims = JwtHandler.GetClaims(this);
 
-                long id = LocationService.Search(claims, city, postalCode, countryId);
+                long id = LocationService.Search(city, postalCode, countryId);
 
                 if (id > 0)
                 {
@@ -58,9 +58,9 @@ namespace RedResQ_API.Controllers
                 }
                 else
                 {
-                    LocationService.Add(claims, city, postalCode, countryId);
+                    LocationService.Add(city, postalCode, countryId);
 
-                    id = LocationService.Search(claims, city, postalCode, countryId);
+                    id = LocationService.Search(city, postalCode, countryId);
 
                     if (id > 0)
                     {
@@ -77,18 +77,18 @@ namespace RedResQ_API.Controllers
         [HttpPut("update")]
         public ActionResult<bool> Edit(Location loc)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "editLocation", () =>
             {
-                return Ok(LocationService.Edit(JwtHandler.GetClaims(this), loc));
+                return Ok(LocationService.Edit(loc));
             });
         }
 
         [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "deleteLocation", () =>
             {
-                return Ok(LocationService.Delete(JwtHandler.GetClaims(this), id));
+                return Ok(LocationService.Delete(id));
             });
         }
     }

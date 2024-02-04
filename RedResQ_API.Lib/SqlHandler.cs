@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace RedResQ_API.Lib
 {
@@ -18,54 +20,54 @@ namespace RedResQ_API.Lib
 			{
 				Console.WriteLine(connection.State);
 
-				using (var cmd = new SqlCommand(storedProcdedure, connection))
-				{
-					cmd.CommandType = CommandType.StoredProcedure;
+                using (var cmd = new SqlCommand(storedProcdedure, connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-					if(parameters != null)
-					{
-						foreach (SqlParameter parameter in parameters)
-						{
-							cmd.Parameters.Add(parameter);
-						}
-					}
+                    if (parameters != null)
+                    {
+                        foreach (SqlParameter parameter in parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                    }
 
-					connection.Open();
+                    connection.Open();
 
-					var reader = cmd.ExecuteReader();
+                    var reader = cmd.ExecuteReader();
 
-					output.Load(reader);
+                    output.Load(reader);
 
-					return output;
-				}
-			}
+                    return output;
+                }
+            }
 		}
 
 		internal static int ExecuteNonQuery(string storedProcdedure, SqlParameter[]? parameters = null)
 		{
 			using (var connection = new SqlConnection(Constants.ConnectionString))
-			{
-				Console.WriteLine(connection.State);
+            {
+                Console.WriteLine(connection.State);
 
-				using (var cmd = new SqlCommand(storedProcdedure, connection))
-				{
-					cmd.CommandType = CommandType.StoredProcedure;
+                using (var cmd = new SqlCommand(storedProcdedure, connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-					if (parameters != null)
-					{
-						foreach (SqlParameter parameter in parameters)
-						{
-							cmd.Parameters.Add(parameter);
-						}
-					}
+                    if (parameters != null)
+                    {
+                        foreach (SqlParameter parameter in parameters)
+                        {
+                            cmd.Parameters.Add(parameter);
+                        }
+                    }
 
-					connection.Open();
+                    connection.Open();
 
-					int output = cmd.ExecuteNonQuery();
+                    int output = cmd.ExecuteNonQuery();
 
-					return output;
-				}
-			}
+                    return output;
+                }
+            }
 		}
 	} 
 }

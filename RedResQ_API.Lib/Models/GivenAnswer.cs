@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RedResQ_API.Lib.Models
 {
-    public class Permission
+    public class GivenAnswer
     {
         #region Constructor
-
-        public Permission(string name, Role requiredRole)
+        public GivenAnswer(long questionId, long answerId)
         {
-            Name = name;
-            RequiredRole = requiredRole;
+            QuestionId = questionId;
+            AnswerId = answerId;
         }
 
         #endregion
 
         #region Properties
 
-        public string Name { get; private set; }
+        public long QuestionId { get; private set; }
 
-        public Role RequiredRole { get; private set; }
+        public long AnswerId { get; private set; }
 
         #endregion
     }

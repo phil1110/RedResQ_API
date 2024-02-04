@@ -11,7 +11,7 @@ namespace RedResQ_API.Lib.Models
 		#region Constructor
 
 		public RawArticle(string title, string content, string author, DateTime date, long language,
-			long image, long location)
+			long image, long country)
 		{
 			Title = title;
 			Content = content;
@@ -19,7 +19,7 @@ namespace RedResQ_API.Lib.Models
 			Date = date;
 			Language = language;
 			Image = image;
-			Location = location;
+			Country = country;
 		}
 
 		#endregion
@@ -38,7 +38,7 @@ namespace RedResQ_API.Lib.Models
 
 		public long Image { get; private set; }
 
-		public long Location { get; private set; }
+		public long Country { get; private set; }
 
 		#endregion
 	}

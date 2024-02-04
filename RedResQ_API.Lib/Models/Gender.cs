@@ -26,19 +26,5 @@ namespace RedResQ_API.Lib.Models
 		public string Name { get; private set; }
 
         #endregion
-
-        #region Methods
-
-		public static Gender ConvertToGender(DataRow row)
-		{
-            int length = row.ItemArray.Length - 1;
-
-            string name = Convert.ToString(row.ItemArray[length--])!;
-            long id = Convert.ToInt64(row.ItemArray[length--])!;
-
-            return new Gender(id, name);
-        }
-
-        #endregion
     }
 }

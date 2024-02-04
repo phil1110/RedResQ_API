@@ -11,25 +11,25 @@ namespace RedResQ_API.Controllers
         [HttpGet("fetch")]
         public ActionResult<Gender> GetAll()
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getGender", () =>
             {
-                return Ok(GenderService.GetAll(JwtHandler.GetClaims(this)));
+                return Ok(GenderService.GetAll());
             });
         }
 
         [HttpGet("get")]
         public ActionResult<Gender> Get(long id)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getGender", () =>
             {
-                return Ok(GenderService.Get(JwtHandler.GetClaims(this), id));
+                return Ok(GenderService.Get(id));
             });
         }
 
         [HttpPost("add")]
         public ActionResult<bool> Add(string name)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "addGender", () =>
             {
                 return Ok(GenderService.Add(JwtHandler.GetClaims(this), name));
             });
@@ -38,16 +38,16 @@ namespace RedResQ_API.Controllers
         [HttpPut("update")]
         public ActionResult<bool> Edit(Gender gender)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "editGender", () =>
             {
-                return Ok(GenderService.Edit(JwtHandler.GetClaims(this), gender));
+                return Ok(GenderService.Edit(gender));
             });
         }
 
         [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "deleteGender", () =>
             {
                 return Ok(GenderService.Delete(JwtHandler.GetClaims(this), id));
             });

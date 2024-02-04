@@ -11,25 +11,25 @@ namespace RedResQ_API.Controllers
         [HttpGet("fetch")]
         public ActionResult<Country[]> GetAll()
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getCountry", () =>
             {
-                return Ok(CountryService.GetAllCountries(JwtHandler.GetClaims(this)));
+                return Ok(CountryService.GetAllCountries());
             });
         }
 
         [HttpGet("get")]
         public ActionResult<Country> Get(long id)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "getCountry", () =>
             {
-                return Ok(CountryService.GetCountry(JwtHandler.GetClaims(this), id));
+                return Ok(CountryService.GetCountry(id));
             });
         }
 
         [HttpPost("add")]
         public ActionResult<bool> Add(string countryName)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "addCountry", () =>
             {
                 return Ok(CountryService.AddCountry(JwtHandler.GetClaims(this), countryName));
             });
@@ -38,7 +38,7 @@ namespace RedResQ_API.Controllers
         [HttpPost("add/list")]
         public ActionResult<bool> AddArray(string[] countryNames)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "addCountry", () =>
             {
                 return Ok(CountryService.AddCountryArray(JwtHandler.GetClaims(this), countryNames));
             });
@@ -47,18 +47,18 @@ namespace RedResQ_API.Controllers
         [HttpPut("update")]
         public ActionResult<bool> Edit(Country country)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "editCountry", () =>
             {
-                return Ok(CountryService.EditCountry(JwtHandler.GetClaims(this), country));
+                return Ok(CountryService.EditCountry(country));
             });
         }
 
         [HttpDelete("delete")]
         public ActionResult<bool> Delete(long id)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "deleteCountry", () =>
             {
-                return Ok(CountryService.DeleteCountry(JwtHandler.GetClaims(this), id));
+                return Ok(CountryService.DeleteCountry(id));
             });
         }
     }

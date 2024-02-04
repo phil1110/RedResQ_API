@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RedResQ_API.Lib.Exceptions;
+using RedResQ_API.Lib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,14 @@ namespace RedResQ_API.Lib.Services
 {
     public static class ActionService
     {
+        public static ActionResult Execute(ControllerBase controller, string permName, Func<ActionResult> func)
+        {
+            JwtClaims claims = JwtHandler.GetClaims(controller);
+            PermissionService.IsPermitted(permName, claims.Role);
+
+            return Execute(controller, func);
+        }
+
         public static ActionResult Execute(ControllerBase controller, Func<ActionResult> func)
         {
             try
@@ -28,7 +37,7 @@ namespace RedResQ_API.Lib.Services
             {
                 return controller.NotFound(ex.Message);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnprocessableEntityException ex)
             {
                 return controller.UnprocessableEntity(ex.Message);
             }

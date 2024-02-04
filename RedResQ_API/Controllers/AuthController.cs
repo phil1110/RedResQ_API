@@ -13,7 +13,7 @@ namespace RedResQ_API.Controllers
 		[HttpGet("login")]
 		public ActionResult<User> Login(string id, string secret)
 		{
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "login", () =>
             {
                 Credentials credentials = new Credentials(id, secret);
 
@@ -33,7 +33,7 @@ namespace RedResQ_API.Controllers
 		[HttpPost("register")]
 		public ActionResult<User> Register(RawUser user)
 		{
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "register", () =>
             {
                 return Ok(AuthService.Register(JwtHandler.GetClaims(this), user));
             });
