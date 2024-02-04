@@ -45,12 +45,16 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
         "environmentVariables": {
-            "ASPNETCORE_URLS": "http://+:80",
+            "ASPNETCORE_URLS": "http://+:8080;https://+:8081",
             "ASPNETCORE_ENVIRONMENT": "Development",
-            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkof"
+            "API_DB_DS": "192.168.8.254",
+            "API_DB_UID": "api",
+            "API_DB_PWD": "password",
+            "API_DB_IC": "RedResQ",
+            "API_TOKEN_KEY": "kgokefokf5j89fj8mcdkofeegegdgesgdgegsdggrsdfegtt35z7u6hggdfthFEdsdadw"
         },
       "publishAllPorts": true
     }
