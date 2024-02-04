@@ -14,7 +14,7 @@ namespace RedResQ_API.Lib.Services
 {
     public static class QuizService
     {
-        public static Quiz[] Fetch(long? id, int? amount)
+        public static Quiz[] Fetch(long? id, int? amount, string? query, long? quizTypeId)
         {
             List<Quiz> quizzes = new List<Quiz>();
             List<SqlParameter> parameters = new List<SqlParameter>();
@@ -32,7 +32,15 @@ namespace RedResQ_API.Lib.Services
             {
                 parameters.Add(new SqlParameter { ParameterName = "@amount", SqlDbType = SqlDbType.Int, Value = amount });
             }
-            
+            if (query != null)
+            {
+                parameters.Add(new SqlParameter { ParameterName = "@query", SqlDbType = SqlDbType.VarChar, Value = query });
+            }
+            if (quizTypeId.HasValue)
+            {
+                parameters.Add(new SqlParameter { ParameterName = "@quizTypeId", SqlDbType = SqlDbType.BigInt, Value = quizTypeId });
+            }
+
             DataTable quizTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
             foreach (DataRow row in quizTable.Rows)
