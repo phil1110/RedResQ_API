@@ -27,7 +27,7 @@ namespace RedResQ_API.Lib.Services
             }
             catch (AuthException ex)
             {
-                return controller.Unauthorized(ex.Message);
+                return controller.Unauthorized();
             }
             catch (ForbidException ex)
             {
