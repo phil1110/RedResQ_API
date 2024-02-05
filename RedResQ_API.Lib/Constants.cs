@@ -22,8 +22,12 @@ namespace RedResQ_API.Lib
 			};
 
 			ConnectionString = builder.ConnectionString;
-		}
+
+			GoogleCredential = Environment.GetEnvironmentVariable("API_GOOGLE_KEY")!;
+        }
 
 		public static string ConnectionString { get; private set; }
+
+		public static string GoogleCredential { get; private set; }
 	}
 }
