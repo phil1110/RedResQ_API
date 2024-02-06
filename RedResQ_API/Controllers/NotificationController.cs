@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RedResQ_API.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("[controller]"), Authorize]
     public class NotificationController : ControllerBase
     {
         [HttpGet("test")]

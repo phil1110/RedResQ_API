@@ -7,11 +7,11 @@ namespace RedResQ_API.Controllers
     public class CoordinatesController : ControllerBase
     {
         [HttpPost("log")]
-        public ActionResult Log(float lon, float lat, [FromBody] string token)
+        public ActionResult Log(float lat, float lon, [FromBody] string token)
         {
             return ActionService.Execute(this, "logCoordinates", () =>
             {
-                return Ok(CoordinateService.LogCoordinates(JwtHandler.GetClaims(this), lon, lat, token));
+                return Ok(CoordinateService.LogCoordinates(JwtHandler.GetClaims(this), lat, lon, token));
             });
         }
     }
