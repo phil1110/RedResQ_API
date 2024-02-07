@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace RedResQ_API.Controllers
 {
@@ -9,9 +10,18 @@ namespace RedResQ_API.Controllers
         [HttpGet("test")]
         public ActionResult<string> SendNotification(string token, string title, string desc)
         {
-            return ActionService.Execute(this, () =>
+            return ActionService.Execute(this, "sendNotification", () =>
             {
                 return Ok(NotificationService.SendNotification(token, title, desc).Result);
+            });
+        }
+
+        [HttpGet("hazard")]
+        public ActionResult<string> SendHazardNotification(long hazardId)
+        {
+            return ActionService.Execute(this, "sendNotification", () =>
+            {
+                return Ok(NotificationService.SendHazardNotification(hazardId).Result);
             });
         }
     }

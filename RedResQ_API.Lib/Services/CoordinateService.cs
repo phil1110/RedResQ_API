@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RedResQ_API.Lib.Exceptions;
 
 namespace RedResQ_API.Lib.Services
 {
@@ -30,6 +31,32 @@ namespace RedResQ_API.Lib.Services
             }
 
             return false;
+        }
+
+
+        public static string[] GetTokens(float lat, float lon, int radius)
+        {
+            List<string> tokens = new List<string>();
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            string storedProcedure = "SP_Cd_GetTokens";
+
+            parameters.Add(new SqlParameter { ParameterName = "@lat", SqlDbType = SqlDbType.Float, Value = lat });
+            parameters.Add(new SqlParameter { ParameterName = "@lon", SqlDbType = SqlDbType.Float, Value = lon });
+            parameters.Add(new SqlParameter { ParameterName = "@radius", SqlDbType = SqlDbType.Int, Value = radius });
+
+            DataTable tokenTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+
+            if (tokenTable.Rows.Count > 0)
+            {
+                foreach (DataRow row in tokenTable.Rows)
+                {
+                    tokens.Add(Convert.ToString(row.ItemArray[0])!);
+                }
+
+                return tokens.ToArray();
+            }
+
+            return null!;
         }
     }
 }

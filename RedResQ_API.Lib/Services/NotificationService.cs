@@ -21,9 +21,6 @@ namespace RedResQ_API.Lib.Services
 
         public async static Task<string> SendNotification(string token, string title, string desc)
         {
-            // This registration token comes from the client FCM SDKs.
-            var registrationToken = token;
-
             // See documentation on defining a message payload.
             var message = new Message()
             {
@@ -32,17 +29,47 @@ namespace RedResQ_API.Lib.Services
                     { "title", title },
                     { "desc", desc },
                 },
-                Token = registrationToken,
+                Token = token,
             };
 
-            // Send a message to the device corresponding to the provided
-            // registration token.
             string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
 
+            Console.WriteLine("Successfully sent message: " + response);
+
+            return response;
+        }
+
+        public static async Task<string> SendHazardNotification(long hazardId)
+        {
+            var topic = TopicService.GetHazardTopic(hazardId);
+
+            // See documentation on defining a message payload.
+            var message = new Message()
+            {
+                Data = new Dictionary<string, string>()
+                {
+                    { "score", "850" },
+                    { "time", "2:45" },
+                },
+                Topic = topic
+            };
+
+            // Send a message to the devices subscribed to the provided topic.
+            string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
             // Response is a message ID string.
             Console.WriteLine("Successfully sent message: " + response);
 
             return response;
+        }
+
+        public static async Task RegisterForTopic(string topic, List<string> tokens)
+        {
+            // Subscribe the devices corresponding to the registration tokens to the
+            // topic
+            var response = await FirebaseMessaging.DefaultInstance.SubscribeToTopicAsync(tokens, topic);
+            // See the TopicManagementResponse reference documentation
+            // for the contents of response.
+            Console.WriteLine($"{response.SuccessCount} tokens were subscribed successfully");
         }
     }
 }
