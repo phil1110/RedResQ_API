@@ -7,7 +7,7 @@ namespace RedResQ_API.Controllers
     public class CoordinatesController : ControllerBase
     {
         [HttpPost("log")]
-        public ActionResult Log(float lat, float lon, [FromBody] string token)
+        public ActionResult Log(double lat, double lon, [FromBody] string token)
         {
             return ActionService.Execute(this, "logCoordinates", () =>
             {

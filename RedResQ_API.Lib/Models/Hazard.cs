@@ -10,7 +10,7 @@ namespace RedResQ_API.Lib.Models
     {
         #region Constructor
 
-        public Hazard(long id, string title, float latitude, float longitude, int radius, DateTime timestamp, HazardType hazardType)
+        public Hazard(long id, string title, double latitude, double longitude, int radius, DateTime timestamp, HazardType hazardType)
         {
             Id = id;
             Title = title;
@@ -29,9 +29,9 @@ namespace RedResQ_API.Lib.Models
 
         public string Title { get; private set; }
 
-        public float Latitude { get; private set; }
+        public double Latitude { get; private set; }
 
-        public float Longitude { get; private set; }
+        public double Longitude { get; private set; }
 
         public int Radius { get; private set; }
 

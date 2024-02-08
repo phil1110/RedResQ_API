@@ -25,7 +25,7 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpPost("add")]
-        public ActionResult<bool> Add(string title, float lat, float lon, int radius, int typeId)
+        public ActionResult<bool> Add(string title, double lat, double lon, int radius, int typeId)
         {
             return ActionService.Execute(this, "addHazard", () =>
             {
@@ -34,7 +34,7 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpPut("edit")]
-        public ActionResult<bool> Edit(long id, [FromBody] string? title, float? lat, float? lon, int? radius, int? typeId)
+        public ActionResult<bool> Edit(long id, [FromBody] string? title, double? lat, double? lon, int? radius, int? typeId)
         {
             return ActionService.Execute(this, "editHazard", () =>
             {

@@ -78,8 +78,8 @@ namespace RedResQ_API.Lib
 
             long id = Convert.ToInt64(items[pos++])!;
             string title = Convert.ToString(items[pos++])!;
-            float latitude = float.Parse(Convert.ToString(items[pos++])!)!;
-            float longitude = float.Parse(Convert.ToString(items[pos++])!)!;
+            double latitude = Convert.ToDouble(items[pos++])!;
+            double longitude = Convert.ToDouble(items[pos++])!;
             int radius = Convert.ToInt32(items[pos++])!;
             DateTime timestamp = (DateTime)items[pos++]!;
 

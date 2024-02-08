@@ -13,12 +13,18 @@ namespace RedResQ_API.Lib.Services
         {
             var hazard = HazardService.Get(id);
 
-            return $"{hazard.Timestamp.ToString("yyyy MM d").Replace(' ', '_')}_{hazard.Id}_{hazard.Title.Substring(0, 8).Trim().Replace(" ", "")}";
+            return GetHazardTopic(hazard);
         }
 
         public static string GetHazardTopic(Hazard hazard)
         {
-            return $"{hazard.Timestamp.ToString("yyyy MM d").Replace(' ', '_')}_{hazard.Id}_{hazard.Title.Substring(0, 8).Trim().Replace(" ", "")}";
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(hazard.Timestamp.ToString("yyyy MM d").Replace(' ', '_'));
+            sb.Append('_');
+            sb.Append(hazard.Title.Length > 8 ? hazard.Title.Substring(0, 8).Trim().Replace(" ", "") : hazard.Title.Trim().Replace(" ", ""));
+
+            return sb.ToString();
         }
 
         public static async Task<bool> InitializeHazardTopic(long id)

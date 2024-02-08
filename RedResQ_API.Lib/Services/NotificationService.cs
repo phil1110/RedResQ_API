@@ -21,9 +21,16 @@ namespace RedResQ_API.Lib.Services
 
         public async static Task<string> SendNotification(string token, string title, string desc)
         {
+            var notification = new Notification()
+            {
+                Title = title,
+                Body = desc
+            };
+
             // See documentation on defining a message payload.
             var message = new Message()
             {
+                Notification = notification,
                 Data = new Dictionary<string, string>()
                 {
                     { "title", title },
@@ -41,16 +48,24 @@ namespace RedResQ_API.Lib.Services
 
         public static async Task<string> SendHazardNotification(long hazardId)
         {
-            var topic = TopicService.GetHazardTopic(hazardId);
+            var hazard = HazardService.Get(hazardId);
+            var topic = TopicService.GetHazardTopic(hazard);
+
+            var notification = new Notification()
+            {
+                Title = "WARNING",
+                Body = hazard.Title
+            };
 
             // See documentation on defining a message payload.
             var message = new Message()
             {
-                Data = new Dictionary<string, string>()
-                {
-                    { "score", "850" },
-                    { "time", "2:45" },
-                },
+                Notification = notification,
+                //Data = new Dictionary<string, string>()
+                //{
+                //    { "score", "850" },
+                //    { "time", "2:45" },
+                //},
                 Topic = topic
             };
 

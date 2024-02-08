@@ -13,7 +13,7 @@ namespace RedResQ_API.Lib.Services
 {
     public static class CoordinateService
     {
-        public static bool LogCoordinates(JwtClaims claims, float lat, float lon, string token)
+        public static bool LogCoordinates(JwtClaims claims, double lat, double lon, string token)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
             string storedProcedure = "SP_Cd_LogCoordinates";
@@ -34,7 +34,7 @@ namespace RedResQ_API.Lib.Services
         }
 
 
-        public static string[] GetTokens(float lat, float lon, int radius)
+        public static string[] GetTokens(double lat, double lon, int radius)
         {
             List<string> tokens = new List<string>();
             List<SqlParameter> parameters = new List<SqlParameter>();
