@@ -17,11 +17,11 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpGet("hazard")]
-        public ActionResult<string> SendHazardNotification(long hazardId)
+        public ActionResult<string> SendHazardNotification(long hazardId, string title, string desc)
         {
             return ActionService.Execute(this, "sendNotification", () =>
             {
-                return Ok(NotificationService.SendHazardNotification(hazardId).Result);
+                return Ok(NotificationService.SendHazardNotification(hazardId, title, desc).Result);
             });
         }
     }

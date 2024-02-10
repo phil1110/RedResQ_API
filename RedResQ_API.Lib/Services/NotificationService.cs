@@ -31,11 +31,11 @@ namespace RedResQ_API.Lib.Services
             var message = new Message()
             {
                 Notification = notification,
-                Data = new Dictionary<string, string>()
-                {
-                    { "title", title },
-                    { "desc", desc },
-                },
+                //Data = new Dictionary<string, string>()
+                //{
+                //    { "title", title },
+                //    { "desc", desc },
+                //},
                 Token = token,
             };
 
@@ -46,15 +46,15 @@ namespace RedResQ_API.Lib.Services
             return response;
         }
 
-        public static async Task<string> SendHazardNotification(long hazardId)
+        public static async Task<string> SendHazardNotification(long hazardId, string title, string desc)
         {
             var hazard = HazardService.Get(hazardId);
             var topic = TopicService.GetHazardTopic(hazard);
 
             var notification = new Notification()
             {
-                Title = "WARNING",
-                Body = hazard.Title
+                Title = title,
+                Body = desc
             };
 
             // See documentation on defining a message payload.
@@ -82,6 +82,7 @@ namespace RedResQ_API.Lib.Services
             // Subscribe the devices corresponding to the registration tokens to the
             // topic
             var response = await FirebaseMessaging.DefaultInstance.SubscribeToTopicAsync(tokens, topic);
+
             // See the TopicManagementResponse reference documentation
             // for the contents of response.
             Console.WriteLine($"{response.SuccessCount} tokens were subscribed successfully");
