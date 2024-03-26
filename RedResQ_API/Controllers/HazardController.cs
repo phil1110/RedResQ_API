@@ -25,7 +25,7 @@ namespace RedResQ_API.Controllers
         }
 
         [HttpPost("add")]
-        public ActionResult<bool> Add(string title, double lat, double lon, int radius, int typeId)
+        public ActionResult<object> Add(string title, double lat, double lon, int radius, int typeId)
         {
             return ActionService.Execute(this, "addHazard", () =>
             {

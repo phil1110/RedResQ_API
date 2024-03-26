@@ -16,7 +16,7 @@ namespace RedResQ_API.Controllers
             });
         }
 
-        [HttpGet("hazard")]
+        [HttpPost("hazard")]
         public ActionResult<string> SendHazardNotification(long hazardId, string title, string desc)
         {
             return ActionService.Execute(this, "sendNotification", () =>

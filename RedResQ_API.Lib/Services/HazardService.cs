@@ -65,7 +65,7 @@ namespace RedResQ_API.Lib.Services
             throw new NotFoundException("No Hazards found!");
         }
 
-        public static async Task<bool> Add(string title, double lat, double lon, int radius, int typeId)
+        public static async Task<object> Add(string title, double lat, double lon, int radius, int typeId)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
             string storedProcedure = "SP_Hz_AddHazard";
@@ -83,7 +83,9 @@ namespace RedResQ_API.Lib.Services
             {
                 long id = Convert.ToInt64(hazardTable.Rows[0].ItemArray[0]);
 
-                return await TopicService.InitializeHazardTopic(id); ;
+                bool hasInitialSubscribers = await TopicService.InitializeHazardTopic(id);
+
+                return new { Id = id, HasInitialSubscribers = hasInitialSubscribers };
             }
 
             throw new UnprocessableEntityException();

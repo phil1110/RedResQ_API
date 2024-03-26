@@ -61,12 +61,8 @@ namespace RedResQ_API.Lib.Services
             var message = new Message()
             {
                 Notification = notification,
-                //Data = new Dictionary<string, string>()
-                //{
-                //    { "score", "850" },
-                //    { "time", "2:45" },
-                //},
-                Topic = topic
+                Topic = topic,
+                
             };
 
             // Send a message to the devices subscribed to the provided topic.

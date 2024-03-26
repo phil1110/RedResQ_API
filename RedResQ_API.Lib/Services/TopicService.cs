@@ -35,9 +35,15 @@ namespace RedResQ_API.Lib.Services
 
             string[] tokens = CoordinateService.GetTokens(hazard.Latitude, hazard.Longitude, hazard.Radius);
 
-            await NotificationService.RegisterForTopic(topicName, tokens.ToList());
-
-            return true;
+            try
+            {
+                await NotificationService.RegisterForTopic(topicName, tokens.ToList());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
