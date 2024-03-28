@@ -16,124 +16,46 @@ namespace RedResQ_API.Lib.Services
 	{
 		#region Get - Methods
 
-		public static Article[] GetGlobalArticles(long? articleId)
+		public static Article[] FetchArticles(long? articleId, long? countryId, long? languageId, string? query)
 		{
-            List<Article> output = new List<Article>();
+            List<Article> articles = new List<Article>();
             List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_Ar_LatestArticles_Global";
+            string storedProcedure = "SP_Ar_FetchArticles";
 
             if (articleId.HasValue)
             {
-                parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
+                parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId });
+            }
+            if(countryId.HasValue)
+            {
+                parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
+            }
+            if (languageId.HasValue)
+            {
+                parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
+            }
+            if (query != null)
+            {
+                parameters.Add(new SqlParameter { ParameterName = "@query", SqlDbType = SqlDbType.VarChar, Value = query });
             }
 
-            DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
+            DataTable articleTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 
-            if (articles.Rows.Count > 0)
+            if (articleTable.Rows.Count > 0)
             {
-                foreach (DataRow row in articles.Rows)
+                foreach (DataRow row in articleTable.Rows)
                 {
-                    output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
+                    articles.Add(Converter.ToArticle(row.ItemArray.ToList()!));
                 }
 
-                return output.ToArray();
+                return articles.ToArray();
             }
             else
             {
                 throw new NotFoundException("No Articles were found!");
             }
         }
-
-		public static Article[] GetCountryArticles(long countryId, long? articleId)
-		{
-            List<Article> output = new List<Article>();
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_Ar_LatestArticles_Country";
-
-            parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
-
-            if (articleId.HasValue)
-            {
-                parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
-            }
-
-            DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-            if (articles.Rows.Count > 0)
-            {
-                foreach (DataRow row in articles.Rows)
-                {
-                    output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
-                }
-
-                return output.ToArray();
-            }
-            else
-            {
-                throw new NotFoundException("No Articles were found!");
-            }
-        }
-
-		public static Article[] GetLanguageArticles(long languageId, long? articleId)
-		{
-            List<Article> output = new List<Article>();
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_Ar_LatestArticles_Language";
-
-            parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
-
-            if (articleId.HasValue)
-            {
-                parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
-            }
-
-            DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-            if (articles.Rows.Count > 0)
-            {
-                foreach (DataRow row in articles.Rows)
-                {
-                    output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
-                }
-
-                return output.ToArray();
-            }
-            else
-            {
-                throw new NotFoundException("No Articles were found!");
-            }
-        }
-
-		public static Article[] GetCountryAndLanguageArticles(long countryId, long languageId, long? articleId)
-		{
-            List<Article> output = new List<Article>();
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_Ar_LatestArticles_CountryAndLanguage";
-
-            parameters.Add(new SqlParameter { ParameterName = "@countryId", SqlDbType = SqlDbType.BigInt, Value = countryId });
-            parameters.Add(new SqlParameter { ParameterName = "@languageId", SqlDbType = SqlDbType.BigInt, Value = languageId });
-
-            if (articleId.HasValue)
-            {
-                parameters.Add(new SqlParameter { ParameterName = "@articleId", SqlDbType = SqlDbType.BigInt, Value = articleId.Value });
-            }
-
-            DataTable articles = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
-
-            if (articles.Rows.Count > 0)
-            {
-                foreach (DataRow row in articles.Rows)
-                {
-                    output.Add(Converter.ToArticle(row.ItemArray.ToList()!));
-                }
-
-                return output.ToArray();
-            }
-            else
-            {
-                throw new NotFoundException("No Articles were found!");
-            }
-        }
+        
 
 		public static Article GetSingleArticle(long articleId)
 		{

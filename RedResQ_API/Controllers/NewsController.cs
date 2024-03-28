@@ -9,44 +9,11 @@ namespace RedResQ_API.Controllers
 	public class NewsController : ControllerBase
 	{
 		[HttpGet("fetch")]
-		public ActionResult<Article[]> GetArticles(long? articleId, long? countryId, long? languageId)
+		public ActionResult<Article[]> FetchArticles(long? articleId, long? countryId, long? languageId, string? query)
 		{
             return ActionService.Execute(this, "getArticle", () =>
             {
-                Article[] articles = null!;
-
-                if (countryId.HasValue)
-                {
-
-                    if (languageId.HasValue)
-                    {
-                        articles = NewsService.GetCountryAndLanguageArticles(countryId.Value, languageId.Value, articleId);
-                    }
-                    else
-                    {
-                        articles = NewsService.GetCountryArticles(countryId.Value, articleId);
-                    }
-
-                }
-                else
-                {
-
-                    if (languageId.HasValue)
-                    {
-                        articles = NewsService.GetLanguageArticles(languageId.Value, articleId);
-                    }
-                    else
-                    {
-                        articles = NewsService.GetGlobalArticles(articleId);
-                    }
-
-                }
-
-                if (articles != null)
-                {
-                    return Ok(articles);
-                }
-                else { return BadRequest(); }
+                return Ok(NewsService.FetchArticles(articleId, countryId, languageId, query));
             });
 		}
 
