@@ -19,34 +19,7 @@ namespace RedResQ_API.Lib.Services
             });
         }
 
-        public async static Task<string> SendNotification(string token, string title, string desc)
-        {
-            var notification = new Notification()
-            {
-                Title = title,
-                Body = desc
-            };
-
-            // See documentation on defining a message payload.
-            var message = new Message()
-            {
-                Notification = notification,
-                //Data = new Dictionary<string, string>()
-                //{
-                //    { "title", title },
-                //    { "desc", desc },
-                //},
-                Token = token,
-            };
-
-            string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-
-            Console.WriteLine("Successfully sent message: " + response);
-
-            return response;
-        }
-
-        public static async Task<string> SendHazardNotification(long hazardId, string title, string desc)
+        public static async Task<string> SendHazardNotification(long hazardId, string title, string desc, Dictionary<string, string>? data = null!)
         {
             var hazard = HazardService.Get(hazardId);
             var topic = TopicService.GetHazardTopic(hazard);
@@ -61,9 +34,13 @@ namespace RedResQ_API.Lib.Services
             var message = new Message()
             {
                 Notification = notification,
-                Topic = topic,
-                
+                Topic = topic
             };
+
+            if (data != null)
+            {
+                message.Data = data;
+            }
 
             // Send a message to the devices subscribed to the provided topic.
             string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);

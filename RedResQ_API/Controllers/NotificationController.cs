@@ -7,15 +7,6 @@ namespace RedResQ_API.Controllers
     [ApiController, Route("[controller]"), Authorize]
     public class NotificationController : ControllerBase
     {
-        [HttpGet("test")]
-        public ActionResult<string> SendNotification(string token, string title, string desc)
-        {
-            return ActionService.Execute(this, "sendNotification", () =>
-            {
-                return Ok(NotificationService.SendNotification(token, title, desc).Result);
-            });
-        }
-
         [HttpPost("hazard")]
         public ActionResult<string> SendHazardNotification(long hazardId, string title, string desc)
         {
