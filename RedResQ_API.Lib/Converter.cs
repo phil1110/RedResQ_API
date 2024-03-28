@@ -72,6 +72,35 @@ namespace RedResQ_API.Lib
             return new Gender(id, name);
         }
 
+        public static Hazard ToHazard(List<object> items)
+        {
+            int pos = 0;
+
+            long id = Convert.ToInt64(items[pos++])!;
+            string title = Convert.ToString(items[pos++])!;
+            double latitude = Convert.ToDouble(items[pos++])!;
+            double longitude = Convert.ToDouble(items[pos++])!;
+            int radius = Convert.ToInt32(items[pos++])!;
+            DateTime timestamp = (DateTime)items[pos++]!;
+
+            int typeId = Convert.ToInt32(items[pos++])!;
+            string typeName = Convert.ToString(items[pos])!;
+
+            var type = new HazardType(typeId, typeName);
+
+            return new Hazard(id, title, latitude, longitude, radius, timestamp, type);
+        }
+
+        public static HazardType ToHazardType(List<object> items)
+        {
+            int pos = 0;
+
+            int id = Convert.ToInt32(items[pos++])!;
+            string name = Convert.ToString(items[pos])!;
+
+            return new HazardType(id, name);
+        }
+
         public static Image ToImage(List<object> items)
         {
             int pos = 0;

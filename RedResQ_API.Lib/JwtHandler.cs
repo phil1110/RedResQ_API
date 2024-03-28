@@ -143,7 +143,7 @@ namespace RedResQ_API.Lib
 
             parameters.Add(new SqlParameter { ParameterName = "@ipAddress", SqlDbType = SqlDbType.VarChar, Value = ipAddress });
             parameters.Add(new SqlParameter { ParameterName = "@timestamp", SqlDbType = SqlDbType.DateTime, Value = expiryDate.AddMinutes(-15) });
-            parameters.Add(new SqlParameter { ParameterName = "@validUntil", SqlDbType = SqlDbType.VarChar, Value = expiryDate });
+            parameters.Add(new SqlParameter { ParameterName = "@validUntil", SqlDbType = SqlDbType.DateTime, Value = expiryDate });
 
             SqlHandler.ExecuteNonQuery(storedProcedure, parameters.ToArray());
         }
