@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Text.Json.Serialization;
 
 namespace RedResQ_API.Controllers
 {
-	[ApiController, Route("[controller]"), Authorize]
+    [ApiController, Route("[controller]"), Authorize]
 	public class NewsController : ControllerBase
 	{
 		[HttpGet("fetch")]

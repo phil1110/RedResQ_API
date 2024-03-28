@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib.Exceptions;
-using System.Xml.Linq;
 
 namespace RedResQ_API.Controllers
 {

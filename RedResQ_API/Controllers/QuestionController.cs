@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib.Models;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RedResQ_API.Controllers
 {

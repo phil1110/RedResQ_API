@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib.Models;
-using System.Net;
-using System.Runtime.CompilerServices;
 
 namespace RedResQ_API.Controllers
 {
-	[ApiController, Route("[controller]"), Authorize]
+    [ApiController, Route("[controller]"), Authorize]
 	public class AuthController : ControllerBase
 	{
 

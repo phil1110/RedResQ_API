@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RedResQ_API.Lib.Models;
-using System.Data;
-using System.Security.Claims;
 
 namespace RedResQ_API.Controllers
 {
-	[ApiController, Route("[controller]"), Authorize]
+    [ApiController, Route("[controller]"), Authorize]
 	public class UserController : ControllerBase
     {
         [HttpGet("fetch")]
