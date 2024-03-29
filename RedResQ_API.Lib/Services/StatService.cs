@@ -23,7 +23,7 @@ namespace RedResQ_API.Lib.Services
 
                 foreach (DataRow row in statTable.Rows)
                 {
-                    stat.Add(Convert.ToString(row.ItemArray[0])!, Convert.ToInt64(row.ItemArray[0])!);
+                    stat.Add(Convert.ToString(row.ItemArray[0])!, Convert.ToInt64(row.ItemArray[1])!);
                 }
 
                 return stat;
