@@ -71,10 +71,10 @@ namespace RedResQ_API.Lib.Services
 		{
 			if (claims.ExpiryDate > DateTime.UtcNow)
 			{
-				throw new AuthException("Please proceed to Login!");
+				return true;
 			}
-
-			return true;
+			
+			throw new AuthException("Please proceed to Login!");
 		}
 
         internal static User LoginEmail(Credentials credentials)
