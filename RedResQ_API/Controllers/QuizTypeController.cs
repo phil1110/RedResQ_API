@@ -7,11 +7,11 @@ namespace RedResQ_API.Controllers
     public class QuizTypeController : ControllerBase
     {
         [HttpGet("fetch")]
-        public ActionResult<QuizType[]> Fetch(int? amount, long? id, string? name)
+        public ActionResult<QuizType[]> Fetch(string? name)
         {
             return ActionService.Execute(this, "getQuizType", () =>
             {
-                return Ok(QuizTypeService.Fetch(amount, id, name));
+                return Ok(QuizTypeService.Fetch(name));
             });
         }
 
