@@ -13,19 +13,11 @@ namespace RedResQ_API.Lib.Services
 {
     public static class QuizTypeService
     {
-        public static QuizType[] Fetch(int? amount, long? id, string? name)
+        public static QuizType[] Fetch(string? name)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
             string storedProcedure = "SP_Qt_FetchQuizTypes";
 
-            if(amount.HasValue)
-            {
-                parameters.Add(new SqlParameter { ParameterName = "@amount", SqlDbType = SqlDbType.Int, Value = amount });
-            }
-            if(id.HasValue)
-            {
-                parameters.Add(new SqlParameter { ParameterName = "@id", SqlDbType = SqlDbType.BigInt, Value = id });
-            }
             if(name != null)
             {
                 parameters.Add(new SqlParameter { ParameterName = "@name", SqlDbType = SqlDbType.VarChar, Value = name });
