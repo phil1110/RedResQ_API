@@ -44,14 +44,14 @@ namespace RedResQ_API.Lib.Services
             throw new UnprocessableEntityException();
         }
 
-        public static int GetResult(long quizId, long userId, long attemptId)
+        public static int GetResult(long attemptId, long quizId, long userId)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
-            string storedProcedure = "SP_At_GetResult";
+            string storedProcedure = "SP_As_GetResult";
 
+            parameters.Add(new SqlParameter { ParameterName = "@attemptId", SqlDbType = SqlDbType.BigInt, Value = attemptId });
             parameters.Add(new SqlParameter { ParameterName = "@quizId", SqlDbType = SqlDbType.BigInt, Value = quizId });
             parameters.Add(new SqlParameter { ParameterName = "@userId", SqlDbType = SqlDbType.BigInt, Value = userId });
-            parameters.Add(new SqlParameter { ParameterName = "@attemptId", SqlDbType = SqlDbType.BigInt, Value = attemptId });
 
             DataTable resultTable = SqlHandler.ExecuteQuery(storedProcedure, parameters.ToArray());
 

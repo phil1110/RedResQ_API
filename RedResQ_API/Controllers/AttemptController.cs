@@ -13,7 +13,7 @@ namespace RedResQ_API.Controllers
             {
                 var claims = JwtHandler.GetClaims(this);
 
-                return Ok(AttemptService.GetResult(quizId, claims.Id, attemptId));
+                return Ok(AttemptService.GetResult(attemptId, quizId, claims.Id));
             });
         }
 
