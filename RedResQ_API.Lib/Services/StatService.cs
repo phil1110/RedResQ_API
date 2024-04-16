@@ -11,7 +11,7 @@ namespace RedResQ_API.Lib.Services
 {
     public class StatService
     {
-        public static Dictionary<string, long> GetStat(string statType)
+        public static Dictionary<string, int> GetStat(string statType)
         {
             string storedProcedure = "STAT_" + statType;
 
@@ -19,11 +19,11 @@ namespace RedResQ_API.Lib.Services
 
             if (statTable.Rows.Count > 0)
             {
-                Dictionary<string, long> stat = new Dictionary<string, long>();
+                Dictionary<string, int> stat = new Dictionary<string, int>();
 
                 foreach (DataRow row in statTable.Rows)
                 {
-                    stat.Add(Convert.ToString(row.ItemArray[0])!, Convert.ToInt64(row.ItemArray[1])!);
+                    stat.Add(Convert.ToString(row.ItemArray[0])!, Convert.ToInt32(row.ItemArray[1])!);
                 }
 
                 return stat;

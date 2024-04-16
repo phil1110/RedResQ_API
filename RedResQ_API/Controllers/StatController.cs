@@ -7,7 +7,7 @@ namespace RedResQ_API.Controllers
     public class StatController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<Dictionary<string, long>> GetStat(string statName)
+        public ActionResult<Dictionary<string, int>> GetStat(string statName)
         {
             return ActionService.Execute(this, "getStat", () =>
             {
